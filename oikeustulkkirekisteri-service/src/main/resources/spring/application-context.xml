@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+       http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <context:property-placeholder
+            location="classpath:oikeustulkkirekisteri-service.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/oikeustulkkirekisteri-service.properties, file:///${user.home:''}/oph-configuration/override.properties"
+            ignore-resource-not-found="true"
+            properties-ref="defaultProps"/>
+
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+    <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <util:properties local-override="true">
+                <prop key="cas_mode">front</prop>
+                <prop key="cas_key">oikeustulkkirekisteri-service</prop>
+                <prop key="cas_service">${cas.service.oikeustulkkirekisteri-service:''}</prop>
+                <prop key="cas_callback_url">${cas.callback.oikeustulkkirekisteri-service:''}</prop>
+                <prop key="spring_security_default_access">permitAll</prop>
+            </util:properties>
+        </property>
+    </bean>
+
+    <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+    </bean>
+
+    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" >
+        <security:expression-handler ref="expressionHandler"/>
+        <!--protect-pointcut expression="execution(* fi.vm.sade.eperusteet.service.*.*(..))" access="ROLE_DENY_ALL"/-->
+    </security:global-method-security>
+
+    <import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml"/>
+
+    <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.service"/>
+    <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.repository.custom"/>
+    <tx:annotation-driven order="100"/>
+    <cache:annotation-driven />
+    <aop:aspectj-autoproxy  />
+
+    <jee:jndi-lookup id="dataSource" jndi-name="jdbc/oikeustulkkirekisteri" expected-type="javax.sql.DataSource"/>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="flyway">
+        <property name="persistenceUnitName" value="oikeustulkkirekisteri-pu"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="fi.vm.sade.oikeustulkkirekisteri.domain"/>
+        <property name="persistenceProviderClass" value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="hibernate.hbm2ddl.auto" value="validate"/>
+                <entry key="hibernate.show_sql" value="${hibernate.show_sql:false}"/>
+                <entry key="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
+                <entry key="javax.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
+                <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>
+                <entry key="net.sf.ehcache.configurationResourceName" value="/eperusteet-hibernate-ehcache.xml"/>
+                <entry key="org.hibernate.envers.audit_strategy" value="org.hibernate.envers.strategy.DefaultAuditStrategy"/>
+                <entry key="javax.persistence.validation.factory" value-ref="validator" />
+                <entry key="org.hibernate.envers.revision_listener" value="fi.vm.sade.eperusteet.service.impl.AuditRevisionListener"/>
+                <entry key="hibernate.jdbc.batch_size" value="20"/>
+                <entry key="hibernate.jdbc.fetch_size" value="20"/>
+            </map>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>src/main/resources/hibernate-typedefs.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <jpa:repositories base-package="fi.vm.sade.oikeustulkkirekisteri.repository" />
+
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename" value="Messages"/>
+    </bean>
+</beans>
