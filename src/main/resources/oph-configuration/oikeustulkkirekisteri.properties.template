@@ -1,0 +1,12 @@
+#
+# TÄHÄN TIEDOSTOON EI SAA TALLENTAA YMPÄRISTÖKOHTAISIA ARVOJA MUUTOIN KUIN MUUTTUJINA!!!
+# 
+# Tämä tiedosto toimii pohjana oph-configuration/common.properties tiedostolle,
+# joka asettaa tomcatin ympäristökohtaiset arvot.
+#
+
+# Aseta vähintään nämä ympäristökohtaiset arvot
+rekisteri.db.url={{rekisteri_db_url}}
+rekisteri.db.user={{rekisteri_db_user}}
+rekisteri.db.password={{rekisteri_db_password}}
+
