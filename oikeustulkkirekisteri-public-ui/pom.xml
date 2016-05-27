@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fi.vm.sade.oikeustulkkireksiteri</groupId>
-    <artifactId>oikeustulkkireksiteri-public-ui</artifactId>
+    <groupId>fi.vm.sade.oikeustulkkirekisteri</groupId>
+    <artifactId>oikeustulkkirekisteri-public-ui</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Oikeustulkkirekisteri :: Public UI</name>
 
     <parent>
-        <artifactId>oikeustulkkireksiteri</artifactId>
-        <groupId>fi.vm.sade.oikeustulkkireksiteri</groupId>
+        <artifactId>oikeustulkkirekisteri</artifactId>
+        <groupId>fi.vm.sade.oikeustulkkirekisteri</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 

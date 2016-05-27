@@ -3,8 +3,8 @@
 
     <modelVersion>4.0.0</modelVersion>
     
-    <artifactId>oikeustulkkireksiteri</artifactId>
-    <groupId>fi.vm.sade.oikeustulkkireksiteri</groupId>
+    <artifactId>oikeustulkkirekisteri</artifactId>
+    <groupId>fi.vm.sade.oikeustulkkirekisteri</groupId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Oikeustulkkirekisteri</name>
@@ -23,7 +23,7 @@
     <modules>
         <module>oikeustulkkirekisteri-service</module>
         <module>oikeustulkkirekisteri-ui</module>
-        <module>oikeustulkkireksiteri-public-ui</module>
+        <module>oikeustulkkirekisteri-public-ui</module>
     </modules>
     
     <properties>
