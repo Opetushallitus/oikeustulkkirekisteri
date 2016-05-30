@@ -42,6 +42,7 @@
         <spring.version>4.1.6.RELEASE</spring.version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
         <spring.data.jpa.version>1.7.2.RELEASE</spring.data.jpa.version>
+        <org.hibernate.javax.persistence.api.version>1.0.1.Final</org.hibernate.javax.persistence.api.version>
         <swagger.version>1.0.2</swagger.version>
         
         <spring.asm.version>3.1.4.RELEASE</spring.asm.version>
@@ -71,6 +72,7 @@
         <jersey.version>2.10.3</jersey.version>
         <joda.version>2.2</joda.version>
         <organisaatio.api.version>2015-13</organisaatio.api.version>
+        <java.utils.version>0.1.0-SNAPSHOT</java.utils.version>
         
         <findbugs.version>1.3.2</findbugs.version>
         <ant-contrib.version>1.0b3</ant-contrib.version>
@@ -303,6 +305,53 @@
                 <version>${camel.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-cxf</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+            
+            <!-- Apache CXF -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-client</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>spring-web</artifactId>
+                        <groupId>org.springframework</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>spring-beans</artifactId>
+                        <groupId>org.springframework</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-databinding-jaxb</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-security</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mongodb.morphia</groupId>
                 <artifactId>morphia</artifactId>
                 <version>${morphia.version}</version>
@@ -445,6 +494,11 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>fi.vm.sade.java-utils</groupId>
+                <artifactId>java-cxf</artifactId>
+                <version>${java.utils.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -607,13 +661,18 @@
                                     <version>[3.1.0,3.4.0)</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <version>[1.7,1.9)</version>
+                                    <version>[1.8,1.9)</version>
                                 </requireJavaVersion>
                             </rules>
                             <fail>true</fail>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

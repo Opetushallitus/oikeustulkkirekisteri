@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jaxrs-client="http://cxf.apache.org/jaxrs-client"
+       xmlns:http="http://cxf.apache.org/transports/http/configuration"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+           http://cxf.apache.org/jaxrs-client http://cxf.apache.org/schemas/jaxrs-client.xsd
+           http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
+    <context:property-placeholder
+            location="classpath:oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/override.properties"
+            ignore-resource-not-found="true"
+            properties-ref="defaultProps"/>
+    
+    <bean id="henkiloClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
+        <property name="serviceUrl" value="${authentication-service.rest.url}/j_spring_cas_security_check"/>
+    </bean>
+    <bean id="henkiloSystemAccountClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
+        <property name="serviceUrl" value="${authentication-service.rest.url}/j_spring_cas_security_check"/>
+        <property name="username" value="${authentication-service.rekisteri.username:}" />
+        <property name="password" value="${authentication-service.rekisteri.password:}" />
+    </bean>
+    <bean id="ophRequestHeaders" class="fi.vm.sade.javautils.cxf.OphRequestHeadersCxfInterceptor">
+        <property name="clientSubSystemCode" value="oikeustulkkireksiteri.oikeustulkkireksiteri-service.backend"/>
+    </bean>
+    
+    <jaxrs-client:client id="henkiloResourceClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi" 
+                         address="${authentication-service.rest.url}" inheritHeaders="true">
+        <jaxrs-client:outInterceptors>
+            <ref bean="henkiloClientCasInterceptor"/>
+            <ref bean="ophRequestHeaders"/>
+        </jaxrs-client:outInterceptors>
+        <jaxrs-client:inInterceptors>
+            <ref bean="henkiloClientCasInterceptor"/>
+        </jaxrs-client:inInterceptors>
+        <jaxrs-client:providers>
+            <ref bean="customJsonProvider"/>
+        </jaxrs-client:providers>
+    </jaxrs-client:client>
+    
+    <jaxrs-client:client id="henkiloResourceReadClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloReadApi"
+                         address="${authentication-service.rest.url}" inheritHeaders="true">
+        <jaxrs-client:outInterceptors>
+            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
+            <ref bean="ophRequestHeaders"/>
+        </jaxrs-client:outInterceptors>
+        <jaxrs-client:inInterceptors>
+            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
+        </jaxrs-client:inInterceptors>
+        <jaxrs-client:providers>
+            <ref bean="customJsonProvider"/>
+        </jaxrs-client:providers>
+    </jaxrs-client:client>
+</beans>
