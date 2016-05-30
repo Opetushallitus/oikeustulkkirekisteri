@@ -11,7 +11,3 @@ rekisteri.db.host={{oikeustulkkirekisteri_db_host}}
 rekisteri.db.port={{oikeustulkkirekisteri_db_port}}
 rekisteri.db.user={{oikeustulkkirekisteri_db_user}}
 rekisteri.db.password={{oikeustulkkirekisteri_db_password}}
-
-#for calling other services
-rekisteri.s2s.username={{oikeustulkkirekisteri_service_username}}
-rekisteri.s2s.password={{oikeustulkkirekisteri_service_password}}
