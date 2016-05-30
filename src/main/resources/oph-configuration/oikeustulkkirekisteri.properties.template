@@ -6,7 +6,8 @@
 #
 
 # Aseta vähintään nämä ympäristökohtaiset arvot
-rekisteri.db.host={{host_postgresql_oikeustulkkirekisteri}}
-rekisteri.db.user={{host_postgresql_oikeustulkkirekisteri_user}}
-rekisteri.db.password={{host_postgresql_oikeustulkkirekisteri_password}}
+rekisteri.db.host={{oikeustulkkirekisteri_db_host}}
+rekisteri.db.port={{oikeustulkkirekisteri_db_port}}
+rekisteri.db.user={{oikeustulkkirekisteri_db_user}}
+rekisteri.db.password={{oikeustulkkirekisteri_db_password}}
 
