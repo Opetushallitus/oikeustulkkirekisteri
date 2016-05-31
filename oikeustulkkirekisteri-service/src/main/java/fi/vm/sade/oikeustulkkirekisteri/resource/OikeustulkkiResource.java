@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api("Oikeustulkki")
 @RestController
-@RequestMapping("/api/oikeustulkki")
+@RequestMapping("/oikeustulkki")
 public class OikeustulkkiResource {
     
     @RequestMapping(value = "/hello", method = RequestMethod.GET)

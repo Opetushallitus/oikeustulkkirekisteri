@@ -5,4 +5,4 @@ fi
 if [ ! -d "src/main/webapp/node_modules/webpack-dev-server" ]; then
 	mvn clean install	
 fi
-cd src/main/webapp/ && ../../../node/node/node node_modules/webpack-dev-server/bin/webpack-dev-server.js -port 9000
+cd src/main/webapp/ && ../../../node/node/node dev.js
