@@ -6,6 +6,7 @@ target
 ## UI related
 *.min.js
 *.js.map
+*.hot-update.*
 
 ### Mac related
 .DS_Store

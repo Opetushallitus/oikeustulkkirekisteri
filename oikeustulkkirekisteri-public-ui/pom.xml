@@ -19,14 +19,63 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <workingDirectory>src/main/webapp</workingDirectory>
+                    <nodeVersion>v0.12.7</nodeVersion>
+                    <npmVersion>2.14.1</npmVersion>
+                    <installDirectory>node</installDirectory>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>npm-install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>webpack build</id>
+                        <goals>
+                            <goal>webpack</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>-p</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <port>8081</port>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/webapp</directory>
+                            <includes>
+                                <include>dist/**</include>
+                                <include>node_modules/**</include>
+                                <include>npm-debug.*</include>
+                            </includes>
+                            <followSymlinks>false</followSymlinks>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <excludes>node_modules/**,js/**,package.json,webpack.config.js,npm-debug.*,dev.js,css/**/*.scss</excludes>
                 </configuration>
             </plugin>
         </plugins>
