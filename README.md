@@ -48,8 +48,8 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
 
     mvn tomcat7-run
    
-Swagger-dokumentaation tulisi löytyä http://localhost:8080/oikeustulkkirekisteri-service/
-   
+Swagger-dokumentaation tulisi löytyä [http://localhost:8080/oikeustulkkirekisteri-service/](http://localhost:8080/oikeustulkkirekisteri-service/)
+
 ### oikeustulkkirekisteri-ui
 
 Kääntäminen ja tarvittavien käännöstyökalujen (node, npm ja riippuvuudet) lataus.
@@ -62,8 +62,8 @@ Ajaminen webpack-dev-server:llä (ajaa tarvittaessa mvn install:n ensin):
     
 (Tai aja node dev.js src/main/webapp-hakemistossa)
 
-Nyt löydät bunldatun UI:n osoitteesta http://localhost:9000/ ja muutokset päivittyvät sinne. Polku /oikeustulkkirekisteri-service proxytään Tomcatille.
-Voit myös käyttää polusta http://localhost:9000/webpack-dev-server/ löytyvää iframe-versiota, joka päivittyy selaimessa automaattisesti.
+Nyt löydät bunldatun UI:n osoitteesta [http://localhost:9000/](http://localhost:9000/) ja muutokset päivittyvät sinne. Polku /oikeustulkkirekisteri-service proxytään Tomcatille.
+Voit myös käyttää polusta [http://localhost:9000/webpack-dev-server/](http://localhost:9000/webpack-dev-server/) löytyvää iframe-versiota, joka päivittyy selaimessa automaattisesti.
 
 ## Kääntäminen
 
