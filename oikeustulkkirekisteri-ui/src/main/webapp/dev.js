@@ -3,7 +3,6 @@ var webpack = require('webpack');
 var config = require("./webpack.config.js");
 var compiler = webpack(config);
 var server = new webpackDevServer(compiler, {
-    hot: true,
     proxy: {
         '/oikeustulkkirekisteri-service/*': {
             target: 'http://localhost:8080',

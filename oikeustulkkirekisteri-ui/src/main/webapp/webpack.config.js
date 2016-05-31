@@ -5,13 +5,17 @@ module.exports = {
     },
     devtool: "source-map",
     output: {
-        path: __dirname + "/dist",
+        path: __dirname+"/dist",
         filename: "[name].js"
     },
     module: {
         loaders: [
-            { test: /\.css$/, loader: "style!css" }
+            { test: /\.css$/, loader: "style-loader!css-loader" },
+            { test: /\.scss$/, loaders: ["style", "css", "sass"] }
         ]
+    },
+    sassLoader: {
+        includePaths: [__dirname+"/dist/css"]
     },
     proxy: {
         '/oikeustulkkirekisteri-service/*': {
