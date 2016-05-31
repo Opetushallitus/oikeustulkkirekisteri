@@ -12,15 +12,19 @@ import javax.ws.rs.*;
  */
 @Path("resources/henkilo")
 public interface HenkiloApi {
-    public static enum ExternalPermissionService {
+    enum ExternalPermissionService {
         HAKU_APP, SURE
     }
     
     @POST
+    @Produces("text/plain")
+    @Consumes("application/json")
     String createHenkilo(HenkiloCreateDTO henkilo);
 
     @PUT
     @Path("/{oid}")
+    @Produces("text/plain")
+    @Consumes("application/json")
     String updateHenkilo(@PathParam("oid") String oid, Henkilo henkilo,
          @HeaderParam("External-Permission-Service") ExternalPermissionService permissionService);
 }
