@@ -1,0 +1,21 @@
+{
+  "name": "oikeustulkkirekisteri",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Opetushallitus / Oikeustulkkirekisteri UI",
+  "repository": "",
+
+  "devDependencies": {
+    "webpack": "1.13.1",
+    "webpack-dev-server": "1.14.1",
+    "css-loader": "0.23.1",
+    "style-loader": "0.13.1",
+    "isomorphic-style-loader": "1.0.0",
+    "postcss-loader": "0.9.1",
+    "sass-loader": "3.2.0"
+  },
+  
+  "dependencies": {
+    "angular": "1.5.5"
+  }
+}

@@ -12,6 +12,7 @@
             ignore-resource-not-found="true"
             properties-ref="defaultProps"/>
     
+    <bean id="casFriendlyCache" class="fi.vm.sade.authentication.cas.CasFriendlyCache"/>
     <bean id="henkiloClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
         <property name="serviceUrl" value="${authentication-service.rest.url}/j_spring_cas_security_check"/>
     </bean>
@@ -23,6 +24,7 @@
     <bean id="ophRequestHeaders" class="fi.vm.sade.javautils.cxf.OphRequestHeadersCxfInterceptor">
         <property name="clientSubSystemCode" value="oikeustulkkireksiteri.oikeustulkkireksiteri-service.backend"/>
     </bean>
+    <bean class="fi.vm.sade.oikeustulkkirekisteri.util.JacksonFeature" id="customJsonProvider"/>
     
     <jaxrs-client:client id="henkiloResourceClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi" 
                          address="${authentication-service.rest.url}" inheritHeaders="true">
@@ -38,17 +40,17 @@
         </jaxrs-client:providers>
     </jaxrs-client:client>
     
-    <jaxrs-client:client id="henkiloResourceReadClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloReadApi"
-                         address="${authentication-service.rest.url}" inheritHeaders="true">
-        <jaxrs-client:outInterceptors>
-            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
-            <ref bean="ophRequestHeaders"/>
-        </jaxrs-client:outInterceptors>
-        <jaxrs-client:inInterceptors>
-            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
-        </jaxrs-client:inInterceptors>
-        <jaxrs-client:providers>
-            <ref bean="customJsonProvider"/>
-        </jaxrs-client:providers>
-    </jaxrs-client:client>
+    <!--<jaxrs-client:client id="henkiloResourceReadClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloReadApi"-->
+                         <!--address="${authentication-service.rest.url}" inheritHeaders="true">-->
+        <!--<jaxrs-client:outInterceptors>-->
+            <!--<ref bean="henkiloSystemAccountClientCasInterceptor"/>-->
+            <!--<ref bean="ophRequestHeaders"/>-->
+        <!--</jaxrs-client:outInterceptors>-->
+        <!--<jaxrs-client:inInterceptors>-->
+            <!--<ref bean="henkiloSystemAccountClientCasInterceptor"/>-->
+        <!--</jaxrs-client:inInterceptors>-->
+        <!--<jaxrs-client:providers>-->
+            <!--<ref bean="customJsonProvider"/>-->
+        <!--</jaxrs-client:providers>-->
+    <!--</jaxrs-client:client>-->
 </beans>
