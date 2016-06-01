@@ -1,8 +1,8 @@
 <!DOCTYPE>
 <html>
 <head>
-    <title>Oikeustulkkirekisteri</title>
-    <link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
+  <title>Oikeustulkkirekisteri</title>
+  <link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
 </head>
 <body>
 
@@ -16,7 +16,7 @@
     <div id="navbar">
       <ul class="nav navbar-nav">
         <li><a href="index.html">Selaa</a></li>
-        <li class="active"><a href="add.html">Lisää henkilö</a></li>
+        <li class="active"><a href="add.html">Lisää tulkki</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
@@ -30,7 +30,7 @@
 
 <div class="container">
 
-  <h1>Lisää henkilö</h1>
+  <h1>Lisää tulkki</h1>
 
   <form class="form-horizontal">
 
@@ -105,14 +105,20 @@
     </div>
 
     <div class="form-group">
-      <label for="endDate" class="col-sm-2 control-label">Loppupvm</label>
+      <label for="languagePairs" class="col-sm-2 control-label">Kieliparit</label>
 
       <div class="col-sm-offset-2 col-sm-8">
-        <p class="todo">kieliparit</p>
-        <select>
-          <option>1</option>
-          <option>2</option>
-        </select>
+        <div class="col-sm-8">
+          <select id="languagePairs">
+            <option>Suomi</option>
+            <option>Ruotsi</option>
+          </select>
+          <select>
+            <option>Suomi</option>
+            <option>Ruotsi</option>
+          </select>
+          <button class="btn btn-primary">Lisää</button>
+        </div>
       </div>
     </div>
 
@@ -143,7 +149,7 @@
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-8">
         <button class="btn btn-primary">Tallenna</button>
-        <button class="btn btn-default">Tyhjennä</button>
+        <button class="btn btn-default">Peruuta</button>
       </div>
     </div>
 

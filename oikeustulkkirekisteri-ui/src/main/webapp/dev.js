@@ -17,4 +17,4 @@ var server = new webpackDevServer(compiler, {
     },
     stats: { colors: true }
 });
-server.listen(9000);
+server.listen(9010);

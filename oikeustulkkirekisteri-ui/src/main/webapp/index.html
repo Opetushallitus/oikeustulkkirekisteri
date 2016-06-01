@@ -17,7 +17,7 @@
 			<div id="navbar">
 				<ul class="nav navbar-nav">
 					<li class="active"><a href="#">Selaa</a></li>
-					<li><a href="add.html">Lisää henkilö</a></li>
+					<li><a href="add.html">Lisää tulkki</a></li>
 				</ul>
 
         <ul class="nav navbar-nav navbar-right">
@@ -45,12 +45,27 @@
 						<input type="text" class="form-control" id="searchHetu" placeholder="Hetu">
 					</div>
 
-          <span class="todo">henkilönumero?</span>
-          <span class="todo">kielipari</span>
+          <div class="form-group">
+            <label for="personId">Henkilönumero</label>
+            <input type="text" class="form-control" id="personId" placeholder="Henkilönumero">
+          </div>
 
-					<button class="btn btn-default">Hae</button>
+          <div class="form-group">
+            <select id="languagePairs">
+              <option>Suomi</option>
+              <option>Ruotsi</option>
+            </select>
+            -
+            <select>
+              <option>Suomi</option>
+              <option>Ruotsi</option>
+            </select>
+          </div>
+
+          <button class="btn btn-default">Hae</button>
 				</form>
 
+        <br/>
 				<div class="table-responsive">
 					<table class="table table-striped table-hover translator-list-table">
 						<thead>
