@@ -46,25 +46,35 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
 
 ### oikeustulkkirekisteri-service
 
+Rekisterin backend-palvelu ajetana Tomcatilla:
+
     mvn tomcat7-run
    
 Swagger-dokumentaation tulisi löytyä [http://localhost:8080/oikeustulkkirekisteri-service/](http://localhost:8080/oikeustulkkirekisteri-service/)
 
 ### oikeustulkkirekisteri-ui
 
-Kääntäminen ja tarvittavien käännöstyökalujen (node, npm ja riippuvuudet) lataus.
+Rekisterin hallintakäyttöliittymä. Kääntäminen ja tarvittavien käännöstyökalujen (node, npm ja riippuvuudet) lataus. ja paketointi:
 
     mvn install 
 
-Ajaminen webpack-dev-server:llä (ajaa tarvittaessa mvn install:n ensin):
+Ajaminen webpack-dev-server:llä (ajaa tarvittaessa mvn install:n ensin automaattisesti):
 
     ./dev.sh
-    
-(Tai aja node dev.js src/main/webapp-hakemistossa)
+
+(Tai vaihtoehtoisesti aja src/main/webapp-hakemistossa node dev.js ja eri konsolissa webpack --watch)
 
 Nyt löydät bunldatun UI:n osoitteesta [http://localhost:9000/](http://localhost:9000/) ja muutokset päivittyvät sinne. Polku /oikeustulkkirekisteri-service proxytään Tomcatille.
 Voit myös käyttää polusta [http://localhost:9000/webpack-dev-server/](http://localhost:9000/webpack-dev-server/) löytyvää iframe-versiota, joka päivittyy selaimessa automaattisesti.
 
+### oikeustulkkirekisteri-public-ui
+
+Rekisterin julkinen käyttöliittymä. Kääntäminen ja ajaminen samoin kuin oikeustulkkirekisteri-ui mutta porttina 9010:
+
+[http://localhost:9000/](http://localhost:9010/) ja [http://localhost:9000/webpack-dev-server/](http://localhost:9010/webpack-dev-server/)
+
 ## Kääntäminen
+
+Deployta varten:
 
     mvn clean install
