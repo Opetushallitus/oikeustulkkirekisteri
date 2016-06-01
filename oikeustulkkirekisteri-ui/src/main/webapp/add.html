@@ -21,7 +21,6 @@
       <ul class="nav navbar-nav">
         <li><a href="index.html">Selaa</a></li>
         <li class="active"><a href="add.html">Lisää henkilö</a></li>
-        <!--<li><a href="#contact">Contact</a></li>-->
       </ul>
     </div><!--/.nav-collapse -->
   </div>
@@ -29,121 +28,119 @@
 
 <div class="container">
 
-  <div class="starter-template">
-    <h1>Lisää henkilö</h1>
+  <h1>Lisää henkilö</h1>
 
-    <form class="form-horizontal">
+  <form class="form-horizontal">
 
-      <div class="form-group">
-        <label for="firstName" class="col-sm-2 control-label">Etunimi</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="firstName" placeholder="Etunimi">
+    <div class="form-group">
+      <label for="firstName" class="col-sm-2 control-label">Etunimi</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="firstName" placeholder="Etunimi">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lastName" class="col-sm-2 control-label">Sukunimi</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="lastName" placeholder="Sukunimi">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="hetu" class="col-sm-2 control-label">Hetu</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="hetu" placeholder="Hetu">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="address" class="col-sm-2 control-label">Osoite</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="address" placeholder="Osoite">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email" class="col-sm-2 control-label">Sähköpostiosoite</label>
+      <div class="col-sm-8">
+        <input type="email" class="form-control" id="email" placeholder="Sähköpostiosoite">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
+      <div class="col-sm-8">
+        <input type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <p class="todo">suoritettu tutkinto?</p>
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label for="startDate" class="col-sm-2 control-label">Alkupvm</label>
+      <div class="col-sm-8">
+        <input type="date" class="form-control" id="startDate" placeholder="Alkupvm">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="endDate" class="col-sm-2 control-label">Loppupvm</label>
+      <div class="col-sm-8">
+        <input type="date" class="form-control" id="endDate" placeholder="Loppupvm">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <p class="todo">kieliparit</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="extraInfo" class="col-sm-2 control-label">Lisätietoa</label>
+      <div class="col-sm-8">
+        <textarea class="form-control" rows="3" id="extraInfo" placeholder="Lisätietoa"></textarea>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <p class="todo">toiminta-alue</p>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="" id="infoPublished">
+            Julkaistu
+          </label>
         </div>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="lastName" class="col-sm-2 control-label">Sukunimi</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="lastName" placeholder="Sukunimi">
-        </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-8">
+        <button class="btn btn-primary">Tallenna</button>
+        <button class="btn btn-default">Tyhjennä</button>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="hetu" class="col-sm-2 control-label">Hetu</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="hetu" placeholder="Hetu">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="address" class="col-sm-2 control-label">Osoite</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="address" placeholder="Osoite">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="email" class="col-sm-2 control-label">Sähköpostiosoite</label>
-        <div class="col-sm-8">
-          <input type="email" class="form-control" id="email" placeholder="Sähköpostiosoite">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
-        <div class="col-sm-8">
-          <input type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-8">
-          <div class="checkbox">
-            <label>
-              <strong class="todo">suoritettu tutkinto?</strong>
-            </label>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <label for="startDate" class="col-sm-2 control-label">Alkupvm</label>
-        <div class="col-sm-8">
-          <input type="date" class="form-control" id="startDate" placeholder="Alkupvm">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="endDate" class="col-sm-2 control-label">Loppupvm</label>
-        <div class="col-sm-8">
-          <input type="date" class="form-control" id="endDate" placeholder="Loppupvm">
-        </div>
-      </div>
-
-      <strong>TODO kieliparit</strong>
-
-
-      <div class="form-group">
-        <label for="extraInfo" class="col-sm-2 control-label">Lisätietoa</label>
-        <div class="col-sm-8">
-          <textarea class="form-control" rows="3" id="extraInfo" placeholder="Lisätietoa"></textarea>
-        </div>
-      </div>
-
-
-      <strong>TODO toiminta-alue</strong>
-
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-8">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="" id="infoPublished">
-              Julkaistu
-            </label>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-8">
-          <button class="btn btn-primary">Tallenna</button>
-          <button class="btn btn-default">Tyhjennä</button>
-        </div>
-      </div>
-
-
-    </form>
-  </div>
+  </form>
 
 </div>
 
