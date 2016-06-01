@@ -5,8 +5,127 @@
 		<title>Oikeustulkkirekisteri - Hallinta</title>
 	</head>
 	<body>
-		<h1>Oikeustulkkirekisteri</h1>
-		
+
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Oikeustulkkirekisteri</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Selaa</a></li>
+					<li><a href="add.html">Lisää henkilö</a></li>
+					<!--<li><a href="#contact">Contact</a></li>-->
+				</ul>
+			</div><!--/.nav-collapse -->
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<!--<div class="starter-template">-->
+		<!--<h1>Bootstrap starter template</h1>-->
+		<!--<p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>-->
+		<!--</div>-->
+
+	</div>
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-9 col-md-10 main">
+				<!--<h1 class="page-header">Dashboard</h1>-->
+				<h2 class="sub-header">Haku</h2>
+
+				<form class="form-inline">
+
+					<div class="form-group">
+						<label for="searchName">Nimi</label>
+						<input type="text" class="form-control" id="searchName" placeholder="Nimi">
+					</div>
+
+					<div class="form-group">
+						<label for="searchHetu">Hetu</label>
+						<input type="text" class="form-control" id="searchHetu" placeholder="Hetu">
+					</div>
+
+					<strong>TODO henkilönumero?</strong>
+					<strong>TODO kielipari</strong>
+
+
+
+					<button type="submit" class="btn btn-default">Hae</button>
+				</form>
+
+				<div class="table-responsive">
+					<table class="table table-striped table-hover translator-list-table">
+						<thead>
+						<tr>
+							<th>Nimi</th>
+							<th>Hetu</th>
+							<th>Kieliparit</th>
+							<th>Loppupvm</th>
+							<th>Toiminta-alue</th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><a href="translator.html">Erkki Esimerkki</a></td>
+							<td>280465-8095</td>
+							<td>Suomi-Ruotsi</td>
+							<td>01.01.2020</td>
+							<td>Pirkanmaa</td>
+						</tr>
+						<tr>
+							<td><a href="translator.html">Erkki Esimerkki</a></td>
+							<td>280465-8095</td>
+							<td>Suomi-Ruotsi</td>
+							<td>01.01.2020</td>
+							<td>Pirkanmaa</td>
+						</tr>
+						<tr>
+							<td><a href="translator.html">Erkki Esimerkki</a></td>
+							<td>280465-8095</td>
+							<td>Suomi-Ruotsi</td>
+							<td>01.01.2020</td>
+							<td>Pirkanmaa</td>
+						</tr>
+						<tr>
+							<td><a href="translator.html">Erkki Esimerkki</a></td>
+							<td>280465-8095</td>
+							<td>Suomi-Ruotsi</td>
+							<td>01.01.2020</td>
+							<td>Pirkanmaa</td>
+						</tr>
+						<tr>
+							<td><a href="translator.html">Erkki Esimerkki</a></td>
+							<td>280465-8095</td>
+							<td>Suomi-Ruotsi</td>
+							<td>01.01.2020</td>
+							<td>Pirkanmaa</td>
+						</tr>
+						<tr>
+							<td><a href="translator.html">Erkki Esimerkki</a></td>
+							<td>280465-8095</td>
+							<td>Suomi-Ruotsi</td>
+							<td>01.01.2020</td>
+							<td>Pirkanmaa</td>
+						</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
         <script type="text/javascript" src="dist/lib.min.js" charset="utf-8"></script>
         <script type="text/javascript" src="dist/app.min.js" charset="utf-8"></script>
 	</body>

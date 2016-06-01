@@ -10,4 +10,4 @@ var server = new webpackDevServer(compiler, {
         }
     }
 });
-server.listen(9000);
+server.listen(9010);

@@ -12,10 +12,18 @@
     "style-loader": "0.13.1",
     "isomorphic-style-loader": "1.0.0",
     "postcss-loader": "0.9.1",
-    "sass-loader": "3.2.0"
+    "sass-loader": "3.2.0",
+    "babel-polyfill": "6.9.1",
+    "bootstrap-sass": "3.3.6",
+    "node-sass": "3.7.0",
+    "resolve-url-loader": "1.4.3",
+    "file-loader": "0.8.5",
+    "url-loader": "0.5.7",
+    "cross-spawn-async": "2.2.4"
   },
   
   "dependencies": {
-    "angular": "1.5.5"
+    "angular": "1.5.5",
+    "bootstrap-loader": "1.0.10"
   }
 }
