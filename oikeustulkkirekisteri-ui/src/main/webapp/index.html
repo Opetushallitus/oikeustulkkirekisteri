@@ -1,157 +1,39 @@
 <!DOCTYPE>
 <html>
-	<head>
-        <meta charset="utf-8"/>
-		<title>Oikeustulkkirekisteri - Hallinta</title>
-		<link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
-	</head>
-	<body>
+<head>
+  <meta charset="utf-8"/>
+  <title>Oikeustulkkirekisteri - Hallinta</title>
+  <link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
+</head>
+<body>
 
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
+<div ng-app="myApp" ng-controller="mainCtrl">
 
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">Oikeustulkkirekisteri</a>
-			</div>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
 
-			<div id="navbar">
-				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Selaa</a></li>
-					<li><a href="add.html">Lisää tulkki</a></li>
-				</ul>
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Oikeustulkkirekisteri</a>
+      </div>
+
+      <div id="navbar">
+        <ul class="nav navbar-nav">
+          <li ng-class="{active: Page.activePage('searchTranslator')}"><a href="#search">Haku</a></li>
+          <li ng-class="{active: Page.activePage('addTranslator')}"><a href="#addTranslator">Lisää tulkki</a></li>
+        </ul>
 
         <ul class="nav navbar-nav navbar-right">
           <li><a href="#">På svenska</a></li>
         </ul>
-			</div>
+      </div>
 
-		</div>
-	</nav>
+    </div>
+  </nav>
 
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-sm-9 col-md-10 main">
-				<h2 class="sub-header">Haku</h2>
+  <div ng-view></div>
+</div>
 
-				<form class="form-inline">
-
-					<div class="form-group">
-						<label for="searchName">Nimi</label>
-						<input type="text" class="form-control" id="searchName" placeholder="Nimi">
-					</div>
-
-					<div class="form-group">
-						<label for="searchHetu">Hetu</label>
-						<input type="text" class="form-control" id="searchHetu" placeholder="Hetu">
-					</div>
-
-          <div class="form-group">
-            <label for="personId">Henkilönumero</label>
-            <input type="text" class="form-control" id="personId" placeholder="Henkilönumero">
-          </div>
-
-          <div class="form-group">
-            <select id="languagePairs">
-              <option>Suomi</option>
-              <option>Ruotsi</option>
-            </select>
-            -
-            <select>
-              <option>Suomi</option>
-              <option>Ruotsi</option>
-            </select>
-          </div>
-
-          <button class="btn btn-default">Hae</button>
-				</form>
-
-        <br/>
-				<div class="table-responsive">
-					<table class="table table-striped table-hover translator-list-table">
-						<thead>
-						<tr>
-							<th>Nimi</th>
-							<th>Hetu</th>
-							<th>Kieliparit</th>
-							<th>Loppupvm</th>
-							<th>Toiminta-alue</th>
-						</tr>
-						</thead>
-						<tbody>
-						<tr>
-							<td><a href="translator.html">Erkki Esimerkki</a></td>
-							<td>280465-8095</td>
-							<td>Suomi-Ruotsi</td>
-							<td>01.01.2020</td>
-							<td>Pirkanmaa</td>
-						</tr>
-						<tr>
-							<td><a href="translator.html">Erkki Esimerkki</a></td>
-							<td>280465-8095</td>
-							<td>Suomi-Ruotsi</td>
-							<td>01.01.2020</td>
-							<td>Pirkanmaa</td>
-						</tr>
-						<tr>
-							<td><a href="translator.html">Erkki Esimerkki</a></td>
-							<td>280465-8095</td>
-							<td>Suomi-Ruotsi</td>
-							<td>01.01.2020</td>
-							<td>Pirkanmaa</td>
-						</tr>
-						<tr>
-							<td><a href="translator.html">Erkki Esimerkki</a></td>
-							<td>280465-8095</td>
-							<td>Suomi-Ruotsi</td>
-							<td>01.01.2020</td>
-							<td>Pirkanmaa</td>
-						</tr>
-						<tr>
-							<td><a href="translator.html">Erkki Esimerkki</a></td>
-							<td>280465-8095</td>
-							<td>Suomi-Ruotsi</td>
-							<td>01.01.2020</td>
-							<td>Pirkanmaa</td>
-						</tr>
-						<tr>
-							<td><a href="translator.html">Erkki Esimerkki</a></td>
-							<td>280465-8095</td>
-							<td>Suomi-Ruotsi</td>
-							<td>01.01.2020</td>
-							<td>Pirkanmaa</td>
-						</tr>
-
-						</tbody>
-					</table>
-
-          <nav style="text-align: center;">
-            <ul class="pagination">
-              <li>
-                <a href="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li class="active"><a href="#">1</a></li>
-              <li><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
-              <li>
-                <a href="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-
-				</div>
-			</div>
-
-
-		</div>
-	</div>
-
-        <script type="text/javascript" src="dist/lib.min.js" charset="utf-8"></script>
-        <script type="text/javascript" src="dist/app.min.js" charset="utf-8"></script>
-	</body>
+<script type="text/javascript" src="dist/lib.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="dist/app.min.js" charset="utf-8"></script>
+</body>
 </html>
