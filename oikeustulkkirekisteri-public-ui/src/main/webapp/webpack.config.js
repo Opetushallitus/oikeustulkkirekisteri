@@ -1,5 +1,6 @@
 var path = require('path'),
-    webpack = require('webpack');
+    webpack = require('webpack'),
+    ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: {
@@ -15,13 +16,15 @@ module.exports = {
     },
     module: {
         loaders: [
-            { test: /\.css$/, loader: 'style!css' },
             { test: /\.ts$/, loader: 'typescript-loader' },
-            { test: /\.scss$/, loader: "style!css!sass"}
+            { test: /\.css$/, loader: ExtractTextPlugin.extract("style", "css")},
+            { test: /\.scss$/, loader: ExtractTextPlugin.extract("style", "css!sass")},
+            { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
         ]
     },
     plugins: [ 
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new ExtractTextPlugin("styles.min.css")
     ]
 };

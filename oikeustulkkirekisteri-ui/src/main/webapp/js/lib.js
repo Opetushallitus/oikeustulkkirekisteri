@@ -1,2 +1,2 @@
-require('../node_modules/angular/angular.js');
+require('angular');
 require('bootstrap-loader');
