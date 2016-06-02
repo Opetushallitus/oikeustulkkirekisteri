@@ -20,7 +20,7 @@
        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.1.xsd">
 
     <context:property-placeholder
-            location="classpath:oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/override.properties"
+            location="classpath:oikeustulkkirekisteri.properties, classpath:url.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/url.properties, file:///${user.home:''}/oph-configuration/override.properties"
             ignore-resource-not-found="true"
             properties-ref="defaultProps"/>
     <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
