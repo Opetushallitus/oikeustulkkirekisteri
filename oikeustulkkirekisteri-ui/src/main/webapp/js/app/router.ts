@@ -20,4 +20,3 @@ angular.module('registryApp').config(($routeProvider) => {
         redirect: '/search'
       });
 });
-

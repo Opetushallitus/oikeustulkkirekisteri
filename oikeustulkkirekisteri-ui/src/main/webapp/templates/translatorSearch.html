@@ -22,15 +22,9 @@
         </div>
 
         <div class="form-group">
-          <select id="languagePairs">
-            <option>Suomi</option>
-            <option>Ruotsi</option>
-          </select>
+          <select id="languagePairs" ng-model="kielesta" ng-options="k.arvo as k.nimi.FI for k in kielet"></select>
           -
-          <select>
-            <option>Suomi</option>
-            <option>Ruotsi</option>
-          </select>
+          <select ng-model="kieleen" ng-options="k.arvo as k.nimi.FI for k in kielet"></select>
         </div>
 
         <button class="btn btn-default" ng-click="search()">Hae</button>
