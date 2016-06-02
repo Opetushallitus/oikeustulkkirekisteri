@@ -1,4 +1,4 @@
-angular.module('myApp').config(($routeProvider) => {
+angular.module('registryApp').config(($routeProvider) => {
   $routeProvider
 
       .when('/search', {
