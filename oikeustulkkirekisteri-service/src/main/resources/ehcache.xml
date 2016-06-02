@@ -14,14 +14,14 @@
             diskPersistent="false"
             diskExpiryThreadIntervalSeconds="120"
             memoryStoreEvictionPolicy="LRU" />
-    <cache name="koodistokoodit"
+    <cache name="kunnat"
            maxElementsInMemory="10000"
            eternal="false"
-           timeToLiveSeconds="600"
+           timeToLiveSeconds="36000"
            overflowToDisk="false" />
-    <cache name="koodistot"
+    <cache name="maakunnat"
            maxElementsInMemory="100"
            eternal="false"
-           timeToLiveSeconds="600"
+           timeToLiveSeconds="36000"
            overflowToDisk="false" />
 </ehcache>

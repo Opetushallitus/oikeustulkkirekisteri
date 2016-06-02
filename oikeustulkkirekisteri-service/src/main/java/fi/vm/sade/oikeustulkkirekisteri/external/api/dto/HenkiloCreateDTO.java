@@ -1,6 +1,5 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api.dto;
 
-import fi.vm.sade.authentication.model.HenkiloTyyppi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,7 @@ import java.util.List;
  * Time: 14.50
  */
 @Getter @Setter
-public class HenkiloCreateDTO implements Serializable {
+public class HenkiloCreateDto implements Serializable {
     private String etunimet;
     private String kutsumanimi;
     private String sukunimi;
@@ -26,5 +25,5 @@ public class HenkiloCreateDTO implements Serializable {
     private KielisyysDto asiointiKieli;
     private KansalaisuusDto kansalaisuus;
     private KielisyysDto aidinkieli;
-    private List<OrganisaatioHenkiloDTO> organisaatioHenkilo = new ArrayList<>();
+    private List<OrganisaatioHenkiloDto> organisaatioHenkilo = new ArrayList<>();
 }

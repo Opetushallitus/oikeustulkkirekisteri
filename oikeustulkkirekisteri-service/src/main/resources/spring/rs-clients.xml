@@ -8,7 +8,7 @@
            http://cxf.apache.org/jaxrs-client http://cxf.apache.org/schemas/jaxrs-client.xsd
            http://cxf.apache.org/transports/http/configuration http://cxf.apache.org/schemas/configuration/http-conf.xsd">
     <context:property-placeholder
-            location="classpath:oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/override.properties"
+            location="classpath:oikeustulkkirekisteri.properties, classpath:url.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/url.properties, file:///${user.home:''}/oph-configuration/override.properties"
             ignore-resource-not-found="true"
             properties-ref="defaultProps"/>
     
@@ -27,7 +27,7 @@
     <bean class="fi.vm.sade.oikeustulkkirekisteri.util.JacksonFeature" id="customJsonProvider"/>
     
     <jaxrs-client:client id="henkiloResourceClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi" 
-                         address="${authentication-service.rest.url}" inheritHeaders="true">
+                         address="${authentication-service.url}" inheritHeaders="true">
         <jaxrs-client:outInterceptors>
             <ref bean="henkiloClientCasInterceptor"/>
             <ref bean="ophRequestHeaders"/>
@@ -53,4 +53,15 @@
             <!--<ref bean="customJsonProvider"/>-->
         <!--</jaxrs-client:providers>-->
     <!--</jaxrs-client:client>-->
+    
+    <jaxrs-client:client id="koodistoResourceClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.KoodistoApi"
+                         address="${koodisto-service.url}" inheritHeaders="true">
+        <jaxrs-client:outInterceptors>
+            <ref bean="ophRequestHeaders"/>
+        </jaxrs-client:outInterceptors>
+        <jaxrs-client:providers>
+            <ref bean="customJsonProvider"/>
+        </jaxrs-client:providers>
+    </jaxrs-client:client>
+
 </beans>

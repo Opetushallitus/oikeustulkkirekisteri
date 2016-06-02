@@ -1,9 +1,11 @@
 package fi.vm.sade.oikeustulkkirekisteri.service;
 
-import fi.vm.sade.oikeustulkkirekisteri.service.dto.KoodistoKoodiDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.KoodiDto;
 
 import java.util.List;
 import java.util.Set;
+
+import static java.util.Collections.emptySet;
 
 /**
  * User: tommiratamaa
@@ -11,7 +13,11 @@ import java.util.Set;
  * Time: 14.12
  */
 public interface KoodistoService {
-    List<KoodistoKoodiDto> getMaakunnat();
+    List<KoodiDto> getMaakunnat();
     
-    List<KoodistoKoodiDto> getKunnat(Set<String> maakuntas);
+    List<KoodiDto> getKunnat(Set<String> maakuntas);
+    
+    default List<KoodiDto> getKunnat() {
+        return getKunnat(emptySet());
+    }
 }

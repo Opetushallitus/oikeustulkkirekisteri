@@ -1,16 +1,18 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
 import fi.vm.sade.authentication.model.Henkilo;
-import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloCreateDTO;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloCreateDto;
 
 import javax.ws.rs.*;
+
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Constants.JSON;
 
 /**
  * User: tommiratamaa
  * Date: 30.5.2016
  * Time: 14.50
  */
-@Path("resources/henkilo")
+@Path("/resources/henkilo")
 public interface HenkiloApi {
     enum ExternalPermissionService {
         HAKU_APP, SURE
@@ -18,13 +20,13 @@ public interface HenkiloApi {
     
     @POST
     @Produces("text/plain")
-    @Consumes("application/json")
-    String createHenkilo(HenkiloCreateDTO henkilo);
+    @Consumes(JSON)
+    String createHenkilo(HenkiloCreateDto henkilo);
 
     @PUT
     @Path("/{oid}")
     @Produces("text/plain")
-    @Consumes("application/json")
+    @Consumes(JSON)
     String updateHenkilo(@PathParam("oid") String oid, Henkilo henkilo,
          @HeaderParam("External-Permission-Service") ExternalPermissionService permissionService);
 }
