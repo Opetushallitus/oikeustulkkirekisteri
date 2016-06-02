@@ -1,15 +1,5 @@
 declare var angular:any;
-const app = angular.module('registryApp', ['ngRoute']);
-
-class Kielipari{
-  kielesta: string;
-  kieleen: string;
-
-  constructor(kielesta: string, kieleen: string){
-    this.kielesta = kielesta;
-    this.kieleen = kieleen;
-  }
-}
+const app = angular.module('registryApp', ['ngRoute', 'ui.select']);
 
 app.controller('mainCtrl', ($scope, Page) => {
   $scope.Page = Page;
@@ -26,19 +16,6 @@ app.controller('translatorSearchCtrl', ($scope, Page) => {
   };
 });
 
-app.controller('translatorCreateCtrl', ($scope, Page) => {
-  Page.setPage('addTranslator');
-
-  $scope.kielesta;
-  $scope.kieleen;
-  $scope.kieliparit = [];
-
-  $scope.addLanguagePair = () => {
-    $scope.kieliparit.push(new Kielipari($scope.kielesta, $scope.kieleen));
-  };
-
-});
-
 app.controller('translatorViewCtrl', ($scope, Page) => {
   Page.setPage('viewTranslator');
   console.log("translatorViewCtrl");
@@ -47,8 +24,14 @@ app.controller('translatorViewCtrl', ($scope, Page) => {
 app.factory('Page', () => {
   let page = 'main';
   return {
-    page: () => { return page; },
-    setPage: (newPage) => { page = newPage; },
-    activePage: (pageName) => { return page === pageName; }
+    page: () => {
+      return page;
+    },
+    setPage: (newPage) => {
+      page = newPage;
+    },
+    activePage: (pageName) => {
+      return page === pageName;
+    }
   };
 });

@@ -5,42 +5,42 @@
   <form class="form-horizontal">
 
     <div class="form-group">
-      <label for="firstName" class="col-sm-2 control-label">Etunimi</label>
+      <label for="firstName" class="col-sm-2 control-label required">Etunimi</label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="firstName" placeholder="Etunimi">
       </div>
     </div>
 
     <div class="form-group">
-      <label for="lastName" class="col-sm-2 control-label">Sukunimi</label>
+      <label for="lastName" class="col-sm-2 control-label required">Sukunimi</label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="lastName" placeholder="Sukunimi">
       </div>
     </div>
 
     <div class="form-group">
-      <label for="hetu" class="col-sm-2 control-label">Hetu</label>
+      <label for="hetu" class="col-sm-2 control-label required">Hetu</label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="hetu" placeholder="Hetu">
       </div>
     </div>
 
     <div class="form-group">
-      <label for="address" class="col-sm-2 control-label">Katuosoite</label>
+      <label for="address" class="col-sm-2 control-label required">Katuosoite</label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="address" placeholder="Katuosoite">
       </div>
     </div>
 
     <div class="form-group">
-      <label for="postalCode" class="col-sm-2 control-label">Postinumero</label>
+      <label for="postalCode" class="col-sm-2 control-label required">Postinumero</label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="postalCode" placeholder="Postinumero">
       </div>
     </div>
 
     <div class="form-group">
-      <label for="postalCity" class="col-sm-2 control-label">Postitoimipaikka</label>
+      <label for="postalCity" class="col-sm-2 control-label required">Postitoimipaikka</label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="postalCity" placeholder="Postitoimipaikka">
       </div>
@@ -68,7 +68,7 @@
     </div>
 
     <div class="form-group">
-      <label for="qualification" class="col-sm-2 control-label">Suoritettu tutkinto</label>
+      <label for="qualification" class="col-sm-2 control-label required">Suoritettu tutkinto</label>
       <div class="col-sm-8">
         <input type="text" class="form-control" id="qualification" placeholder="Suoritettu tutkinto">
       </div>
@@ -89,7 +89,7 @@
     <!--</div>-->
 
     <div class="form-group">
-      <label for="languagePairs" class="col-sm-2 control-label">Kieliparit</label>
+      <label for="languagePairs" class="col-sm-2 control-label required">Kieliparit</label>
 
       <div class="col-sm-8">
         <div>
@@ -107,7 +107,7 @@
             <option value="ruotsi">Ruotsi</option>
             <option value="venaja">Venäjä</option>
           </select>
-          <button class="btn btn-primary" ng-click="addLanguagePair()">Lisää</button>
+          <button class="btn btn-primary" ng-click="addKielipari()">Lisää</button>
         </div>
       </div>
     </div>
@@ -120,8 +120,16 @@
     </div>
 
     <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-8">
-        <p class="todo">toiminta-alue</p>
+      <label for="region" class="col-sm-2 control-label required">Toiminta-alue</label>
+      <div class="col-sm-8">
+        <ui-select multiple tagging ng-model="selected.value" id="region">
+          <ui-select-match placeholder="Toiminta-alue">
+            <span ng-bind="$item.name"></span>
+          </ui-select-match>
+          <ui-select-choices repeat="region in (regions | filter: $select.search) track by region.id">
+            <span ng-bind="region.name"></span>
+          </ui-select-choices>
+        </ui-select>
       </div>
     </div>
 

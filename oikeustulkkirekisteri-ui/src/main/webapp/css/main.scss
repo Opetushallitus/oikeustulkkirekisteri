@@ -12,3 +12,9 @@ body {
 .btn-container-right{
     float: right;
 }
+
+.required{
+    &:after{
+        content: "*";
+    }
+}
