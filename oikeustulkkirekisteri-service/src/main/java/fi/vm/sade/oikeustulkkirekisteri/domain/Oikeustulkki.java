@@ -4,9 +4,9 @@ import fi.vm.sade.oikeustulkkirekisteri.domain.feature.Mutable;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.joda.time.LocalDate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 

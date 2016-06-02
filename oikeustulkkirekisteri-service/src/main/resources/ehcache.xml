@@ -24,4 +24,9 @@
            eternal="false"
            timeToLiveSeconds="36000"
            overflowToDisk="false" />
+    <cache name="kielet"
+           maxElementsInMemory="100"
+           eternal="false"
+           timeToLiveSeconds="36000"
+           overflowToDisk="false" />
 </ehcache>

@@ -33,7 +33,13 @@ public class KoodistoServiceImpl implements KoodistoService {
 
     @Resource
     private KoodistoApi koodistoResourceClient;
-    
+
+    @Override
+    @Cacheable("kielet")
+    public List<KoodiDto> getKielet() {
+        return convertedAndSorted(koodistoResourceClient.listKoodis("kieli").stream()).collect(toList());
+    }
+
     @Override
     @Cacheable("maakunnat")
     public List<KoodiDto> getMaakunnat() {

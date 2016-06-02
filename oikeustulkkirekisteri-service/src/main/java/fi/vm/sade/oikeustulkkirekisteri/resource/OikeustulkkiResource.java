@@ -21,4 +21,5 @@ public class OikeustulkkiResource {
         return DateTime.now();
     }
     
+    
 }

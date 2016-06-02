@@ -13,6 +13,8 @@ import static java.util.Collections.emptySet;
  * Time: 14.12
  */
 public interface KoodistoService {
+    List<KoodiDto> getKielet();
+    
     List<KoodiDto> getMaakunnat();
     
     List<KoodiDto> getKunnat(Set<String> maakuntas);

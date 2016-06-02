@@ -27,6 +27,11 @@ public class KoodistoResource {
     @Autowired
     private KoodistoService koodistoService;
 
+    @RequestMapping(value = "/kielet", method = RequestMethod.GET)
+    public List<KoodiDto> getKielet() {
+        return koodistoService.getKielet();
+    }
+    
     @RequestMapping(value = "/maakunnat", method = RequestMethod.GET)
     public List<KoodiDto> getKunnat() {
         return koodistoService.getMaakunnat();

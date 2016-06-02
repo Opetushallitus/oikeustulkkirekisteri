@@ -1,9 +1,12 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
+import com.wordnik.swagger.annotations.ApiParam;
 import fi.vm.sade.authentication.model.Henkilo;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloCreateDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.PaginationObject;
 
 import javax.ws.rs.*;
+import java.util.List;
 
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Constants.JSON;
 
@@ -14,9 +17,28 @@ import static fi.vm.sade.oikeustulkkirekisteri.external.api.Constants.JSON;
  */
 @Path("/resources/henkilo")
 public interface HenkiloApi {
-    enum ExternalPermissionService {
-        HAKU_APP, SURE
-    }
+    @GET
+    @Produces(JSON)
+    PaginationObject<Henkilo> listHenkilos(
+            @ApiParam("Hakuparametri, henkilötunnus, nimi tai henkilö-oid") @QueryParam("q") String queryParam,
+            @ApiParam("Henkilötyypin määre") @QueryParam("ht") String henkiloTyyppi,
+            @ApiParam("Haun määrärajoite, arvo 0 tarkoittaa hae kaikki") @QueryParam("count") Integer count,
+            @ApiParam("Haun aloitusindeksi") @QueryParam("index") Integer index,
+            @ApiParam("Rajaus organisaatioiden mukaan") @QueryParam("org") List<String> orgOid,
+            @ApiParam("Rajaus palvelun mukaan") @QueryParam("serviceName") String serviceName,
+            @ApiParam("Käyttöoikeusryhmärajaus") @QueryParam("groupName") String groupName,
+            @ApiParam("Järjestyksen määrääminen") @QueryParam("order") String order,
+            @ApiParam(value= "Myös passiivisten henkilöiden haku", defaultValue="false") @QueryParam("p") Boolean passives,
+            @ApiParam("Myös aliorganisaatioiden sisällyttäminen") @QueryParam("s") Boolean subOrganizations,
+            @ApiParam("Myös organisaatiottomat henkilöt") @QueryParam("no") Boolean noOrganizations,
+            @ApiParam("Myös suljetut käyttöoikeudet") @QueryParam("groupClosed") Boolean groupClosed,
+            @ApiParam("Rajaus huoltajan hetun tai OID:n mukaan") @QueryParam("guardian") String guardian,
+            @ApiParam("Myös duplikaattihenkilöiden haku") @QueryParam("d") Boolean duplicates);
+
+    @GET
+    @Produces(JSON)
+    @Path("/{oid}")
+    Henkilo findByOid(@ApiParam("Haettavan henkilön OID") @PathParam("oid") String oid);
     
     @POST
     @Produces("text/plain")
@@ -27,6 +49,5 @@ public interface HenkiloApi {
     @Path("/{oid}")
     @Produces("text/plain")
     @Consumes(JSON)
-    String updateHenkilo(@PathParam("oid") String oid, Henkilo henkilo,
-         @HeaderParam("External-Permission-Service") ExternalPermissionService permissionService);
+    String updateHenkilo(@PathParam("oid") String oid, Henkilo henkilo);
 }
