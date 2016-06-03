@@ -14,7 +14,7 @@ import java.util.List;
  * Time: 14.50
  */
 @Getter @Setter
-public class HenkiloCreateDto_ implements Serializable {
+public class HenkiloCreateDto implements Serializable {
     private String etunimet;
     private String kutsumanimi;
     private String sukunimi;
@@ -25,5 +25,5 @@ public class HenkiloCreateDto_ implements Serializable {
     private KielisyysDto asiointiKieli;
     private KansalaisuusDto kansalaisuus;
     private KielisyysDto aidinkieli;
-    private List<OrganisaatioHenkiloDto_> organisaatioHenkilo = new ArrayList<>();
+    private List<OrganisaatioHenkiloDto> organisaatioHenkilo = new ArrayList<>();
 }

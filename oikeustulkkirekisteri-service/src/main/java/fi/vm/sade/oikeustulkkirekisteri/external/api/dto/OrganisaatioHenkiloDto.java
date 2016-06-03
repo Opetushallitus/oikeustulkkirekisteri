@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Time: 15.00
  */
 @Getter @Setter
-public class OrganisaatioHenkiloDto_ implements Serializable {
+public class OrganisaatioHenkiloDto implements Serializable {
     private String organisaatioOid;
     private String tehtavanimike;
 }
