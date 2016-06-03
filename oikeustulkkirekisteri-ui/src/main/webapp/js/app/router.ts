@@ -2,18 +2,18 @@ angular.module('registryApp').config(($routeProvider) => {
   $routeProvider
 
       .when('/search', {
-        templateUrl: 'templates/translatorSearch.html',
-        controller: 'translatorSearchCtrl'
+        templateUrl: 'templates/oikeustulkkiSearch.html',
+        controller: 'oikeustulkkiSearchCtrl'
       })
 
-      .when('/addTranslator', {
-        templateUrl: 'templates/translatorCreate.html',
-        controller: 'translatorCreateCtrl'
+      .when('/addOikeustulkki', {
+        templateUrl: 'templates/oikeustulkkiCreate.html',
+        controller: 'oikeustulkkiCreateCtrl'
       })
 
-      .when('/translator/:id', {
-        templateUrl: 'templates/translatorView.html',
-        controller: 'translatorViewCtrl'
+      .when('/oikeustulkki/:id', {
+        templateUrl: 'templates/oikeustulkkiView.html',
+        controller: 'oikeustulkkiViewCtrl'
       })
 
       .otherwise({

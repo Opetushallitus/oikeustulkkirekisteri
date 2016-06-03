@@ -25,6 +25,12 @@ class Tulkki{
   }
 }
 
+class Kieli{
+  arvo: string;
+  nimi: any;
+  uri: string;
+}
+
 class Kielipari {
   kielesta:string;
   kieleen:string;
@@ -35,37 +41,36 @@ class Kielipari {
   }
 }
 
-angular.module('registryApp').service('KoodistoService', ($resource) => {
+angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page, KoodistoService) => {
+  Page.setPage('addOikeustulkki');
 
-  const koodisto = $resource('/oikeustulkkirekisteri-service/api/koodisto/:koodi', {koodi:'@koodi'}, {
-    list: {method: 'GET', isArray: true}
-  });
-
-  const getMaakunnat = (): Maakunta[] => koodisto.list({koodi: 'maakunnat'});
-  const getKunnat = () => koodisto.list({koodi: 'kunnat'});
-
-  return {
-    getMaakunnat: getMaakunnat,
-    getKunnat: getKunnat
-  };
-
-});
-
-angular.module('registryApp').controller('translatorCreateCtrl', ($scope, Page, KoodistoService) => {
-  Page.setPage('addTranslator');
-
-  $scope.tulkki = new Tulkki();
-  $scope.regions = KoodistoService.getMaakunnat();
-  $scope.tulkki.toimintaAlue = $scope.regions[0];
+  console.log("lo", _.capitalize('test'));
   $scope.kielesta;
   $scope.kieleen;
+  $scope.kieliparit = [];
+
+  KoodistoService.getKielet().then(r => {
+    $scope.kielet = r.data;
+    console.log('kielet', $scope.kielet);
+  });
+
+  $scope.tulkki = new Tulkki();
+  $scope.regions = [];
+
+  KoodistoService.getMaakunnat().then(r => {
+    $scope.regions = r.data;
+  });
+
+  $scope.tulkki.toimintaAlue = $scope.regions[0];
 
   $scope.addKielipari = () => {
+    console.log('kielesta', $scope.kielesta);
     $scope.tulkki.kieliparit.push(new Kielipari($scope.kielesta, $scope.kieleen));
   };
 
   $scope.save = () => {
     console.log('save', $scope.tulkki);
   };
+
 
 });

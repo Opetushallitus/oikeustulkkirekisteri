@@ -25,6 +25,9 @@ module.exports = {
     plugins: [ 
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
-        new ExtractTextPlugin("styles.min.css")
+        new ExtractTextPlugin("styles.min.css"),
+        new webpack.ProvidePlugin({
+            _: 'lodash'
+        })
     ]
 };
