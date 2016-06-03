@@ -42,6 +42,7 @@ class Kielipari {
   constructor(kielesta:Kieli, kieleen:Kieli) {
     if (kielesta === kieleen) {
       console.error("kielet ovat samat");
+      //TODO virheiden näyttäminen käyttäjälle
       throw "kielet ovat samat";
     }
 
@@ -53,12 +54,14 @@ class Kielipari {
 angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page, KoodistoService) => {
   Page.setPage('addOikeustulkki');
 
+  $scope.kieliparit = [];
   $scope.kielesta;
   $scope.kieleen;
-  $scope.kieliparit = [];
 
   KoodistoService.getKielet().then(r => {
     $scope.kielet = r.data;
+    $scope.kielesta = {selected: $scope.kielet[0]};
+    $scope.kieleen = {selected: $scope.kielet[0]};
   });
 
   $scope.tulkki = new Tulkki();
@@ -69,9 +72,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
   });
 
   $scope.addKielipari = () => {
-    const kielesta:Kieli = _.find($scope.kielet, ['arvo', $scope.kielesta]);
-    const kieleen:Kieli = _.find($scope.kielet, ['arvo', $scope.kieleen]);
-    const kielipari:Kielipari = new Kielipari(kielesta, kieleen);
+    const kielipari:Kielipari = new Kielipari($scope.kielesta.selected, $scope.kieleen.selected);
 
     var kielipariAlreadyExists = _.some($scope.tulkki.kieliparit, (kpari) => {
       return kielipari.isMatch(kpari);

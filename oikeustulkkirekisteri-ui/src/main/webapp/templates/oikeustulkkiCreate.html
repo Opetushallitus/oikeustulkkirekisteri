@@ -102,8 +102,24 @@
         </div>
 
         <div>
-          <select id="languagePairs" ng-model="kielesta" ng-options="k.arvo as k.nimi.FI for k in kielet"></select>
-          <select ng-model="kieleen" ng-options="k.arvo as k.nimi.FI for k in kielet"></select>
+          <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
+            <ui-select-match placeholder="Kielestä">
+              <span ng-bind="$select.selected.nimi.FI"></span>
+            </ui-select-match>
+            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo">
+              <span ng-bind="kieli.nimi.FI"></span>
+            </ui-select-choices>
+          </ui-select>
+
+          <ui-select ng-model="kieleen.selected" class="col-sm-4">
+            <ui-select-match placeholder="Kieleen">
+              <span ng-bind="$select.selected.nimi.FI"></span>
+            </ui-select-match>
+            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo">
+              <span ng-bind="kieli.nimi.FI"></span>
+            </ui-select-choices>
+          </ui-select>
+
           <button class="btn btn-primary" ng-click="addKielipari()">Lisää</button>
         </div>
       </div>
