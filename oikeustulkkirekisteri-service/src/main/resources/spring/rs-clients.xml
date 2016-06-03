@@ -39,20 +39,19 @@
             <ref bean="customJsonProvider"/>
         </jaxrs-client:providers>
     </jaxrs-client:client>
-    
-    <!--<jaxrs-client:client id="henkiloResourceReadClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloReadApi"-->
-                         <!--address="${authentication-service.rest.url}" inheritHeaders="true">-->
-        <!--<jaxrs-client:outInterceptors>-->
-            <!--<ref bean="henkiloSystemAccountClientCasInterceptor"/>-->
-            <!--<ref bean="ophRequestHeaders"/>-->
-        <!--</jaxrs-client:outInterceptors>-->
-        <!--<jaxrs-client:inInterceptors>-->
-            <!--<ref bean="henkiloSystemAccountClientCasInterceptor"/>-->
-        <!--</jaxrs-client:inInterceptors>-->
-        <!--<jaxrs-client:providers>-->
-            <!--<ref bean="customJsonProvider"/>-->
-        <!--</jaxrs-client:providers>-->
-    <!--</jaxrs-client:client>-->
+    <jaxrs-client:client id="henkiloResourceReadClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi"
+                         address="${authentication-service.rest.url}" inheritHeaders="true">
+        <jaxrs-client:outInterceptors>
+            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
+            <ref bean="ophRequestHeaders"/>
+        </jaxrs-client:outInterceptors>
+        <jaxrs-client:inInterceptors>
+            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
+        </jaxrs-client:inInterceptors>
+        <jaxrs-client:providers>
+            <ref bean="customJsonProvider"/>
+        </jaxrs-client:providers>
+    </jaxrs-client:client>
     
     <jaxrs-client:client id="koodistoResourceClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.KoodistoApi"
                          address="${koodisto-service.url}" inheritHeaders="true">

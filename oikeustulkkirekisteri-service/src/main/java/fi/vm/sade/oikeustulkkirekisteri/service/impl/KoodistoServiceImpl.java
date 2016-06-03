@@ -28,12 +28,18 @@ import static java.util.stream.Collectors.toList;
 public class KoodistoServiceImpl implements KoodistoService {
     private static final String EI_TIEDOSSA_KUNTA = "999";
     private static final Function<KoodistoKoodiDto, KoodiDto> CONVERT_DTO = k -> new KoodiDto(k.getKoodiArvo(), k.getKoodiUri(), k.getNimi());
-    private static final Comparator<Map<String,String>> NIMI_COMPARATOR = (a,b) -> comparing((Map<String,String> m) -> m.get("FI"), nullsLast(naturalOrder()))
-                .thenComparing(m -> m.get("SV"), nullsLast(naturalOrder())).compare(a,b);
+    private static final Comparator<Map<String,String>> NIMI_COMPARATOR = comparing((Map<String,String> m) -> m.get("FI"), nullsLast(naturalOrder()))
+                .thenComparing(m -> m.get("SV"), nullsLast(naturalOrder()));
 
     @Resource
     private KoodistoApi koodistoResourceClient;
-    
+
+    @Override
+    @Cacheable("kielet")
+    public List<KoodiDto> getKielet() {
+        return convertedAndSorted(koodistoResourceClient.listKoodis("kieli").stream()).collect(toList());
+    }
+
     @Override
     @Cacheable("maakunnat")
     public List<KoodiDto> getMaakunnat() {
