@@ -111,6 +111,12 @@
             </ui-select-choices>
           </ui-select>
 
+          <button class="btn btn-default col-sm-1" ng-click="switchKieliparit()">
+            &nbsp;
+            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>
+            &nbsp;
+          </button>
+
           <ui-select ng-model="kieleen.selected" class="col-sm-4">
             <ui-select-match placeholder="Kieleen">
               <span ng-bind="$select.selected.nimi.FI"></span>

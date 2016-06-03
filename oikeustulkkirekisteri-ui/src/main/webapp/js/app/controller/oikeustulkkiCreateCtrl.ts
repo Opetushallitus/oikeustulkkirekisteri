@@ -92,5 +92,10 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
     console.log('save', $scope.tulkki);
   };
 
+  $scope.switchKieliparit = () => {
+    const tmp = $scope.kielesta;
+    $scope.kielesta = $scope.kieleen;
+    $scope.kieleen = tmp;
+  };
 
 });
