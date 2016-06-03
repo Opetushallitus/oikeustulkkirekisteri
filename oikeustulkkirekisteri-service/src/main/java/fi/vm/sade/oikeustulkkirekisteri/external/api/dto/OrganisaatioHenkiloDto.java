@@ -1,3 +1,4 @@
+
 package fi.vm.sade.oikeustulkkirekisteri.external.api.dto;
 
 import lombok.Getter;
