@@ -1,5 +1,6 @@
 declare var angular:any;
-const app = angular.module('registryApp', ['ngRoute', 'ui.select']);
+
+const app = angular.module('registryApp', ['ngResource', 'ngRoute', 'ui.select']);
 
 app.controller('mainCtrl', ($scope, Page) => {
   $scope.Page = Page;

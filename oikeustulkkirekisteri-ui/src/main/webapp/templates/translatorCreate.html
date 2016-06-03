@@ -7,70 +7,70 @@
     <div class="form-group">
       <label for="firstName" class="col-sm-2 control-label required">Etunimi</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="firstName" placeholder="Etunimi">
+        <input ng-model="tulkki.etunimi" type="text" class="form-control" id="firstName" placeholder="Etunimi">
       </div>
     </div>
 
     <div class="form-group">
       <label for="lastName" class="col-sm-2 control-label required">Sukunimi</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="lastName" placeholder="Sukunimi">
+        <input ng-model="tulkki.sukunimi" type="text" class="form-control" id="lastName" placeholder="Sukunimi">
       </div>
     </div>
 
     <div class="form-group">
       <label for="hetu" class="col-sm-2 control-label required">Hetu</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="hetu" placeholder="Hetu">
+        <input ng-model="tulkki.hetu" type="text" class="form-control" id="hetu" placeholder="Hetu">
       </div>
     </div>
 
     <div class="form-group">
       <label for="address" class="col-sm-2 control-label required">Katuosoite</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="address" placeholder="Katuosoite">
+        <input ng-model="tulkki.katuosoite" type="text" class="form-control" id="address" placeholder="Katuosoite">
       </div>
     </div>
 
     <div class="form-group">
       <label for="postalCode" class="col-sm-2 control-label required">Postinumero</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="postalCode" placeholder="Postinumero">
+        <input ng-model="tulkki.postinumero" type="text" class="form-control" id="postalCode" placeholder="Postinumero">
       </div>
     </div>
 
     <div class="form-group">
       <label for="postalCity" class="col-sm-2 control-label required">Postitoimipaikka</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="postalCity" placeholder="Postitoimipaikka">
+        <input ng-model="tulkki.postitoimipaikka" type="text" class="form-control" id="postalCity" placeholder="Postitoimipaikka">
       </div>
     </div>
 
     <div class="form-group">
       <label for="email" class="col-sm-2 control-label">Sähköpostiosoite</label>
       <div class="col-sm-8">
-        <input type="email" class="form-control" id="email" placeholder="Sähköpostiosoite">
+        <input ng-model="tulkki.sahkopostiosoite" type="text" class="form-control" id="email" placeholder="Sähköpostiosoite">
       </div>
     </div>
 
     <div class="form-group">
       <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
+        <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
       </div>
     </div>
 
     <div class="form-group">
       <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
+        <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
       </div>
     </div>
 
     <div class="form-group">
       <label for="qualification" class="col-sm-2 control-label required">Suoritettu tutkinto</label>
       <div class="col-sm-8">
-        <input type="text" class="form-control" id="qualification" placeholder="Suoritettu tutkinto">
+        <input ng-model="tulkki.tutkinto" type="text" class="form-control" id="qualification" placeholder="Suoritettu tutkinto">
       </div>
     </div>
 
@@ -93,7 +93,7 @@
 
       <div class="col-sm-8">
         <div>
-          <p ng-repeat="kielipari in kieliparit">{{kielipari.kielesta}} - {{kielipari.kieleen}}</p>
+          <p ng-repeat="kielipari in tulkki.kieliparit">{{kielipari.kielesta}} - {{kielipari.kieleen}}</p>
         </div>
 
         <div class="col-sm-8">
@@ -122,12 +122,12 @@
     <div class="form-group">
       <label for="region" class="col-sm-2 control-label required">Toiminta-alue</label>
       <div class="col-sm-8">
-        <ui-select multiple tagging ng-model="selected.value" id="region">
+        <ui-select multiple tagging ng-model="tulkki.toimintaAlue" id="region">
           <ui-select-match placeholder="Toiminta-alue">
-            <span ng-bind="$item.name"></span>
+            <span ng-bind="$item.nimi.FI"></span>
           </ui-select-match>
-          <ui-select-choices repeat="region in (regions | filter: $select.search) track by region.id">
-            <span ng-bind="region.name"></span>
+          <ui-select-choices repeat="region in (regions | filter: $select.search) track by region.arvo">
+            <span ng-bind="region.nimi.FI"></span>
           </ui-select-choices>
         </ui-select>
       </div>
@@ -146,7 +146,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-8">
-        <button class="btn btn-primary">Tallenna</button>
+        <button class="btn btn-primary" ng-click="save()">Tallenna</button>
         <button class="btn btn-default">Peruuta</button>
       </div>
     </div>
