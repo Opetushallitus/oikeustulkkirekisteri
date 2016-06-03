@@ -94,14 +94,14 @@
       <div class="col-sm-8">
         <div>
           <p ng-repeat="kielipari in tulkki.kieliparit">
-            {{kielipari.kielesta}} - {{kielipari.kieleen}}
-            <button type="button" class="btn btn-default btn-xs">
+            {{kielipari.kielesta.nimi.FI}} - {{kielipari.kieleen.nimi.FI}}
+            <button type="button" class="btn btn-default btn-xs" ng-click="removeKielipari(kielipari)">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
             </button>
           </p>
         </div>
 
-        <div class="col-sm-8">
+        <div>
           <select id="languagePairs" ng-model="kielesta" ng-options="k.arvo as k.nimi.FI for k in kielet"></select>
           <select ng-model="kieleen" ng-options="k.arvo as k.nimi.FI for k in kielet"></select>
           <button class="btn btn-primary" ng-click="addKielipari()">Lisää</button>

@@ -32,10 +32,19 @@ class Kieli{
 }
 
 class Kielipari {
-  kielesta:string;
-  kieleen:string;
+  kielesta:Kieli;
+  kieleen:Kieli;
 
-  constructor(kielesta:string, kieleen:string) {
+  isMatch(kielipari:Kielipari){
+    return this.kieleen === kielipari.kieleen && this.kielesta === kielipari.kielesta;
+  }
+
+  constructor(kielesta:Kieli, kieleen:Kieli) {
+    if (kielesta === kieleen) {
+      console.error("kielet ovat samat");
+      throw "kielet ovat samat";
+    }
+
     this.kielesta = kielesta;
     this.kieleen = kieleen;
   }
@@ -44,14 +53,12 @@ class Kielipari {
 angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page, KoodistoService) => {
   Page.setPage('addOikeustulkki');
 
-  console.log("lo", _.capitalize('test'));
   $scope.kielesta;
   $scope.kieleen;
   $scope.kieliparit = [];
 
   KoodistoService.getKielet().then(r => {
     $scope.kielet = r.data;
-    console.log('kielet', $scope.kielet);
   });
 
   $scope.tulkki = new Tulkki();
@@ -61,12 +68,24 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
     $scope.regions = r.data;
   });
 
-  $scope.tulkki.toimintaAlue = $scope.regions[0];
-
   $scope.addKielipari = () => {
-    console.log('kielesta', $scope.kielesta);
-    $scope.tulkki.kieliparit.push(new Kielipari($scope.kielesta, $scope.kieleen));
+    const kielesta:Kieli = _.find($scope.kielet, ['arvo', $scope.kielesta]);
+    const kieleen:Kieli = _.find($scope.kielet, ['arvo', $scope.kieleen]);
+    const kielipari:Kielipari = new Kielipari(kielesta, kieleen);
+
+    var kielipariAlreadyExists = _.some($scope.tulkki.kieliparit, (kpari) => {
+      return kielipari.isMatch(kpari);
+    });
+
+    if(kielipariAlreadyExists){
+      console.error("kielipari jo lisätty");
+      return;
+    }
+
+    $scope.tulkki.kieliparit.push(kielipari);
   };
+
+  $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.tulkki.kieliparit, kielipari);
 
   $scope.save = () => {
     console.log('save', $scope.tulkki);
