@@ -11,9 +11,13 @@ class Tulkki{
   katuosoite: string;
   postinumero: number;
   postitoimipaikka: string;
+  osoiteJulkaisulupa: boolean;
   sahkopostiosoite: string;
+  sahkopostiJulkaisulupa: boolean;
   puhelinnumero: string;
+  puhelinnumeroJulkaisulupa: boolean;
   muuYhteystieto: string;
+  muuYhteystietoJulkaisulupa: boolean;
   tutkinto: string;
   kieliparit: Kielipari[];
   lisatietoa: string;
@@ -22,7 +26,12 @@ class Tulkki{
 
   constructor(){
     this.kieliparit = [];
+    this.osoiteJulkaisulupa = true;
+    this.sahkopostiJulkaisulupa = true;
+    this.puhelinnumeroJulkaisulupa = false;
+    this.muuYhteystietoJulkaisulupa = false;
   }
+
 }
 
 class Kieli{
@@ -36,7 +45,8 @@ class Kielipari {
   kieleen:Kieli;
 
   isMatch(kielipari:Kielipari){
-    return this.kieleen === kielipari.kieleen && this.kielesta === kielipari.kielesta;
+    return (this.kieleen === kielipari.kieleen || this.kieleen === kielipari.kielesta) &&
+        (this.kielesta === kielipari.kielesta || this.kielesta === kielipari.kieleen);
   }
 
   constructor(kielesta:Kieli, kieleen:Kieli) {
@@ -55,20 +65,24 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
   Page.setPage('addOikeustulkki');
 
   $scope.kieliparit = [];
+  $scope.showErrors = false;
   $scope.kielesta;
   $scope.kieleen;
 
   KoodistoService.getKielet().then(r => {
     $scope.kielet = r.data;
     $scope.kielesta = {selected: $scope.kielet[0]};
-    $scope.kieleen = {selected: $scope.kielet[0]};
+    $scope.kieleen = {selected: $scope.kielet[1]};
   });
 
   $scope.tulkki = new Tulkki();
   $scope.regions = [];
 
   KoodistoService.getMaakunnat().then(r => {
-    $scope.regions = r.data;
+    const regionsWithoutUnknownOption = _.filter(r.data, (region) => {
+      return region.arvo !== "99";
+    });
+    $scope.regions = regionsWithoutUnknownOption;
   });
 
   $scope.addKielipari = () => {
@@ -89,13 +103,14 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
   $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.tulkki.kieliparit, kielipari);
 
   $scope.save = () => {
-    console.log('save', $scope.tulkki);
+    if (!_.isEmpty($scope.tulkkiForm.$error)) {
+      $scope.showErrors = true;
+    }
+    console.log('save', $scope.tulkki, $scope.tulkkiForm.$error, _.isEmpty($scope.tulkkiForm.$error));
   };
 
-  $scope.switchKieliparit = () => {
-    const tmp = $scope.kielesta;
-    $scope.kielesta = $scope.kieleen;
-    $scope.kieleen = tmp;
+  $scope.addAllRegions = () => {
+    $scope.tulkki.toimintaAlue = $scope.regions;
   };
 
 });
