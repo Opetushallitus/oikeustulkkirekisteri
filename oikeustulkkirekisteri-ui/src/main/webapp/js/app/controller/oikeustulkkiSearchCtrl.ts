@@ -1,4 +1,4 @@
-angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ($scope, Page, KoodistoService) => {
+angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "Page", "KoodistoService", ($scope, Page, KoodistoService) => {
   Page.setPage('searchOikeustulkki');
   $scope.showResults = false;
 
@@ -12,4 +12,4 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ($scope, Page
   $scope.search = () => {
     $scope.showResults = true;
   };
-});
+}]);
