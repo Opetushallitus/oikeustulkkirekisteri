@@ -443,6 +443,10 @@
             <artifactId>swagger-springmvc</artifactId>
             <version>${swagger.version}</version>
         </dependency>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-jgroupsreplication</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
