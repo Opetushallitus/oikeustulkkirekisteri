@@ -33,4 +33,11 @@ public class Tulkki extends Mutable {
     
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tulkki", cascade = CascadeType.ALL)
     private Set<Oikeustulkki> oikeustulkit = new HashSet<>(0);
+
+    protected Tulkki() {
+    }
+
+    public Tulkki(String oid) {
+        this.henkiloOid = oid;
+    }
 }

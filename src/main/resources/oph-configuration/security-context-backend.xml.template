@@ -12,9 +12,7 @@
   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   ~ European Union Public Licence for more details.
-  -->
-
-<!--
+  --><!--
     spring security context for front/backend applications/services, uses cas+ldap
 
     NOTE!
@@ -23,15 +21,13 @@
     * needs app specific cas_key and cas_service properties
 
 -->
-
 <beans:beans xmlns="http://www.springframework.org/schema/security"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:p="http://www.springframework.org/schema/p"
              xsi:schemaLocation="http://www.springframework.org/schema/beans
-                    http://www.springframework.org/schema/beans/spring-beans.xsd
-                    http://www.springframework.org/schema/security
-                    http://www.springframework.org/schema/security/spring-security.xsd">
+                    http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
     <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
     </global-method-security>

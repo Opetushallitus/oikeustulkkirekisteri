@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: tommiratamaa
@@ -11,10 +13,9 @@ import java.io.Serializable;
  * Time: 15.15
  */
 @Getter @Setter
-public class OikeustulkkiJulkinenHakuDto implements Serializable, OikeustulkkiHakuehto, KieliRajaus {
+public class OikeustulkkiJulkinenHakuDto implements Serializable, OikeustulkkiHakuehto {
     private String nimi;
-    private String kielesta;
-    private String kieleen;
+    private List<KieliRajausDto> kieliparit = new ArrayList<>();
     private Integer page;
     private Integer count;
 }

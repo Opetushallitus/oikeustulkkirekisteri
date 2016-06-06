@@ -25,7 +25,7 @@ public class Oikeustulkki extends Mutable {
     @SequenceGenerator(name = "oikeustulkki_id_seq", sequenceName = "oikeustulkki_id_seq")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tulkki", nullable = false)
     private Tulkki tulkki;
     

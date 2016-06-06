@@ -19,22 +19,7 @@
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.1.xsd">
 
-    <context:property-placeholder
-            location="classpath:oikeustulkkirekisteri.properties, classpath:url.properties, file:///${user.home:''}/oph-configuration/common.properties, file:///${user.home:''}/oph-configuration/oikeustulkkirekisteri.properties, file:///${user.home:''}/oph-configuration/url.properties, file:///${user.home:''}/oph-configuration/override.properties"
-            ignore-resource-not-found="true"
-            properties-ref="defaultProps"/>
-    <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="properties">
-            <util:properties local-override="true">
-                <prop key="cas_mode">front</prop>
-                <prop key="cas_key">oikeustulkkirekisteri-service</prop>
-                <prop key="cas_service">${cas.service.oikeustulkkirekisteri-service:''}</prop>
-                <prop key="cas_callback_url">${cas.callback.oikeustulkkirekisteri-service:''}</prop>
-                <prop key="spring_security_default_access">permitAll</prop>
-            </util:properties>
-        </property>
-    </bean>
-    
+    <import resource="properties.xml"/>
     <import resource="rs-clients.xml"/>
 
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
@@ -54,21 +39,18 @@
         <security:expression-handler ref="expressionHandler"/>
         <!--protect-pointcut expression="execution(* fi.vm.sade.eperusteet.service.*.*(..))" access="ROLE_DENY_ALL"/-->
     </security:global-method-security>
-
-    <import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml"/>
-
+    
+    <import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml" />
+    
     <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.service"/>
     <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.repository.custom"/>
     <tx:annotation-driven order="100"/>
     <cache:annotation-driven />
     <aop:aspectj-autoproxy  />
-
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="org.postgresql.Driver"/>
-        <property name="url" value="jdbc:postgresql://${rekisteri.db.host:localhost}:${rekisteri.db.port:5432}/${rekisteri.db.name:oikeustulkkirekisteri}"/>
-        <property name="username" value="${rekisteri.db.user:oikaeustulkkirekisteri}"/>
-        <property name="password" value="${rekisteri.db.password:oikeustulkkirekisteri}"/>
-    </bean>
+    
+    <import resource="app-config.xml"/>
+    <import resource="test-config.xml"/>
+    <import resource="test-with-db-config.xml"/>
 
     <bean name="hibernateInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.hibernate.HibernateInterceptor"/>
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="flyway">
@@ -88,10 +70,6 @@
                 <entry key="hibernate.ejb.interceptor" value-ref="hibernateInterceptor" />
             </map>
         </property>
-    </bean>
-
-    <bean id="flyway" class="com.googlecode.flyway.core.Flyway" init-method="migrate">
-        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
