@@ -1,4 +1,4 @@
-angular.module('registryApp').config(($routeProvider) => {
+angular.module('registryApp').config(["$routeProvider", ($routeProvider) => {
   $routeProvider
 
       .when('/search', {
@@ -19,4 +19,4 @@ angular.module('registryApp').config(($routeProvider) => {
       .otherwise({
         redirect: '/search'
       });
-});
+}]);

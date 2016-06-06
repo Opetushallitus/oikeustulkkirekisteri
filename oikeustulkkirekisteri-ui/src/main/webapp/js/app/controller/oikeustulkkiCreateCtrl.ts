@@ -51,7 +51,7 @@ class Kielipari {
   }
 }
 
-angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page, KoodistoService) => {
+angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService", ($scope, Page, KoodistoService) => {
   Page.setPage('addOikeustulkki');
 
   $scope.kieliparit = [];
@@ -98,4 +98,4 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
     $scope.kieleen = tmp;
   };
 
-});
+}]);
