@@ -42,8 +42,6 @@
         <security:expression-handler ref="expressionHandler"/>
     </security:global-method-security>
 
-    <import resource="file:///${user.home:''}/oph-configuration/security-context-backend.xml" />
-
     <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.service"/>
     <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.repository.custom"/>
     <tx:annotation-driven order="100"/>
