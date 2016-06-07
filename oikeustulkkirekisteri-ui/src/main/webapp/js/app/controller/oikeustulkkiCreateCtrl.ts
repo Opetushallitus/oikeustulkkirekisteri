@@ -1,3 +1,5 @@
+import {Kieli, Kielipari} from "../kielet.ts";
+
 class Maakunta{
   arvo: string;
   uri: string;
@@ -11,64 +13,58 @@ class Tulkki{
   katuosoite: string;
   postinumero: number;
   postitoimipaikka: string;
+  osoiteJulkaisulupa: boolean;
   sahkopostiosoite: string;
+  sahkopostiJulkaisulupa: boolean;
   puhelinnumero: string;
+  puhelinnumeroJulkaisulupa: boolean;
   muuYhteystieto: string;
+  muuYhteystietoJulkaisulupa: boolean;
   tutkinto: string;
   kieliparit: Kielipari[];
   lisatietoa: string;
+  kokoSuomi: boolean;
   toimintaAlue: Maakunta[];
   julkaisulupa: boolean;
+  alkuPvm: string;
 
   constructor(){
     this.kieliparit = [];
-  }
-}
-
-class Kieli{
-  arvo: string;
-  nimi: any;
-  uri: string;
-}
-
-class Kielipari {
-  kielesta:Kieli;
-  kieleen:Kieli;
-
-  isMatch(kielipari:Kielipari){
-    return this.kieleen === kielipari.kieleen && this.kielesta === kielipari.kielesta;
+    this.osoiteJulkaisulupa = true;
+    this.sahkopostiJulkaisulupa = true;
+    this.puhelinnumeroJulkaisulupa = false;
+    this.muuYhteystietoJulkaisulupa = false;
+    this.kokoSuomi = true;
+    this.tutkinto = 'ERIKOISAMMATTITUTKINTO';
   }
 
-  constructor(kielesta:Kieli, kieleen:Kieli) {
-    if (kielesta === kieleen) {
-      console.error("kielet ovat samat");
-      //TODO virheiden näyttäminen käyttäjälle
-      throw "kielet ovat samat";
-    }
-
-    this.kielesta = kielesta;
-    this.kieleen = kieleen;
-  }
 }
 
-angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService", ($scope, Page, KoodistoService) => {
+angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService",
+  "$filter", ($scope, Page, KoodistoService, $filter) => {
+
   Page.setPage('addOikeustulkki');
-
   $scope.kieliparit = [];
+  $scope.showErrors = false;
   $scope.kielesta;
   $scope.kieleen;
 
   KoodistoService.getKielet().then(r => {
     $scope.kielet = r.data;
     $scope.kielesta = {selected: $scope.kielet[0]};
-    $scope.kieleen = {selected: $scope.kielet[0]};
+    $scope.kieleen = {selected: $scope.kielet[1]};
   });
 
   $scope.tulkki = new Tulkki();
+  //TODO lisätään datepicker
+  $scope.tulkki.alkuPvm = $filter('date')(new Date(), 'd.M.yyyy');
   $scope.regions = [];
 
   KoodistoService.getMaakunnat().then(r => {
-    $scope.regions = r.data;
+    const regionsWithoutUnknownOption = _.filter(r.data, (region) => {
+      return region.arvo !== "99";
+    });
+    $scope.regions = regionsWithoutUnknownOption;
   });
 
   $scope.addKielipari = () => {
@@ -89,13 +85,14 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
   $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.tulkki.kieliparit, kielipari);
 
   $scope.save = () => {
+    if (!_.isEmpty($scope.tulkkiForm.$error)) {
+      $scope.showErrors = true;
+    }
     console.log('save', $scope.tulkki);
   };
 
-  $scope.switchKieliparit = () => {
-    const tmp = $scope.kielesta;
-    $scope.kielesta = $scope.kieleen;
-    $scope.kieleen = tmp;
+  $scope.addAllRegions = () => {
+    $scope.tulkki.toimintaAlue = $scope.regions;
   };
 
 }]);

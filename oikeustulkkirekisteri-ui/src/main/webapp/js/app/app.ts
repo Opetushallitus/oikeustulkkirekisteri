@@ -1,7 +1,7 @@
 declare var angular:any;
 declare var _:any;
 
-const app = angular.module('registryApp', ['ngRoute', 'ui.select']).factory('Page', () => {
+const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.select']).factory('Page', () => {
   let page = 'main';
   return {
     page: () => { return page; },
