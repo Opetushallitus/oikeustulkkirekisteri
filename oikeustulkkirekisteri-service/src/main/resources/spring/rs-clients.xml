@@ -11,10 +11,10 @@
     
     <bean id="casFriendlyCache" class="fi.vm.sade.authentication.cas.CasFriendlyCache"/>
     <bean id="henkiloClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
-        <property name="serviceUrl" value="${authentication-service.rest.url}/j_spring_cas_security_check"/>
+        <property name="serviceUrl" value="${authentication-service.url}/j_spring_cas_security_check"/>
     </bean>
     <bean id="henkiloSystemAccountClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
-        <property name="serviceUrl" value="${authentication-service.rest.url}/j_spring_cas_security_check"/>
+        <property name="serviceUrl" value="${authentication-service.url}/j_spring_cas_security_check"/>
         <property name="username" value="${authentication-service.rekisteri.username:}" />
         <property name="password" value="${authentication-service.rekisteri.password:}" />
     </bean>
@@ -37,7 +37,7 @@
         </jaxrs-client:providers>
     </jaxrs-client:client>
     <jaxrs-client:client id="henkiloResourceReadClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi"
-                         address="${authentication-service.rest.url}" inheritHeaders="true">
+                         address="${authentication-service.url}" inheritHeaders="true">
         <jaxrs-client:outInterceptors>
             <ref bean="henkiloSystemAccountClientCasInterceptor"/>
             <ref bean="ophRequestHeaders"/>
