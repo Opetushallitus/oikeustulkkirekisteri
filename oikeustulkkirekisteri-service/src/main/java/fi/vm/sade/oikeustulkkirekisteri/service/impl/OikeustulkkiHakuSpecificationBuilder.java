@@ -1,9 +1,10 @@
-package fi.vm.sade.oikeustulkkirekisteri.service.dto;
+package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
 import fi.vm.sade.oikeustulkkirekisteri.domain.Kielipari;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.KieliRajaus;
 import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -22,8 +23,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * Date: 2.6.2016
  * Time: 13.08
  */
-public class OikeustulkkiHakuSpecBuilder {
-    public static final Specifications<Oikeustulkki> empty = where(null);
+public class OikeustulkkiHakuSpecificationBuilder {
     public static final Specifications<Oikeustulkki> eiPoistettu = where((root, query, cb) 
             -> cb.and(
                     cb.equal(root.get("poistettu"), false),
@@ -112,5 +112,5 @@ public class OikeustulkkiHakuSpecBuilder {
         return (root, query, cb) -> root.join("tulkki").get("henkiloOid").in(in);
     }
 
-    private OikeustulkkiHakuSpecBuilder() {}
+    private OikeustulkkiHakuSpecificationBuilder() {}
 }

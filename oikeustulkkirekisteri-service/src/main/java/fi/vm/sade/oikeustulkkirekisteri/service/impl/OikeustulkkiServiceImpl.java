@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.*;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.KOKO_SUOMI;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.MAAKUNTA;
-import static fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiHakuSpecBuilder.*;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.*;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.or;
 import static java.util.Collections.singletonList;
