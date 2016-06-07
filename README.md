@@ -38,6 +38,21 @@ Varmista, että asennettuna on:
 
 ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/static/auth-pg-hba-conf.html)).
 
+### Luo kotihakemistoon security-configurtaatio
+
+- Luo kotihakemistoosi hakemisto oph-configuration, jonka sisälle tiedosto security-context-backend.xml.
+- Lisää sisällöksi esimerkiksi tyhjä Springin security-konfiguraatio:
+
+        <beans:beans xmlns="http://www.springframework.org/schema/security"
+                  xmlns:beans="http://www.springframework.org/schema/beans"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:p="http://www.springframework.org/schema/p"
+                  xsi:schemaLocation="http://www.springframework.org/schema/beans
+                         http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">      
+        </beans:beans>
+                    
+
 ## Testien ajaminen
 
     mvn clean test
