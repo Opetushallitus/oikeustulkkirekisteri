@@ -21,6 +21,7 @@ class Tulkki{
   tutkinto: string;
   kieliparit: Kielipari[];
   lisatietoa: string;
+  kokoSuomi: boolean;
   toimintaAlue: Maakunta[];
   julkaisulupa: boolean;
 
@@ -30,6 +31,8 @@ class Tulkki{
     this.sahkopostiJulkaisulupa = true;
     this.puhelinnumeroJulkaisulupa = false;
     this.muuYhteystietoJulkaisulupa = false;
+    this.kokoSuomi = true;
+    this.tutkinto = 'ERIKOISAMMATTITUTKINTO';
   }
 
 }
@@ -106,7 +109,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
     if (!_.isEmpty($scope.tulkkiForm.$error)) {
       $scope.showErrors = true;
     }
-    console.log('save', $scope.tulkki, $scope.tulkkiForm.$error, _.isEmpty($scope.tulkkiForm.$error));
+    console.log('save', $scope.tulkki);
   };
 
   $scope.addAllRegions = () => {

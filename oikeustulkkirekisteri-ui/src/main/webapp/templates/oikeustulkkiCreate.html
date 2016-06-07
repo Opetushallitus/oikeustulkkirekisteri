@@ -79,10 +79,11 @@
     <div class="form-group">
       <label for="sahkopostiosoite" class="col-sm-2 control-label required">Sähköpostiosoite</label>
       <div class="col-sm-8">
-        <input ng-model="tulkki.sahkopostiosoite" type="text" class="form-control" id="sahkopostiosoite"
+        <input ng-model="tulkki.sahkopostiosoite" type="email" class="form-control" id="sahkopostiosoite"
                name="sahkopostiosoite" placeholder="Sähköpostiosoite" required>
         <div ng-if="showErrors" ng-messages="tulkkiForm.sahkopostiosoite.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="email">Virheellinen sähköpostiosoite</div>
         </div>
         <div class="checkbox">
           <label>
@@ -120,14 +121,14 @@
     </div>
 
     <div class="form-group">
-      <label for="qualification" class="col-sm-2 control-label required">Suoritettu tutkinto</label>
+      <label for="tutkinto" class="col-sm-2 control-label required">Suoritettu tutkinto</label>
       <div class="col-sm-8">
         <label>
-          <input id="qualification" type="radio" name="qualification" value="erikoisammattitutkinto">Oikeustulkin erikoisammattitutkinto<br>
+          <input id="tutkinto" ng-model="tulkki.tutkinto" type="radio" name="tutkinto" value="ERIKOISAMMATTITUTKINTO">Oikeustulkin erikoisammattitutkinto<br>
         </label>
         <br/>
         <label>
-          <input type="radio" name="qualification" value="korkeakoulututkinto">Korkeakoulututkinto<br>
+          <input ng-model="tulkki.tutkinto" type="radio" name="tutkinto" value="KORKEAKOULUTUTKINTO">Korkeakoulututkinto<br>
         </label>
       </div>
     </div>
@@ -166,6 +167,11 @@
 
           <button class="btn btn-primary" ng-click="addKielipari()">Lisää</button>
         </div>
+
+        <div ng-if="showErrors && tulkki.kieliparit.length === 0" class="error-msg">
+          <div>Kielipareja ei ole lisätty</div>
+        </div>
+
       </div>
     </div>
 
@@ -176,12 +182,19 @@
       </div>
     </div>
 
+
     <div class="form-group">
-      <label for="region" class="col-sm-2 control-label required">Toiminta-alue</label>
-      <div class="col-sm-2" ng-click="addAllRegions()">
-        <button class="btn btn-primary">Lisää kaikki</button>
+      <label for="kokoSuomi" class="col-sm-2 control-label required">Toiminta-alue</label>
+      <div class="col-sm-2">
+        <label>
+          <input id="kokoSuomi" ng-model="tulkki.kokoSuomi" type="radio" ng-value="true">Koko Suomi<br>
+        </label>
+        <br/>
+        <label>
+          <input ng-model="tulkki.kokoSuomi" type="radio" ng-value="false">Maakunnat<br>
+        </label>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-6" ng-if="!tulkki.kokoSuomi">
         <ui-select multiple tagging ng-model="tulkki.toimintaAlue" id="region" required name="toimintaAlue">
           <ui-select-match placeholder="Toiminta-alue">
             <span ng-bind="$item.nimi.FI"></span>
@@ -190,11 +203,11 @@
             <span ng-bind="region.nimi.FI"></span>
           </ui-select-choices>
         </ui-select>
-      </div>
 
-      <br/>
-      <div ng-if="showErrors" ng-messages="tulkkiForm.toimintaAlue.$error" role="alert" class="error-msg">
-        <div ng-message="required">Pakollinen kenttä</div>
+        <br/>
+        <div ng-if="showErrors" ng-messages="tulkkiForm.toimintaAlue.$error" role="alert" class="error-msg">
+          <div ng-message="required">Pakollinen kenttä</div>
+        </div>
       </div>
     </div>
 
