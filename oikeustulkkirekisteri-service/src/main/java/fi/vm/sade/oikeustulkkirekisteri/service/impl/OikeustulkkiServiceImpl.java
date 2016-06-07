@@ -19,16 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiHakuSpecBuilder.empty;
 import static fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiHakuSpecBuilder.*;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
-import static java.util.Optional.empty;
 import static java.util.Optional.*;
 import static java.util.stream.Collectors.*;
 import static org.joda.time.LocalDate.now;
@@ -59,50 +56,19 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Transactional(readOnly = true)
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
         return doHaku(henkiloResourceClient,
-                new Haku<>(hakuDto, mostRestictiveCondition(hakuDto).orElse(null), henkiloPredicate(hakuDto), spec(hakuDto)),
+                new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
                 this::combineHenkiloVirkailija);
     }
     
-    private Optional<String> mostRestictiveCondition(OikeustulkkiVirkailijaHakuDto hakuDto) {
-        if (hakuDto.getOid() != null) {
-            return of(hakuDto.getOid());
-        }
-        if (hakuDto.getHetu() != null) {
-            return of(hakuDto.getHetu());
-        }
-        if (hakuDto.getNimi() != null) {
-            return of(hakuDto.getNimi());
-        }
-        return empty();
-    }
-    
-    private Predicate<Henkilo> henkiloPredicate(OikeustulkkiVirkailijaHakuDto hakuDto) {
-        Predicate<Henkilo> p = h -> true;
-        if (hakuDto.getHetu() != null) {
-            p = p.and(h -> h.getHetu().startsWith(hakuDto.getHetu().trim().toLowerCase()));
-        }
-        if (hakuDto.getOid() != null) {
-            p = p.and(h -> h.getOidHenkilo().startsWith(hakuDto.getOid().trim().toLowerCase()));
-        }
-        if (hakuDto.getNimi() != null) {
-            p = p.and(nimiHaku(hakuDto.getNimi()));
-        }
-        return p;
-    }
-    
-    private static Predicate<Henkilo> nimiHaku(String nimi) {
-        return Stream.of(nimi.trim().toLowerCase().split("\\s+"))
-                .reduce(h -> true, (Predicate<Henkilo> p1, String s) ->
-                        (h -> h.getEtunimet().trim().toLowerCase().contains(s) || h.getSukunimi().trim().toLowerCase().contains(s)), Predicate::and);
-    }
-    
     private static Specifications<Oikeustulkki> spec(OikeustulkkiVirkailijaHakuDto dto) {
-        return empty.and(voimassaoloAlku(dto.getVoimassaAlku()))
-                .and(voimassaoloLoppu(dto.getVoimassaLoppu()))
-                .and(kielipari(dto))
+        Specifications<Oikeustulkki> where =  empty.and(voimassaoloRajausAlku(dto.getVoimassaAlku()))
+                .and(voimassaoloRajausLoppu(dto.getVoimassaLoppu()))
+                .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())))
+                .and(kieliparit(dto.getKieliparit()))
                 .and(dto.getVoimassaNyt() == null ? null : dto.getVoimassaNyt() ? voimassa(now()) : Specifications.not(voimassa(now())));
+        return where(latest(where)).and(where);
     }
-
+    
     private Function<Oikeustulkki, OikeustulkkiVirkailijaListDto> combineHenkiloVirkailija(Function<String, Henkilo> h) {
         return ot -> {
             Henkilo henkilo = h.apply(ot.getTulkki().getHenkiloOid());
@@ -119,22 +85,17 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OikeustulkkiPublicListDto> haeJulkinen(OikeustulkkiJulkinenHakuDto hakuDto) {
+    public List<OikeustulkkiPublicListDto> haeJulkinen(OikeustulkkiPublicHakuDto hakuDto) {
         return doHaku(henkiloResourceReadClient,
-                new Haku<>(hakuDto, hakuDto.getNimi(), henkiloPredicate(hakuDto), spec(hakuDto)),
+                new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
                 this::combineHenkilo);
     }
     
-    private Predicate<Henkilo> henkiloPredicate(OikeustulkkiJulkinenHakuDto hakuDto) {
-        Predicate<Henkilo> p = h -> true;
-        if (hakuDto.getNimi() != null) {
-            p = p.and(nimiHaku(hakuDto.getNimi()));
-        }
-        return p;
-    }
-
-    private static Specifications<Oikeustulkki> spec(OikeustulkkiJulkinenHakuDto dto) {
-        return where(voimassa(now())).and(kielipari(dto));
+    private static Specifications<Oikeustulkki> spec(OikeustulkkiPublicHakuDto dto) {
+        Specifications<Oikeustulkki> where = where(voimassaoloRajausLoppu(now()))
+                .and(kieliparit(dto.getKieliparit()))
+                .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())));
+        return where(latest(where)).and(where);
     }
 
     private Function<Oikeustulkki, OikeustulkkiPublicListDto> combineHenkilo(Function<String, Henkilo> h) {
@@ -151,8 +112,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Getter @AllArgsConstructor
     private static class Haku<HakuType extends OikeustulkkiHakuehto> {
         private final HakuType haku;
-        private final String mostRestictiveHenkiloCondition;
-        private final Predicate<Henkilo> henkiloPredicate;
+        private final String mostRestrictiveHenkiloCondition;
         private final Specification<Oikeustulkki> oikeustulkkiSpecification;
     }
 
@@ -162,8 +122,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         Integer count = ofNullable(hakuDto.getCount()).orElse(DEFAULT_COUNT),
                 page = ofNullable(hakuDto.getPage()).orElse(1),
                 index = (page-1)*count;
-        List<Henkilo> henkiloResults = listHenkilosByTermi(api, haku.getMostRestictiveHenkiloCondition(), count, index)
-                .getResults().stream().filter(haku.getHenkiloPredicate()).collect(toList());
+        List<Henkilo> henkiloResults = listHenkilosByTermi(api, haku.getMostRestrictiveHenkiloCondition(), count, index)
+                .getResults().stream().collect(toList());
         Map<String,Henkilo> henkilosByOid = henkiloResults.stream().collect(toMap(Henkilo::getOidHenkilo, h -> h));
         Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getOikeustulkkiSpecification())
                     .and(henkiloOidIn(henkilosByOid.keySet()))).stream()

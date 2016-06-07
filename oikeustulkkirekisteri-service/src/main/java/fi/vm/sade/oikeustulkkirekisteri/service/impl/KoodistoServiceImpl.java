@@ -50,13 +50,4 @@ public class KoodistoServiceImpl implements KoodistoService {
         return from.map(CONVERT_DTO).sorted(comparing(KoodiDto::getNimi, NIMI_COMPARATOR))
                 .filter(k -> !EI_TIEDOSSA_KUNTA.equals(k.getArvo()));
     }
-    
-    @Override
-    @Cacheable(value = "kunnat", key = "#maakuntas", condition = "#maakuntas.size() < 2")
-    public List<KoodiDto> getKunnat(Set<String> maakuntas) {
-        if (maakuntas.isEmpty()) {
-            return convertedAndSorted(koodistoResourceClient.listKoodis("kunta").stream()).collect(toList());
-        }
-        return convertedAndSorted(maakuntas.stream().flatMap(mk -> koodistoResourceClient.listAlakoodit(mk).stream())).collect(toList());
-    }
 }

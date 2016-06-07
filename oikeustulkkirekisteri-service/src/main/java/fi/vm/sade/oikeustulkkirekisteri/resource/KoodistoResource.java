@@ -1,6 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.resource;
 
-import fi.vm.sade.oikeustulkkirekisteri.resource.config.InternalApi;
+import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.oikeustulkkirekisteri.service.KoodistoService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.KoodiDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import static java.util.Optional.ofNullable;
  * Date: 2.6.2016
  * Time: 11.19
  */
-@InternalApi
+@Api("Koodisto")
 @RestController
 @RequestMapping("/koodisto")
 public class KoodistoResource {
@@ -33,12 +33,7 @@ public class KoodistoResource {
     }
     
     @RequestMapping(value = "/maakunnat", method = RequestMethod.GET)
-    public List<KoodiDto> getKunnat() {
+    public List<KoodiDto> getMaakunnat() {
         return koodistoService.getMaakunnat();
-    }
-    
-    @RequestMapping(value = "/kunnat", method = RequestMethod.GET)
-    public List<KoodiDto> getKunnat(@RequestParam(required = false) Set<String> maakunta) {
-        return koodistoService.getKunnat(ofNullable(maakunta).orElseGet(HashSet::new));
     }
 }

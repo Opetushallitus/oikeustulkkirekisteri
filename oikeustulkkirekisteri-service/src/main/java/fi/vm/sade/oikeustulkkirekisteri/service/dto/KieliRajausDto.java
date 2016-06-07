@@ -7,14 +7,11 @@ import java.io.Serializable;
 
 /**
  * User: tommiratamaa
- * Date: 2.6.2016
- * Time: 15.15
+ * Date: 6.6.2016
+ * Time: 11.17
  */
 @Getter @Setter
-public class OikeustulkkiJulkinenHakuDto implements Serializable, OikeustulkkiHakuehto, KieliRajaus {
-    private String nimi;
+public class KieliRajausDto implements Serializable, KieliRajaus {
     private String kielesta;
     private String kieleen;
-    private Integer page;
-    private Integer count;
 }

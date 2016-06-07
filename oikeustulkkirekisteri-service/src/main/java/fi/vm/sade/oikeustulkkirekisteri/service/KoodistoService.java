@@ -16,10 +16,4 @@ public interface KoodistoService {
     List<KoodiDto> getKielet();
     
     List<KoodiDto> getMaakunnat();
-    
-    List<KoodiDto> getKunnat(Set<String> maakuntas);
-    
-    default List<KoodiDto> getKunnat() {
-        return getKunnat(emptySet());
-    }
 }

@@ -17,6 +17,6 @@ oikeustulkkirekisteri.organisaatio.oid=12345.67890.12345.67890
 
 rekisteri.external.apis.dev.mode=false
 
-authentication-service.rest.url=
+authentication-service.url=
 authentication-service.rekisteri.username=
 authentication-service.rekisteri.password=

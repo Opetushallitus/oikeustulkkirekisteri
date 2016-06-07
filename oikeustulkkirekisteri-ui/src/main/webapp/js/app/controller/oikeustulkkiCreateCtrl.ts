@@ -1,5 +1,3 @@
-import {Kieli, Kielipari} from "../kielet.ts";
-
 class Maakunta{
   arvo: string;
   uri: string;
@@ -96,4 +94,4 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
     $scope.tulkki.toimintaAlue = $scope.regions;
   };
 
-});
+}]);
