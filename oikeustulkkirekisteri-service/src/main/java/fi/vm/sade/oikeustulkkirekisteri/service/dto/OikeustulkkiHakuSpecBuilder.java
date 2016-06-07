@@ -24,6 +24,11 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 public class OikeustulkkiHakuSpecBuilder {
     public static final Specifications<Oikeustulkki> empty = where(null);
+    public static final Specifications<Oikeustulkki> eiPoistettu = where((root, query, cb) 
+            -> cb.and(
+                    cb.equal(root.get("poistettu"), false),
+                    cb.equal(root.join("tulkki").get("poistettu"), false)
+            ));
     
     public static Specification<Oikeustulkki> voimassa(LocalDate at) {
         if (at == null) {

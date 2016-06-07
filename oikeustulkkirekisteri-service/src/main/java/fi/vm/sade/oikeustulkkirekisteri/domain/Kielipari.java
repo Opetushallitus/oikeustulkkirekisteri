@@ -2,10 +2,13 @@ package fi.vm.sade.oikeustulkkirekisteri.domain;
 
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+
+import static lombok.AccessLevel.PROTECTED;
 
 /**
  * User: tommiratamaa
@@ -14,6 +17,7 @@ import java.io.Serializable;
  */
 @Entity
 @Getter @Setter
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "kielipari", schema = "public", uniqueConstraints =
     @UniqueConstraint(columnNames = {"oikeustulkki", "kielesta", "kieleen"}))
 public class Kielipari implements Serializable {
@@ -32,4 +36,10 @@ public class Kielipari implements Serializable {
     
     @AttributeOverrides(@AttributeOverride(name = "koodi", column = @Column(name = "kieleen", nullable = false, updatable = false)))
     private Kieli kieleen;
+
+    public Kielipari(Oikeustulkki oikeustulkki, Kieli kielesta, Kieli kieleen) {
+        this.oikeustulkki = oikeustulkki;
+        this.kielesta = kielesta;
+        this.kieleen = kieleen;
+    }
 }

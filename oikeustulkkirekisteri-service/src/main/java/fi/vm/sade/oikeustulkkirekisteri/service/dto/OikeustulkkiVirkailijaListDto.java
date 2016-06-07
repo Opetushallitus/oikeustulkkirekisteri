@@ -15,6 +15,7 @@ import java.io.Serializable;
 public class OikeustulkkiVirkailijaListDto implements Serializable {
     private Long id;
     private String henkiloOid;
+    private String hetu;
     private String etunimi;
     private String sukunimi;
     private LocalDate alkaa;

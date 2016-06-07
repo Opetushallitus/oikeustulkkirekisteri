@@ -1,0 +1,1 @@
+ALTER TABLE oikeustulkki_muokkaus ADD COLUMN muokkausviesti TEXT;

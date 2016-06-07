@@ -59,7 +59,6 @@ public class SwaggerConfig {
                 .alternateTypeRules(Alternates.newRule(typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
                         }), typeResolver.resolve(Object.class)))
                 .swaggerGroup("internal");
-
         return plugin;
     }
 

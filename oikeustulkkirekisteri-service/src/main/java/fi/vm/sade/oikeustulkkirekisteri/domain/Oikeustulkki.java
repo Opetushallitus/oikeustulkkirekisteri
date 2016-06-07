@@ -19,6 +19,12 @@ import java.util.Set;
 @Getter @Setter
 @Table(name = "oikeustulkki", schema = "public")
 public class Oikeustulkki extends Mutable {
+
+    public enum TutkintoTyyppi {
+        OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO,
+        MUU_KORKEAKOULUTUTKINTO;
+    }
+    
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
     @GeneratedValue(generator = "oikeustulkki_id_seq")
@@ -33,9 +39,25 @@ public class Oikeustulkki extends Mutable {
     @Column(name = "alkaa", nullable = false)
     private LocalDate alkaa;
     
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tutkinto_tyyppi", nullable = false)
+    private TutkintoTyyppi tutkintoTyyppi;
+    
     @Type(type = "localDate")
     @Column(name = "paattyy", nullable = false)
     private LocalDate paattyy;
+
+    @Column(name = "julklaisulupa_email", nullable = false)
+    private boolean julkaisulupaEmail;
+
+    @Column(name = "julklaisulupa_puhelinnumero", nullable = false)
+    private boolean julkaisulupaPuhelinnumero;
+    
+    @Column(name = "julklaisulupa_muu_yhteystieto", nullable = false)
+    private boolean julkaisulupaMuuYhteystieto;
+    
+    @Column(name = "muu_yhteystieto")
+    private String muuYhteystieto;
     
     @Column(name = "lisatiedot")
     private String lisatiedot;
@@ -47,4 +69,8 @@ public class Oikeustulkki extends Mutable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,
             mappedBy = "oikeustulkki")
     private Set<Sijainti> sijainnit = new HashSet<>(0);
+    
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,
+            mappedBy = "oikeustulkki")
+    private Set<OikeustulkkiMuokkaus> muokkaukset = new HashSet<>(0);
 }

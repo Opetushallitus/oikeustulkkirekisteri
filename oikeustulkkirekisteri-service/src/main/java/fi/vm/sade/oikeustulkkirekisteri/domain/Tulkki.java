@@ -28,9 +28,6 @@ public class Tulkki extends Mutable {
     @Column(name = "henkilo_oid", nullable = false, unique = true, updatable = false)
     private String henkiloOid;
     
-    @Column(name = "julklaisulupa", nullable = false)
-    private boolean julklaisulupa;
-    
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "tulkki", cascade = CascadeType.ALL)
     private Set<Oikeustulkki> oikeustulkit = new HashSet<>(0);
 

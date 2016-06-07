@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
 import java.io.Serializable;
 
 import static org.joda.time.DateTime.now;
@@ -30,12 +31,56 @@ public abstract class Mutable implements Creatable, Modifyable, Serializable {
     @Type(type = "dateTime") @Getter
     @Column(name = "luotu", nullable = false, updatable = false)
     private DateTime luotu = now();
+    
     @Getter @Setter
     @Column(name = "luoja", nullable = false, updatable = false)
     private String luoja;
+
+    @Getter @Setter
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version;
+
     @Getter@Setter
     @Type(type = "dateTime")
+    @Column(name = "muokattu")
     private DateTime muokattu;
+    
     @Getter@Setter
+    @Column(name = "muokkaaja")
     private String muokkaaja;
+
+    @Getter
+    @Column(name = "poistettu", nullable = false)
+    private boolean poistettu;
+    
+    @Getter
+    @Column(name = "poistaja")
+    private String poistaja;
+    
+    @Getter
+    @Column(name = "poistohetki")
+    private DateTime poistohetki;
+    
+    public void markPoistettu(String poistaja) {
+        this.poistohetki = now();
+        this.poistettu = true;
+        this.poistaja = poistaja;
+    }
+
+    protected void setLuotu(DateTime luotu) {
+        this.luotu = luotu;
+    }
+
+    protected void setPoistettu(boolean poistettu) {
+        this.poistettu = poistettu;
+    }
+
+    protected void setPoistaja(String poistaja) {
+        this.poistaja = poistaja;
+    }
+
+    protected void setPoistohetki(DateTime poistohetki) {
+        this.poistohetki = poistohetki;
+    }
 }

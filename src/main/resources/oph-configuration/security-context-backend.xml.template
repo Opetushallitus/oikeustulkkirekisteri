@@ -29,9 +29,6 @@
                     http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
                     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
-    <global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
-    </global-method-security>
-
     <!-- /buildversion.txt?auth forced to require authentication (needed for auth health checking purposes) -->
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex" pattern="/buildversion.txt.auth|/healthcheck.auth|/healthcheck.userinfo">
         <intercept-url pattern="/**" access="isAuthenticated()"/>
@@ -74,6 +71,7 @@
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex">
         <intercept-url pattern="(/.*)?/secured(/.*)?" access="isAuthenticated()"/>
         <intercept-url pattern="/public(/.*)?" access="permitAll"/>
+        <intercept-url pattern="/api/public(/.*)?" access="permitAll"/>
         <intercept-url pattern="/**" access="${spring_security_default_access}"/>
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
         <logout logout-success-url="/user/logout"/> <!-- huom! vain haku tarvitsee tata? -->

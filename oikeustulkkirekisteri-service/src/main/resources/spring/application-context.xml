@@ -34,7 +34,7 @@
     
     <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
     </bean>
-
+    
     <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled" >
         <security:expression-handler ref="expressionHandler"/>
         <!--protect-pointcut expression="execution(* fi.vm.sade.eperusteet.service.*.*(..))" access="ROLE_DENY_ALL"/-->

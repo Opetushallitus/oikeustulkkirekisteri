@@ -3,6 +3,7 @@ package fi.vm.sade.oikeustulkkirekisteri.resource;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
+import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.generic.service.exception.NotAuthorizedException;
 import fi.vm.sade.oikeustulkkirekisteri.service.exception.NotFoundException;
 import org.hibernate.annotations.common.util.StringHelper;
@@ -97,10 +98,22 @@ public class ErrorHandlerAdvice {
         return handleConstraintViolations(req, exception, exception.getConstraintViolations());
     }
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST) // 400 Bad request.
+    @ExceptionHandler(ValidationException.class) @ResponseBody
+    public Map<String,Object> badRequest(HttpServletRequest req, ValidationException exception) {
+        Collection<ViolationDto> violations = Collections2.transform(exception.getViolations(), VIOLATIONS_TRANSFORMER);
+        Collection<String> violationsMsgs = exception.getValidationMessages();
+        Map<String,Object> result = handleException(req, exception, exception.getKey(),
+                StringHelper.join(", ", violationsMsgs.iterator()));
+        result.put("errors", violationsMsgs);
+        result.put("violations", violations);
+        return result;
+    }
+
     @ResponseStatus(value = HttpStatus.BAD_REQUEST) // 400 Bad Request
     @ExceptionHandler(java.lang.IllegalArgumentException.class) @ResponseBody
     public Map<String,Object> badRequest(HttpServletRequest req, java.lang.IllegalArgumentException exception) {
-        return handleException(req, exception, "bad_request_illegal_argument", exception.getMessage());
+        return handleException(req, exception, "bad_request_illegal_argumentex", exception.getMessage());
     }
     
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) // 500 Internal

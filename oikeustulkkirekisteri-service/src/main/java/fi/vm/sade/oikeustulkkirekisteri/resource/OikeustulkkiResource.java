@@ -1,10 +1,14 @@
 package fi.vm.sade.oikeustulkkirekisteri.resource;
 
 import com.wordnik.swagger.annotations.Api;
-import org.joda.time.DateTime;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import fi.vm.sade.generic.common.ValidationException;
+import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiService;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * User: tommiratamaa
@@ -15,9 +19,33 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/oikeustulkki")
 public class OikeustulkkiResource {
-    
-    @RequestMapping(value = "/hello", method = RequestMethod.GET)
-    public DateTime helloWorld() {
-        return DateTime.now();
+    @Autowired
+    private OikeustulkkiService oikeustulkkiService;
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public List<OikeustulkkiVirkailijaListDto> hae(OikeustulkkiVirkailijaHakuDto haku) {
+        return oikeustulkkiService.haeVirkailija(haku);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public OikeustulkkiVirkailijaViewDto getOikeustulkki(@PathVariable Long id) {
+        return oikeustulkkiService.getOikeustulkkiVirkailija(id);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public void deleteOikeustulkki(@PathVariable Long id) {
+        oikeustulkkiService.deleteOikeustulkki(id);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public long createOikeustulkki(@Valid @RequestBody OikeustulkkiCreateDto dto) {
+        return oikeustulkkiService.createOikeustulkki(dto);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "", method = RequestMethod.PUT)
+    public void editOikeustulkki(@Valid @RequestBody OikeustulkkiMuokkausDto dto) throws ValidationException {
+        oikeustulkkiService.editOikeustulkki(dto);
     }
 }
