@@ -15,10 +15,9 @@ import java.util.List;
  */
 @Getter @Setter
 public class OikeustulkkiVirkailijaHakuDto implements Serializable, OikeustulkkiHakuehto {
-    private String hetu;
-    private String nimi;
-    private String oid;
+    private String termi; // hetu|nimi|oid
     private Boolean voimassaNyt;
+    private String maakuntaKoodi;
     private LocalDate voimassaAlku;
     private LocalDate voimassaLoppu;
     private List<KieliRajausDto> kieliparit = new ArrayList<>();

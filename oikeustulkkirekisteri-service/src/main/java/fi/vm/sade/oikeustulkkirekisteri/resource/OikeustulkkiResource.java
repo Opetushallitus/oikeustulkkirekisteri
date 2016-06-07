@@ -20,6 +20,4 @@ public class OikeustulkkiResource {
     public DateTime helloWorld() {
         return DateTime.now();
     }
-    
-    
 }

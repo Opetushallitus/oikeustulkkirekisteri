@@ -2,6 +2,8 @@ package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
 import fi.vm.sade.oikeustulkkirekisteri.domain.Kielipari;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi;
 import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -50,6 +52,25 @@ public class OikeustulkkiHakuSpecBuilder {
                             cb.and(
                                     cb.equal(kp.get("kieleen").get("koodi"), kr.getKielesta()),
                                     cb.equal(kp.get("kielesta").get("koodi"), kr.getKieleen())
+                            )
+                    )).toArray(Predicate[]::new)));
+        };
+    }
+    
+    public static Specification<Oikeustulkki> toimiiMaakunnissa(Collection<String> maakuntaKoodis) {
+        if (maakuntaKoodis == null || maakuntaKoodis.isEmpty()) {
+            return null;
+        }
+        return (root, query, cb) -> {
+            Subquery<Oikeustulkki> s = query.subquery(Oikeustulkki.class);
+            Root<Oikeustulkki> t = s.correlate(root);
+            Path<Sijainti> sijainti = t.join("sijainnit");
+            return cb.exists(s.select(t.get("id")).where(maakuntaKoodis.stream()
+                    .map(maakuntaKoodi -> cb.or(
+                            cb.equal(sijainti.get("tyyppi"), Tyyppi.KOKO_SUOMI),
+                            cb.and(
+                                    cb.equal(sijainti.get("tyyppi"), Tyyppi.MAAKUNTA),
+                                    cb.equal(sijainti.get("koodi"), maakuntaKoodi)
                             )
                     )).toArray(Predicate[]::new)));
         };

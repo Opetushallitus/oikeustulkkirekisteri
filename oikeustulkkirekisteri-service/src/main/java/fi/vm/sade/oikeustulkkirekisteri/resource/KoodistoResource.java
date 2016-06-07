@@ -33,12 +33,7 @@ public class KoodistoResource {
     }
     
     @RequestMapping(value = "/maakunnat", method = RequestMethod.GET)
-    public List<KoodiDto> getKunnat() {
+    public List<KoodiDto> getMaakunnat() {
         return koodistoService.getMaakunnat();
-    }
-    
-    @RequestMapping(value = "/kunnat", method = RequestMethod.GET)
-    public List<KoodiDto> getKunnat(@RequestParam(required = false) Set<String> maakunta) {
-        return koodistoService.getKunnat(ofNullable(maakunta).orElseGet(HashSet::new));
     }
 }

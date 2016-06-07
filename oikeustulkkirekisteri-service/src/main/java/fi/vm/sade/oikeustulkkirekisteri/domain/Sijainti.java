@@ -20,7 +20,7 @@ import java.io.Serializable;
 public class Sijainti implements Serializable {
     public enum Tyyppi {
         MAAKUNTA,
-        KUNTA
+        KOKO_SUOMI
     }
 
     @Id
@@ -35,8 +35,8 @@ public class Sijainti implements Serializable {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "tyyppi", nullable = false)
-    private Tyyppi tyyppi;
+    private Tyyppi tyyppi = Tyyppi.MAAKUNTA;
     
-    @Column(name = "koodi", nullable = false)
+    @Column(name = "koodi")
     private String koodi;
 }

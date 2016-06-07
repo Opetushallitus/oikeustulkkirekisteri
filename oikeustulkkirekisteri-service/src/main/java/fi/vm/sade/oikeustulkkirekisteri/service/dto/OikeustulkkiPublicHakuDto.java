@@ -13,8 +13,9 @@ import java.util.List;
  * Time: 15.15
  */
 @Getter @Setter
-public class OikeustulkkiJulkinenHakuDto implements Serializable, OikeustulkkiHakuehto {
-    private String nimi;
+public class OikeustulkkiPublicHakuDto implements Serializable, OikeustulkkiHakuehto {
+    private String termi; // nimi|hetu|oid
+    private String maakuntaKoodi;
     private List<KieliRajausDto> kieliparit = new ArrayList<>();
     private Integer page;
     private Integer count;
