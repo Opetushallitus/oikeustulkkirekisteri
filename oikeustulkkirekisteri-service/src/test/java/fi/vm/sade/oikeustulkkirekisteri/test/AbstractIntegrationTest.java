@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * Time: 14.52
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/spring/application-context.xml")
+@ContextConfiguration("/test-config.xml")
 @ActiveProfiles("test")
 public abstract class AbstractIntegrationTest {
     @Before

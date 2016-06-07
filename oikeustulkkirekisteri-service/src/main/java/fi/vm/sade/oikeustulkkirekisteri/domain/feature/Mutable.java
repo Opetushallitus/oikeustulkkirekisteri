@@ -59,6 +59,7 @@ public abstract class Mutable implements Creatable, Modifyable, Serializable {
     private String poistaja;
     
     @Getter
+    @Type(type = "dateTime")
     @Column(name = "poistohetki")
     private DateTime poistohetki;
     

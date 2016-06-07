@@ -4,7 +4,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterators;
 import fi.vm.sade.generic.common.ValidationException;
-import fi.vm.sade.generic.service.exception.NotAuthorizedException;
 import fi.vm.sade.oikeustulkkirekisteri.service.exception.NotFoundException;
 import org.hibernate.annotations.common.util.StringHelper;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -68,8 +68,8 @@ public class ErrorHandlerAdvice {
     }
 
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized
-    @ExceptionHandler(NotAuthorizedException.class) @ResponseBody
-    public Map<String,Object> notAuthorized(HttpServletRequest req, NotAuthorizedException exception) {
+    @ExceptionHandler(AccessDeniedException.class) @ResponseBody
+    public Map<String,Object> notAuthorized(HttpServletRequest req, AccessDeniedException exception) {
         return handleException(req, exception, "error_NotAuthorizedException",
                 messageSource.getMessage("error_NotAuthorizedException", new Object[0], getLocale(req)));
     }
