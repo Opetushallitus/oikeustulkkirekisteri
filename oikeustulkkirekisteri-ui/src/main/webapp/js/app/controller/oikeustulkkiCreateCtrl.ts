@@ -26,6 +26,7 @@ class Tulkki{
   kokoSuomi: boolean;
   toimintaAlue: Maakunta[];
   julkaisulupa: boolean;
+  alkuPvm: string;
 
   constructor(){
     this.kieliparit = [];
@@ -41,7 +42,7 @@ class Tulkki{
 
 
 
-angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page, KoodistoService) => {
+angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page, KoodistoService, $filter) => {
   Page.setPage('addOikeustulkki');
 
   $scope.kieliparit = [];
@@ -56,6 +57,8 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page
   });
 
   $scope.tulkki = new Tulkki();
+  //TODO lisätään datepicker
+  $scope.tulkki.alkuPvm = $filter('date')(new Date(), 'd.M.yyyy');
   $scope.regions = [];
 
   KoodistoService.getMaakunnat().then(r => {

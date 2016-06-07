@@ -121,6 +121,17 @@
     </div>
 
     <div class="form-group">
+      <label for="alkuPvm" class="col-sm-2 control-label required">Alkupvm</label>
+      <div class="col-sm-8">
+        <input class="form-control" ng-model="tulkki.alkuPvm" id="alkuPvm" placeholder="Alkupvm" required>
+        <div ng-if="showErrors" ng-messages="tulkkiForm.sahkopostiosoite.$error" role="alert" class="error-msg">
+          <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="email">Virheellinen sähköpostiosoite</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
       <label for="tutkinto" class="col-sm-2 control-label required">Suoritettu tutkinto</label>
       <div class="col-sm-8">
         <label>
