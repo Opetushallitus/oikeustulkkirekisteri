@@ -1,8 +1,8 @@
 import {Kieli, Kielipari} from "../kielet.ts";
 
+angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "Page", "KoodistoService",
+  ($scope, Page, KoodistoService) => {
 
-angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ($scope, Page, KoodistoService) => {
-angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "Page", "KoodistoService", ($scope, Page, KoodistoService) => {
   Page.setPage('searchOikeustulkki');
   $scope.showResults = false;
 
@@ -20,4 +20,20 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
   $scope.search = () => {
     $scope.showResults = true;
   };
+
+  $scope.addKielipari = () => {
+    const kielipari:Kielipari = new Kielipari($scope.kielesta.selected, $scope.kieleen.selected);
+
+    var kielipariAlreadyExists = _.some($scope.kieliparit, (kpari) => {
+      return kielipari.isMatch(kpari);
+    });
+
+    if(kielipariAlreadyExists){
+      console.error("kielipari jo lisätty");
+      return;
+    }
+
+    $scope.kieliparit.push(kielipari);
+  };
+
 }]);

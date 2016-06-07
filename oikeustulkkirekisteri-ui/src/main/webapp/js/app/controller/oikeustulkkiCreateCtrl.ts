@@ -1,3 +1,5 @@
+import {Kieli, Kielipari} from "../kielet.ts";
+
 class Maakunta{
   arvo: string;
   uri: string;
@@ -38,11 +40,10 @@ class Tulkki{
 
 }
 
+angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService",
+  "$filter", ($scope, Page, KoodistoService, $filter) => {
 
-
-angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ($scope, Page, KoodistoService, $filter) => {
   Page.setPage('addOikeustulkki');
-
   $scope.kieliparit = [];
   $scope.showErrors = false;
   $scope.kielesta;
