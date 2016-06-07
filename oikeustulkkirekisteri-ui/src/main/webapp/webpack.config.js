@@ -27,7 +27,10 @@ module.exports = {
         new webpack.NoErrorsPlugin(),
         new ExtractTextPlugin("styles.min.css"),
         new webpack.ProvidePlugin({
-            _: 'lodash'
+            _: 'lodash',
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
         })
     ]
 };

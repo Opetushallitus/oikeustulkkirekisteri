@@ -32,6 +32,7 @@
     "angular-route": "1.5.6",
     "angular-messages": "1.5.6",
     "bootstrap-loader": "1.0.10",
-    "lodash": "4.13.1"
+    "lodash": "4.13.1",
+    "jquery": "2.2.4"
   }
 }
