@@ -21,7 +21,10 @@ authentication-service.url=
 authentication-service.rekisteri.username=
 authentication-service.rekisteri.password=
 
+#Spring security configurations
 host.cas={{host_cas}}
+host.ldap={{host_ldap}}
+
 web.url.cas=https\://${host.cas}/cas
 cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
@@ -29,3 +32,8 @@ cas.group-search-filter=(uniqueMember\={0})
 cas.sendRenew=false
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
+
+ldap.url.with.base=ldap\://${host.ldap}/dc\=opintopolku,dc\=fi
+ldap.manager.userdn={{ldap_manager_userdn}}
+ldap.manager-dn=${ldap.manager.userdn}
+ldap.manager-password={{ldap_manager_password}}
