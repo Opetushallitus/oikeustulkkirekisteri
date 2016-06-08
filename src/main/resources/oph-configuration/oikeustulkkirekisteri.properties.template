@@ -22,9 +22,10 @@ authentication-service.rekisteri.username=
 authentication-service.rekisteri.password=
 
 #Spring security configurations
+server.name={{ansible_hostname}}
+host.virkailija={{host_virkailija}}
 host.cas={{host_cas}}
 host.ldap={{host_ldap}}
-
 web.url.cas=https\://${host.cas}/cas
 cas.group-role-attribute=cn
 cas.group-search-base=ou\=groups
@@ -32,7 +33,8 @@ cas.group-search-filter=(uniqueMember\={0})
 cas.sendRenew=false
 cas.user-search-base=ou\=people
 cas.user-search-filter=(|(mail\={0})(uid\={0}))
-
+cas.service.oikeustulkkirekisteri-service=https://{{ host_oikeustulkkirekisteri | default("${host.virkailija}") }}/oikeustulkkirekisteri-service
+cas.callback.oikeustulkkirekisteri-service=http://${server.name}:8335/oikeustulkkirekisteri-service
 ldap.url.with.base=ldap\://${host.ldap}/dc\=opintopolku,dc\=fi
 ldap.manager.userdn={{ldap_manager_userdn}}
 ldap.manager-dn=${ldap.manager.userdn}
