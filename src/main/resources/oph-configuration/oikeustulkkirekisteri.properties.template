@@ -23,3 +23,9 @@ authentication-service.rekisteri.password=
 
 host.cas={{host_cas}}
 web.url.cas=https\://${host.cas}/cas
+cas.group-role-attribute=cn
+cas.group-search-base=ou\=groups
+cas.group-search-filter=(uniqueMember\={0})
+cas.sendRenew=false
+cas.user-search-base=ou\=people
+cas.user-search-filter=(|(mail\={0})(uid\={0}))
