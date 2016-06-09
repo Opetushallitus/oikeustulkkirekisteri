@@ -103,13 +103,114 @@
         </div>
 
         <div class="btn-container-right">
-          <button type="button" class="btn btn-primary">Muokkaa</button>
+          <a type="button" class="btn btn-primary" href="#/oikeustulkki/33/edit">Muokkaa</a>
           <button type="button" class="btn btn-danger">Poista</button>
         </div>
 
       </div>
     </div>
 
-  </div>
 
+    <div class="row">
+      <div class="col-sm-9 col-md-10 main">
+        <h2 class="sub-header">Historia</h2>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default history-panel" ng-repeat="item in history">
+      <div class="panel-heading" ng-click="showItem(item)">{{item.muokattuPvm}} - {{item.kommentti}}</div>
+      <div class="panel-body" ng-if="item.visible">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Hetu</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">280465-8095</p>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Osoite</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">Yliopistonkatu 58, 33100 Tampere</p>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Sähköpostiosoite</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">erkki.esimerkki@example.com</p>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Puhelinnumero</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">123456789</p>
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Yhteystiedot</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">lorem ipsum...</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Rekisteröinnin alkupvm</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">01.01.2014</p>
+          </div>
+        </div>
+        <div style="clear: both;"></div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Rekisteröinnin loppupvm</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">01.01.2019</p>
+          </div>
+        </div>
+        <div style="clear: both;"></div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Kieliparit</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">Suomi-Venäjä, Venäjä-Suomi</p>
+          </div>
+        </div>
+        <div style="clear: both;"></div>
+
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Lisätietoa</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">lorem ipsum...</p>
+          </div>
+        </div>
+        <div style="clear: both;"></div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Toiminta-alue</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">Pirkanmaa</p>
+          </div>
+        </div>
+        <div style="clear: both;"></div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Julkaistu</label>
+          <div class="col-sm-10">
+            <p class="form-control-static">Kyllä</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
 </div>

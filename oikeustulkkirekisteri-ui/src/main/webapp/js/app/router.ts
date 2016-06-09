@@ -16,6 +16,11 @@ angular.module('registryApp').config(["$routeProvider", ($routeProvider) => {
         controller: 'oikeustulkkiViewCtrl'
       })
 
+      .when('/oikeustulkki/:id/edit', {
+        templateUrl: 'templates/oikeustulkkiEdit.html',
+        controller: 'oikeustulkkiEditCtrl'
+      })
+
       .otherwise({
         redirect: '/search'
       });

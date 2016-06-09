@@ -1,50 +1,10 @@
 import {Kieli, Kielipari} from "../kielet.ts";
+import {Tulkki} from "../tulkki.ts";
 
-class Maakunta{
-  arvo: string;
-  uri: string;
-  nimi: any;
-}
-
-class Tulkki{
-  etunimi: string;
-  sukunimi: string;
-  hetu: string;
-  katuosoite: string;
-  postinumero: number;
-  postitoimipaikka: string;
-  osoiteJulkaisulupa: boolean;
-  sahkopostiosoite: string;
-  sahkopostiJulkaisulupa: boolean;
-  puhelinnumero: string;
-  puhelinnumeroJulkaisulupa: boolean;
-  muuYhteystieto: string;
-  muuYhteystietoJulkaisulupa: boolean;
-  tutkinto: string;
-  kieliparit: Kielipari[];
-  lisatietoa: string;
-  kokoSuomi: boolean;
-  toimintaAlue: Maakunta[];
-  julkaisulupa: boolean;
-  alkuPvm: string;
-
-  constructor(){
-    this.kieliparit = [];
-    this.osoiteJulkaisulupa = true;
-    this.sahkopostiJulkaisulupa = true;
-    this.puhelinnumeroJulkaisulupa = false;
-    this.muuYhteystietoJulkaisulupa = false;
-    this.kokoSuomi = true;
-    this.tutkinto = 'ERIKOISAMMATTITUTKINTO';
-  }
-
-}
-
-angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService",
-  "$filter", ($scope, Page, KoodistoService, $filter) => {
+angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService", "OikeustulkkiService",
+  "$filter", ($scope, Page, KoodistoService, OikeustulkkiService, $filter) => {
 
   Page.setPage('addOikeustulkki');
-  $scope.kieliparit = [];
   $scope.showErrors = false;
   $scope.kielesta;
   $scope.kieleen;
@@ -57,7 +17,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
 
   $scope.tulkki = new Tulkki();
   //TODO lisätään datepicker
-  $scope.tulkki.alkuPvm = $filter('date')(new Date(), 'd.M.yyyy');
+  $scope.tulkki.alkaa = $filter('date')(new Date(), 'd.M.yyyy');
   $scope.regions = [];
 
   KoodistoService.getMaakunnat().then(r => {
@@ -85,6 +45,8 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
   $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.tulkki.kieliparit, kielipari);
 
   $scope.save = () => {
+    OikeustulkkiService.createTulkki($scope.tulkki.getTulkkiPostData());
+
     if (!_.isEmpty($scope.tulkkiForm.$error)) {
       $scope.showErrors = true;
     }

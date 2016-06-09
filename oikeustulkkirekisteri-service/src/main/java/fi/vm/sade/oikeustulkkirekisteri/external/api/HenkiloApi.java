@@ -41,13 +41,13 @@ public interface HenkiloApi {
     Henkilo findByOid(@ApiParam("Haettavan henkilön OID") @PathParam("oid") String oid);
     
     @POST
-    @Produces("text/plain")
+    @Produces("application/json")
     @Consumes(JSON)
     String createHenkilo(HenkiloCreateDto henkilo);
 
     @PUT
     @Path("/{oid}")
-    @Produces("text/plain")
+    @Produces("application/json")
     @Consumes(JSON)
     String updateHenkilo(@PathParam("oid") String oid, Henkilo henkilo);
 }

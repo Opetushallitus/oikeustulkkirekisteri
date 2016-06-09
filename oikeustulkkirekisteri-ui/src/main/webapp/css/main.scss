@@ -22,3 +22,9 @@ body {
 .error-msg{
     color:maroon;
 }
+
+.history-panel{
+    & .panel-heading{
+        cursor: pointer;
+    }
+}

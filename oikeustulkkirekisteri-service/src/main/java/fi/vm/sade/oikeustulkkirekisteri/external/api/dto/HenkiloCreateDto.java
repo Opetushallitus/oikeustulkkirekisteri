@@ -1,5 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api.dto;
 
+import fi.vm.sade.authentication.model.HenkiloTyyppi;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,7 @@ public class HenkiloCreateDto implements Serializable {
     private String hetu;
     private Date syntymaaika;
     private String oidHenkilo;
+    private HenkiloTyyppi henkiloTyyppi;
     private String sukupuoli;
     private KielisyysDto asiointiKieli;
     private KansalaisuusDto kansalaisuus;
