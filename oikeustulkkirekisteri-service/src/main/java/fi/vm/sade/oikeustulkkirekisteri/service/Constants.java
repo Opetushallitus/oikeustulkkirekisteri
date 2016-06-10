@@ -6,6 +6,6 @@ package fi.vm.sade.oikeustulkkirekisteri.service;
  * Time: 18.48
  */
 public interface Constants {
-    String CRUD_PERMISSION = "isAuthenticated() AND hasRole('OIKEUSTULKKIREKISTERI_CRUD')";
+    String CRUD_PERMISSION = "isAuthenticated() and hasRole('OIKEUSTULKKIREKISTERI_CRUD')";
     String PUBLIC = "permitAll()";
 }

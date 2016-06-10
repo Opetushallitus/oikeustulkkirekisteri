@@ -1,9 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
-import fi.vm.sade.authentication.model.Henkilo;
-import fi.vm.sade.authentication.model.Yhteystiedot;
-import fi.vm.sade.authentication.model.YhteystiedotRyhma;
-import fi.vm.sade.authentication.model.YhteystietoTyyppi;
+import fi.vm.sade.authentication.model.*;
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.oikeustulkkirekisteri.domain.*;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
@@ -154,6 +151,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         henkilo.setHetu(dto.getHetu());
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
+        henkilo.setKutsumanimi(firstName(dto.getEtunimet())); // required by henkilöpalvelu
+        henkilo.setHenkiloTyyppi(HenkiloTyyppi.OPPIJA); // although deprecated is required by henkilöpalvelu impl and(others virkalija and palvelu not suitable)
         List<OrganisaatioHenkiloDto> orgHenkilos = new ArrayList<>();
         OrganisaatioHenkiloDto orgHenkilo = new OrganisaatioHenkiloDto();
         orgHenkilo.setOrganisaatioOid(oikeustulkkirekisteriOrganisaatioOid);
@@ -161,6 +160,14 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         orgHenkilos.add(orgHenkilo);
         henkilo.setOrganisaatioHenkilo(orgHenkilos);
         return new Tulkki(henkiloResourceClient.createHenkilo(henkilo));
+    }
+
+    private String firstName(String etunimet) {
+        String[] prts = etunimet.split("\\s+");
+        if (prts.length > 0) {
+            return prts[0];
+        }
+        return etunimet;
     }
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiCreateDto dto) {
@@ -204,7 +211,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         oikeustulkki.setJulkaisulupaPuhelinnumero(dto.isJulkaisulupaPuhelinnumero());
         oikeustulkki.setJulkaisulupaMuuYhteystieto(dto.isJulkaisulupaMuuYhteystieto());
         oikeustulkki.setJulkaisulupaEmail(dto.isJulkaisulupaEmail());
-        oikeustulkki.setMuuYhteystieto(dto.getMuuYhteystieto());
+        oikeustulkki.setMuuYhteystieto(dto.getMuuYhteystieto()); // missing from henkilöpalvelu, thus saved here
         if (dto.isKokoSuomi()) {
             oikeustulkki.getSijainnit().add(new Sijainti(oikeustulkki, KOKO_SUOMI));
         } else {
@@ -305,8 +312,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Getter @AllArgsConstructor
     private static class Haku<HakuType extends OikeustulkkiHakuehto> {
         private final HakuType haku;
-        private final String mostRestrictiveHenkiloCondition;
-        private final Specification<Oikeustulkki> oikeustulkkiSpecification;
+        private final String term;
+        private final Specification<Oikeustulkki> specification;
     }
 
     private <DtoType,HakuType extends OikeustulkkiHakuehto> List<DtoType> doHaku(HenkiloApi api, Haku<HakuType> haku,
@@ -315,18 +322,18 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         Integer count = ofNullable(hakuDto.getCount()).orElse(DEFAULT_COUNT),
                 page = ofNullable(hakuDto.getPage()).orElse(1),
                 index = (page-1)*count;
-        List<Henkilo> henkiloResults = listHenkilosByTermi(api, haku.getMostRestrictiveHenkiloCondition(), count, index)
+        List<Henkilo> henkiloResults = listHenkilosByTermi(api, haku.getTerm(), 0, 0)
                 .getResults().stream().collect(toList());
         Map<String,Henkilo> henkilosByOid = henkiloResults.stream().collect(toMap(Henkilo::getOidHenkilo, h -> h));
-        Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getOikeustulkkiSpecification())
+        Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getSpecification())
                     .and(henkiloOidIn(henkilosByOid.keySet()))).stream()
                 .sorted(comparing(Oikeustulkki::getAlkaa)).collect(groupingBy(ot -> ot.getTulkki().getHenkiloOid(), mapping(ot->ot, toList())));
         return henkiloResults.stream().flatMap(ot -> ofNullable(oikeustulkkis.get(ot.getOidHenkilo()))
                 .map(List::stream).orElseGet(Stream::empty)).map(combiner.apply(henkilosByOid::get)).collect(toList());
     }
 
-    private PaginationObject<Henkilo> listHenkilosByTermi(HenkiloApi api, String termi, Integer count, Integer index) {
-        return api.listHenkilos(termi, null, count, index, singletonList(oikeustulkkirekisteriOrganisaatioOid),
+    private PaginationObject<Henkilo> listHenkilosByTermi(HenkiloApi api, String term, Integer count, Integer index) {
+        return api.listHenkilos(term, null, count, index, singletonList(oikeustulkkirekisteriOrganisaatioOid),
                 null, null, null, false, true, false, false, null, false);
     }
 }

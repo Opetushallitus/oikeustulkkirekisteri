@@ -15,7 +15,10 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Stream;
 
+import static java.util.stream.Stream.concat;
+import static java.util.stream.Stream.of;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -41,15 +44,17 @@ public class OikeustulkkiHakuSpecificationBuilder {
     }
     
     public static Specification<Oikeustulkki> kieliparit(Collection<? extends KieliRajaus> kieliRajaus) {
-        if (kieliRajaus == null || kieliRajaus.isEmpty()) {
+        if (kieliRajaus == null || kieliRajaus.isEmpty()  || (kieliRajaus.size() == 1 && kieliRajaus.iterator().next() == null)) {
             return null;
         }
         return (root, query, cb) -> {
-            Subquery<Oikeustulkki> s = query.subquery(Oikeustulkki.class);
-            Root<Oikeustulkki> t = s.correlate(root);
+            Subquery<Long> s = query.subquery(Long.class);
+            Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
             Path<Kielipari> kp = t.join("kielet");
-            return cb.exists(s.select(t.get("id")).where(kieliRajaus.stream().filter(kr -> kr.getKielesta() != null && kr.getKieleen() != null)
-                    .map(kr -> cb.or(
+            return cb.exists(s.select(t.get("id")).where(
+                    concat(of(cb.equal(t.get("id"), root.get("id"))),
+                    kieliRajaus.stream().filter(kr -> kr.getKielesta() != null && kr.getKieleen() != null)
+                        .map(kr -> cb.or(
                             cb.and(
                                     cb.equal(kp.get("kielesta").get("koodi"), kr.getKielesta()),
                                     cb.equal(kp.get("kieleen").get("koodi"), kr.getKieleen())
@@ -58,36 +63,41 @@ public class OikeustulkkiHakuSpecificationBuilder {
                                     cb.equal(kp.get("kieleen").get("koodi"), kr.getKielesta()),
                                     cb.equal(kp.get("kielesta").get("koodi"), kr.getKieleen())
                             )
-                    )).toArray(Predicate[]::new)));
+                    ))).toArray(Predicate[]::new)));
         };
     }
     
     public static Specification<Oikeustulkki> toimiiMaakunnissa(Collection<String> maakuntaKoodis) {
-        if (maakuntaKoodis == null || maakuntaKoodis.isEmpty()) {
+        if (maakuntaKoodis == null || maakuntaKoodis.isEmpty() || (maakuntaKoodis.size() == 1 && maakuntaKoodis.iterator().next() == null)) {
             return null;
         }
         return (root, query, cb) -> {
-            Subquery<Oikeustulkki> s = query.subquery(Oikeustulkki.class);
-            Root<Oikeustulkki> t = s.correlate(root);
+            Subquery<Long> s = query.subquery(Long.class);
+            Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
             Path<Sijainti> sijainti = t.join("sijainnit");
-            return cb.exists(s.select(t.get("id")).where(maakuntaKoodis.stream()
-                    .map(maakuntaKoodi -> cb.or(
-                            cb.equal(sijainti.get("tyyppi"), Tyyppi.KOKO_SUOMI),
-                            cb.and(
-                                    cb.equal(sijainti.get("tyyppi"), Tyyppi.MAAKUNTA),
-                                    cb.equal(sijainti.get("koodi"), maakuntaKoodi)
-                            )
-                    )).toArray(Predicate[]::new)));
+            return cb.exists(s.select(t.get("id")).where(concat(of(
+                        cb.equal(t.get("id"), root.get("id"))            
+                    ), 
+                    maakuntaKoodis.stream()
+                        .map(maakuntaKoodi -> cb.or(
+                                cb.equal(sijainti.get("tyyppi"), Tyyppi.KOKO_SUOMI),
+                                cb.and(
+                                        cb.equal(sijainti.get("tyyppi"), Tyyppi.MAAKUNTA),
+                                        cb.equal(sijainti.get("koodi"), maakuntaKoodi)
+                                )
+                    ))).toArray(Predicate[]::new)));
         };
     }
     
     public static Specification<Oikeustulkki> latest(Specification<Oikeustulkki> specification) {
         return (root, query, cb) -> {
-            Subquery<Oikeustulkki> s = query.subquery(Oikeustulkki.class);
-            Root<Oikeustulkki> t = s.correlate(root);
+            Subquery<LocalDate> s = query.subquery(LocalDate.class);
+            Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
             return cb.equal(root.get("alkaa"), s.select(cb.greatest((Path)t.get("alkaa")))
-                    .where(cb.equal(t.join("tulkki").get("id"), root.join("tulkki").get("id")),
-                            specification.toPredicate(t, query, cb)));
+                    .where(cb.and(
+                            cb.equal(t.join("tulkki").get("id"), root.join("tulkki").get("id")),
+                            specification.toPredicate(t, query, cb)
+            )));
         };
     }
     

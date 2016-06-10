@@ -113,7 +113,7 @@ public class ErrorHandlerAdvice {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST) // 400 Bad Request
     @ExceptionHandler(java.lang.IllegalArgumentException.class) @ResponseBody
     public Map<String,Object> badRequest(HttpServletRequest req, java.lang.IllegalArgumentException exception) {
-        return handleException(req, exception, "bad_request_illegal_argumentex", exception.getMessage());
+        return handleException(req, exception, "bad_request_illegal_argument", exception.getMessage());
     }
     
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) // 500 Internal
