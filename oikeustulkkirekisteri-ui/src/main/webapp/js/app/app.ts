@@ -17,7 +17,7 @@ angular.module('registryApp').filter('selectFilter', () => {
     }
 
     return _.filter(items, (item) => {
-      return item.nimi.FI.indexOf(input) === 0;
+      return item.nimi.FI.toLowerCase().indexOf(input.toLowerCase()) === 0;
     });
   };
 });
