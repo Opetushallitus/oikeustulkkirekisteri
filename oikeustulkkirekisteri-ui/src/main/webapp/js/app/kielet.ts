@@ -1,28 +1,15 @@
-class Kieli{
+interface Kieli{
   arvo: string;
   nimi: any;
   uri: string;
 }
 
-class Kielipari {
+interface Kielipari {
   kielesta:Kieli;
   kieleen:Kieli;
-
-  isMatch(kielipari:Kielipari){
-    return (this.kieleen === kielipari.kieleen || this.kieleen === kielipari.kielesta) &&
-        (this.kielesta === kielipari.kielesta || this.kielesta === kielipari.kieleen);
-  }
-
-  constructor(kielesta:Kieli, kieleen:Kieli) {
-    if (kielesta === kieleen) {
-      console.error("kielet ovat samat");
-      //TODO virheiden näyttäminen käyttäjälle
-      throw "kielet ovat samat";
-    }
-
-    this.kielesta = kielesta;
-    this.kieleen = kieleen;
-  }
 }
 
-export {Kieli, Kielipari}
+const kielipariMatch = (a:Kielipari,b:Kielipari):boolean =>(a.kieleen === b.kieleen || a.kieleen === b.kielesta) &&
+  (a.kielesta === b.kielesta || a.kielesta === b.kieleen);
+
+export {Kieli, Kielipari, kielipariMatch}

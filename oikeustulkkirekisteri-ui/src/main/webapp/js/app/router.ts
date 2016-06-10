@@ -1,11 +1,6 @@
 angular.module('registryApp').config(["$routeProvider", ($routeProvider) => {
   $routeProvider
 
-      .when('/search', {
-        templateUrl: 'templates/oikeustulkkiSearch.html',
-        controller: 'oikeustulkkiSearchCtrl'
-      })
-
       .when('/addOikeustulkki', {
         templateUrl: 'templates/oikeustulkkiCreate.html',
         controller: 'oikeustulkkiCreateCtrl'
@@ -16,12 +11,13 @@ angular.module('registryApp').config(["$routeProvider", ($routeProvider) => {
         controller: 'oikeustulkkiViewCtrl'
       })
 
-      .when('/oikeustulkki/:id/edit', {
+      .when('/oikeustulkki/:id/:action', {
         templateUrl: 'templates/oikeustulkkiEdit.html',
         controller: 'oikeustulkkiEditCtrl'
       })
 
       .otherwise({
-        redirect: '/search'
+          templateUrl: 'templates/oikeustulkkiSearch.html',
+          controller: 'oikeustulkkiSearchCtrl'
       });
 }]);

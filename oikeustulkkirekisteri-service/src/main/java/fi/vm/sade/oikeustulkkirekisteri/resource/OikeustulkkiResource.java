@@ -45,7 +45,7 @@ public class OikeustulkkiResource {
 
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.PUT)
-    public void editOikeustulkki(@Valid @RequestBody OikeustulkkiMuokkausDto dto) throws ValidationException {
+    public void editOikeustulkki(@Valid @RequestBody OikeustulkkiEditDto dto) throws ValidationException {
         oikeustulkkiService.editOikeustulkki(dto);
     }
 }

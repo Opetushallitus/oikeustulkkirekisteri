@@ -47,46 +47,52 @@ public class OikeustulkkiHakuSpecificationBuilder {
         if (kieliRajaus == null || kieliRajaus.isEmpty()  || (kieliRajaus.size() == 1 && kieliRajaus.iterator().next() == null)) {
             return null;
         }
-        return (root, query, cb) -> {
-            Subquery<Long> s = query.subquery(Long.class);
-            Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
-            Path<Kielipari> kp = t.join("kielet");
-            return cb.exists(s.select(t.get("id")).where(
-                    concat(of(cb.equal(t.get("id"), root.get("id"))),
-                    kieliRajaus.stream().filter(kr -> kr.getKielesta() != null && kr.getKieleen() != null)
-                        .map(kr -> cb.or(
-                            cb.and(
-                                    cb.equal(kp.get("kielesta").get("koodi"), kr.getKielesta()),
-                                    cb.equal(kp.get("kieleen").get("koodi"), kr.getKieleen())
-                            ),
-                            cb.and(
-                                    cb.equal(kp.get("kieleen").get("koodi"), kr.getKielesta()),
-                                    cb.equal(kp.get("kielesta").get("koodi"), kr.getKieleen())
+        return kieliRajaus.stream().filter(kr -> kr.getKielesta() != null && kr.getKieleen() != null)
+            .map(kr -> where((Specification<Oikeustulkki>) (root, query, cb) -> {
+                Subquery<Long> s = query.subquery(Long.class);
+                Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
+                Path<Kielipari> kp = t.join("kielet");
+                return cb.exists(s.select(t.get("id")).where(
+                        cb.and(
+                            cb.equal(t.get("id"), root.get("id")),
+                            cb.or(
+                                cb.and(
+                                        cb.equal(kp.get("kielesta").get("koodi"), kr.getKielesta()),
+                                        cb.equal(kp.get("kieleen").get("koodi"), kr.getKieleen())
+                                ),
+                                cb.and(
+                                        cb.equal(kp.get("kieleen").get("koodi"), kr.getKielesta()),
+                                        cb.equal(kp.get("kielesta").get("koodi"), kr.getKieleen())
+                                )
                             )
-                    ))).toArray(Predicate[]::new)));
-        };
+                        )
+                    )
+                );
+            })).reduce(where(null), Specifications::and);
     }
     
     public static Specification<Oikeustulkki> toimiiMaakunnissa(Collection<String> maakuntaKoodis) {
         if (maakuntaKoodis == null || maakuntaKoodis.isEmpty() || (maakuntaKoodis.size() == 1 && maakuntaKoodis.iterator().next() == null)) {
             return null;
         }
-        return (root, query, cb) -> {
-            Subquery<Long> s = query.subquery(Long.class);
-            Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
-            Path<Sijainti> sijainti = t.join("sijainnit");
-            return cb.exists(s.select(t.get("id")).where(concat(of(
-                        cb.equal(t.get("id"), root.get("id"))            
-                    ), 
-                    maakuntaKoodis.stream()
-                        .map(maakuntaKoodi -> cb.or(
+        return maakuntaKoodis.stream().map(maakuntaKoodi -> where((Specification<Oikeustulkki>) (root, query, cb) -> {
+                Subquery<Long> s = query.subquery(Long.class);
+                Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
+                Path<Sijainti> sijainti = t.join("sijainnit");
+                return cb.exists(s.select(t.get("id")).where(
+                        cb.and(
+                            cb.equal(t.get("id"), root.get("id")),
+                            cb.or(
                                 cb.equal(sijainti.get("tyyppi"), Tyyppi.KOKO_SUOMI),
                                 cb.and(
                                         cb.equal(sijainti.get("tyyppi"), Tyyppi.MAAKUNTA),
                                         cb.equal(sijainti.get("koodi"), maakuntaKoodi)
                                 )
-                    ))).toArray(Predicate[]::new)));
-        };
+                            )
+                        )
+                    )
+                );
+            })).reduce(where(null), Specifications::and);
     }
     
     public static Specification<Oikeustulkki> latest(Specification<Oikeustulkki> specification) {

@@ -1,15 +1,15 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
-import fi.vm.sade.authentication.model.*;
+import fi.vm.sade.authentication.model.HenkiloTyyppi;
+import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.oikeustulkkirekisteri.domain.*;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi;
-import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloCreateDto;
-import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.OrganisaatioHenkiloDto;
-import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.PaginationObject;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.*;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.repository.TullkiRepository;
+import fi.vm.sade.oikeustulkkirekisteri.repository.custom.CustomFlushRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.*;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,6 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.*;
@@ -54,8 +53,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     private static final Integer DEFAULT_COUNT = 20;
     private static final String KOTIOSOITE_TYYPPI = "yhteystietotyyppi1";
     private static final String TYOOSOITE_TYYPPI = "yhteystietotyyppi2";
-    private static final Predicate<YhteystiedotRyhma> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
-    private static final Predicate<YhteystiedotRyhma> YT_RYHMA_FILTER_SET = YT_RYHMA_FILTER_READ.and(r -> !r.isReadOnly());
+    private static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
+    private static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_SET = YT_RYHMA_FILTER_READ.and(r -> !r.isReadOnly());
     
     @Autowired
     private OikeustulkkiRepository oikeustulkkiRepository;
@@ -68,7 +67,10 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     
     @Resource
     private HenkiloApi henkiloResourceReadClient;
-    
+
+    @Autowired
+    private CustomFlushRepository customFlushRepository;
+
     @Value("${oikeustulkkirekisteri.organisaatio.oid}")
     private String oikeustulkkirekisteriOrganisaatioOid;
     
@@ -81,7 +83,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Override
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) {
-        Optional<Henkilo> existingHenkilo = listHenkilosByTermi(henkiloResourceReadClient, 
+        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceReadClient, 
                 dto.getHetu(), 1, 0).getResults().stream().findFirst();
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
@@ -99,13 +101,14 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     
     @Override
     @Transactional
-    public void editOikeustulkki(OikeustulkkiMuokkausDto dto) throws ValidationException {
+    public void editOikeustulkki(OikeustulkkiEditDto dto) throws ValidationException {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuById(dto.getId()));
         if (dto.getPaattyy().isBefore(dto.getAlkaa())) {
             throw new ValidationException("Validation period end before start", "oikeustulkki.paattyy.before.alkaa");
         }
         convert(dto, oikeustulkki);
         oikeustulkki.setPaattyy(dto.getPaattyy());
+        updateHenkilo(oikeustulkki.getTulkki().getHenkiloOid(), dto);
         OikeustulkkiMuokkaus muokkaus = new OikeustulkkiMuokkaus();
         muokkaus.setMuokkaaja(SecurityContextHolder.getContext().getAuthentication().getName());
         muokkaus.setOikeustulkki(oikeustulkki);
@@ -124,24 +127,36 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Transactional(readOnly = true)
     public OikeustulkkiVirkailijaViewDto getOikeustulkkiVirkailija(long id) {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuById(id));
-        Henkilo henkilo = found(henkiloResourceClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
+        OikeustulkkiVirkailijaViewDto dto = produceViewDto(oikeustulkki);
+        dto.setAiemmat(oikeustulkkiRepository.listAiemmatEiPoistetutById(id).stream().map(this::produceViewDto).collect(toList()));
+        dto.setUusinId(oikeustulkkiRepository.getUusinUuudempiEiPoistettuById(oikeustulkki.getId()));
+        return dto;
+    }
+
+    private OikeustulkkiVirkailijaViewDto produceViewDto(Oikeustulkki oikeustulkki) {
+        HenkiloRestDto henkilo = found(henkiloResourceClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
         OikeustulkkiVirkailijaViewDto viewDto = convert(oikeustulkki, henkilo, new OikeustulkkiVirkailijaViewDto());
         viewDto.setPaattyy(oikeustulkki.getPaattyy());
-        Map<String,Henkilo> fetched = new HashMap<>();
-        Function<String,Henkilo> getHenkilos = or(fetched::get, oid -> {
-            Henkilo h = henkiloResourceReadClient.findByOid(oid);
-            fetched.put(oid, h);
-            return h;
+        viewDto.setId(oikeustulkki.getId());
+        Map<String,HenkiloRestDto> fetched = new HashMap<>();
+        Function<String,HenkiloRestDto> getHenkilos = or(fetched::get, oid -> {
+            try {
+                HenkiloRestDto h = henkiloResourceReadClient.findByOid(oid);
+                fetched.put(oid, h);
+                return h;
+            } catch(Exception e) {
+                return null; // not found, e.g. not a valid OID, removed etc.
+            }
         });
         viewDto.getMuokkaushistoria().addAll(oikeustulkki.getMuokkaukset()
                 .stream().sorted(comparing(OikeustulkkiMuokkaus::getMuokattu))
                 .map(m -> {
-                    Henkilo muokkaaja = getHenkilos.apply(m.getMuokkaaja());
+                    HenkiloRestDto muokkaaja = getHenkilos.apply(m.getMuokkaaja());
                     return new OikeustulkkiMuokkausHistoriaDto(
                             m.getMuokattu(),
                             m.getMuokkaaja(),
                             m.getMuokkausviesti(),
-                            muokkaaja.getEtunimet() + " " + muokkaaja.getSukunimi()
+                            muokkaaja !=null ? muokkaaja.getEtunimet() + " " + muokkaaja.getSukunimi() : m.getMuokkaaja()
                     );
                 }).collect(toList()));
         return viewDto;
@@ -153,7 +168,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
         henkilo.setKutsumanimi(firstName(dto.getEtunimet())); // required by henkilöpalvelu
-        henkilo.setHenkiloTyyppi(HenkiloTyyppi.OPPIJA); // although deprecated is required by henkilöpalvelu impl and(others virkalija and palvelu not suitable)
+        henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA); // although deprecated is required by henkilöpalvelu impl, 
+        // virkalija so that can be serached and edited through henkilopalvelu
         List<OrganisaatioHenkiloDto> orgHenkilos = new ArrayList<>();
         OrganisaatioHenkiloDto orgHenkilo = new OrganisaatioHenkiloDto();
         orgHenkilo.setOrganisaatioOid(oikeustulkkirekisteriOrganisaatioOid);
@@ -171,18 +187,20 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         return etunimet;
     }
 
-    private void updateHenkilo(String henkiloOid, OikeustulkkiCreateDto dto) {
-        Henkilo henkilo = henkiloResourceReadClient.findByOid(henkiloOid);
+    private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
+        HenkiloRestDto henkilo = henkiloResourceReadClient.findByOid(henkiloOid);
         updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
+        updateYhteystieto(henkilo, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
         updateYhteystieto(henkilo, YHTEYSTIETO_POSTINUMERO, dto.getOsoite().getPostinumero());
         updateYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI, dto.getEmail());
         updateYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO, dto.getPuhelinnumero());
+        updateYhteystieto(henkilo, YHTEYSTIETO_PUHELINNUMERO, dto.getPuhelinnumero());
         henkiloResourceClient.updateHenkilo(henkiloOid, henkilo);
     }
 
-    private void updateYhteystieto(Henkilo henkilo, YhteystietoTyyppi tyyppi, String arvo) {
-        Optional<Yhteystiedot> yhteystiedot = henkilo.getYhteystiedot().stream().filter(YT_RYHMA_FILTER_SET)
+    private void updateYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi, String arvo) {
+        Optional<YhteystiedotDto> yhteystiedot = henkilo.getYhteystiedotRyhma().stream().filter(YT_RYHMA_FILTER_SET)
                 .flatMap(r -> r.getYhteystiedot().stream()).filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
                 .findFirst();
         if (yhteystiedot.isPresent()) {
@@ -192,13 +210,14 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
                 // not writable, skip
                 return;
             }
-            Optional<YhteystiedotRyhma> ryhma = henkilo.getYhteystiedot().stream().filter(YT_RYHMA_FILTER_SET).findFirst();
+            Optional<YhteystiedotRyhmaDto> ryhma = henkilo.getYhteystiedotRyhma().stream().filter(YT_RYHMA_FILTER_SET).findFirst();
             if (!ryhma.isPresent()) {
-                YhteystiedotRyhma r = new YhteystiedotRyhma();
+                YhteystiedotRyhmaDto r = new YhteystiedotRyhmaDto();
                 r.setRyhmaKuvaus(TYOOSOITE_TYYPPI);
                 ryhma = of(r);
+                henkilo.getYhteystiedotRyhma().add(r);
             }
-            Yhteystiedot yt = new Yhteystiedot();
+            YhteystiedotDto yt = new YhteystiedotDto();
             yt.setYhteystietoTyyppi(tyyppi);
             yt.setYhteystietoArvo(arvo);
             ryhma.get().getYhteystiedot().add(yt);
@@ -214,6 +233,9 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         oikeustulkki.setJulkaisulupaEmail(dto.isJulkaisulupaEmail());
         oikeustulkki.setJulkaisulupa(dto.isJulkaisulupa());
         oikeustulkki.setMuuYhteystieto(dto.getMuuYhteystieto()); // missing from henkilöpalvelu, thus saved here
+        oikeustulkki.getSijainnit().clear();
+        oikeustulkki.getKielet().clear();
+        customFlushRepository.flush();
         if (dto.isKokoSuomi()) {
             oikeustulkki.getSijainnit().add(new Sijainti(oikeustulkki, KOKO_SUOMI));
         } else {
@@ -225,7 +247,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         return oikeustulkki;
     }
 
-    private<T extends OikeustulkkiBaseDto> T convert(Oikeustulkki from, Henkilo henkilo, T to) {
+    private<T extends OikeustulkkiBaseDto> T convert(Oikeustulkki from, HenkiloRestDto henkilo, T to) {
         to.setAlkaa(from.getAlkaa());
         to.setTutkintoTyyppi(from.getTutkintoTyyppi());
         to.setLisatiedot(from.getLisatiedot());
@@ -240,9 +262,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         to.setPuhelinnumero(findYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
                 .orElseGet(() -> findYhteystieto(henkilo, YHTEYSTIETO_PUHELINNUMERO).orElse(null)));
         to.setMuuYhteystieto(from.getMuuYhteystieto());
-        to.setKokoSuomi(from.getSijainnit().stream().filter(s -> s.getTyyppi() == KOKO_SUOMI).findAny().isPresent());
-        to.setMaakunnat(from.getSijainnit().stream().filter(s -> s.getTyyppi() == MAAKUNTA).map(Sijainti::getKoodi)
-                .sorted().collect(toList()));
+        to.setKokoSuomi(isKokoSuomi(from.getSijainnit().stream()));
+        to.setMaakunnat(maakuntaKoodis(from.getSijainnit().stream()));
         OsoiteEditDto osoite = new OsoiteEditDto();
         osoite.setKatuosoite(findYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE).orElse(null));
         osoite.setPostinumero(findYhteystieto(henkilo, YHTEYSTIETO_POSTINUMERO).orElse(null));
@@ -252,10 +273,10 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         return to;
     }
 
-    private Optional<String> findYhteystieto(Henkilo henkilo, YhteystietoTyyppi tyyppi) {
-        return henkilo.getYhteystiedot().stream().filter(YT_RYHMA_FILTER_READ).flatMap(yt -> yt.getYhteystiedot().stream())
+    private Optional<String> findYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
+        return henkilo.getYhteystiedotRyhma().stream().filter(YT_RYHMA_FILTER_READ).flatMap(yt -> yt.getYhteystiedot().stream())
             .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
-            .map(Yhteystiedot::getYhteystietoArvo).findFirst();
+            .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
     }
 
     @Override
@@ -275,9 +296,9 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         return where(latest(where)).and(where);
     }
     
-    private Function<Oikeustulkki, OikeustulkkiVirkailijaListDto> combineHenkiloVirkailija(Function<String, Henkilo> h) {
+    private Function<Oikeustulkki, OikeustulkkiVirkailijaListDto> combineHenkiloVirkailija(Function<String, HenkiloRestDto> h) {
         return ot -> {
-            Henkilo henkilo = h.apply(ot.getTulkki().getHenkiloOid());
+            HenkiloRestDto henkilo = h.apply(ot.getTulkki().getHenkiloOid());
             OikeustulkkiVirkailijaListDto dto = new OikeustulkkiVirkailijaListDto();
             dto.setId(ot.getId());
             dto.setAlkaa(ot.getAlkaa());
@@ -287,6 +308,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
             dto.setEtunimi(henkilo.getEtunimet());
             dto.setSukunimi(henkilo.getSukunimi());
             dto.setKieliParit(convert(ot.getKielet().stream()));
+            dto.setKokoSuomi(isKokoSuomi(ot.getSijainnit().stream()));
+            dto.setMaakunnat(maakuntaKoodis(ot.getSijainnit().stream()));
             return dto;
         };
     }
@@ -298,7 +321,33 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
                 new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
                 this::combineHenkilo);
     }
-    
+
+    @Override
+    @Transactional(readOnly = true)
+    public OikeustulkkiPublicViewDto getJulkinen(long id) {
+        Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuJulkinenById(id));
+        HenkiloRestDto henkilo = found(henkiloResourceReadClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
+        OikeustulkkiPublicViewDto viewDto = new OikeustulkkiPublicViewDto();
+        viewDto.setId(oikeustulkki.getId());
+        viewDto.setEtunimet(henkilo.getEtunimet());
+        viewDto.setSukunimi(henkilo.getSukunimi());
+        viewDto.setPaattyy(oikeustulkki.getPaattyy());
+        viewDto.setKieliParit(convert(oikeustulkki.getKielet().stream()));
+        viewDto.setKokoSuomi(isKokoSuomi(oikeustulkki.getSijainnit().stream()));
+        viewDto.setMaakuntaKoodis(maakuntaKoodis(oikeustulkki.getSijainnit().stream()));
+        if (oikeustulkki.isJulkaisulupaEmail()) {
+            viewDto.setEmail(findYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
+        }
+        if (oikeustulkki.isJulkaisulupaPuhelinnumero()) {
+            viewDto.setPuhelinnumero(findYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
+                    .orElseGet(() -> findYhteystieto(henkilo, YHTEYSTIETO_PUHELINNUMERO).orElse(null)));
+        }
+        if (oikeustulkki.isJulkaisulupaMuuYhteystieto()) {
+            viewDto.setMuuYhteystieto(oikeustulkki.getMuuYhteystieto());
+        }
+        return viewDto;
+    }
+
     private static Specifications<Oikeustulkki> spec(OikeustulkkiPublicHakuDto dto) {
         Specifications<Oikeustulkki> where = eiPoistettu.and(voimassaoloRajausLoppu(now()))
                 .and(julkaisulupa()).and(kieliparit(dto.getKieliparit()))
@@ -306,18 +355,30 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         return where(latest(where)).and(where);
     }
 
-    private Function<Oikeustulkki, OikeustulkkiPublicListDto> combineHenkilo(Function<String, Henkilo> h) {
+    private Function<Oikeustulkki, OikeustulkkiPublicListDto> combineHenkilo(Function<String, HenkiloRestDto> h) {
         return ot -> {
-            Henkilo henkilo = h.apply(ot.getTulkki().getHenkiloOid());
+            HenkiloRestDto henkilo = h.apply(ot.getTulkki().getHenkiloOid());
             OikeustulkkiPublicListDto dto = new OikeustulkkiPublicListDto();
+            dto.setId(ot.getId());
             dto.setPaattyy(ot.getPaattyy());
-            dto.setEtunimi(henkilo.getEtunimet());
+            dto.setEtunimet(henkilo.getEtunimet());
             dto.setSukunimi(henkilo.getSukunimi());
             dto.setKieliParit(convert(ot.getKielet().stream()));
+            dto.setKokoSuomi(isKokoSuomi(ot.getSijainnit().stream()));
+            dto.setMaakunnat(maakuntaKoodis(ot.getSijainnit().stream()));
             return dto;
         };
     }
-    
+
+    private boolean isKokoSuomi(Stream<Sijainti> sijainnit) {
+        return sijainnit.filter(s -> s.getTyyppi() == KOKO_SUOMI).findAny().isPresent();
+    }
+
+    private List<String> maakuntaKoodis(Stream<Sijainti> sijainnit) {
+        return sijainnit.filter(s -> s.getTyyppi() == MAAKUNTA).map(Sijainti::getKoodi)
+                .sorted().collect(toList());
+    }
+
     private List<KieliPariDto> convert(Stream<Kielipari> from) {
         return from.map(kp -> new KieliPariDto(kp.getKielesta().getKoodi(), kp.getKieleen().getKoodi()))
                 .sorted(comparing(KieliPariDto::getKielesta).thenComparing(KieliPariDto::getKieleen))
@@ -332,14 +393,14 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     }
 
     private <DtoType,HakuType extends OikeustulkkiHakuehto> List<DtoType> doHaku(HenkiloApi api, Haku<HakuType> haku,
-                             Function<Function<String,Henkilo>, Function<Oikeustulkki, DtoType>> combiner) {
+                             Function<Function<String,HenkiloRestDto>, Function<Oikeustulkki, DtoType>> combiner) {
         HakuType hakuDto = haku.getHaku();
         Integer count = ofNullable(hakuDto.getCount()).orElse(DEFAULT_COUNT),
                 page = ofNullable(hakuDto.getPage()).orElse(1),
                 index = (page-1)*count;
-        List<Henkilo> henkiloResults = listHenkilosByTermi(api, haku.getTerm(), 0, 0)
+        List<HenkiloRestDto> henkiloResults = listHenkilosByTermi(api, haku.getTerm(), 0, 0)
                 .getResults().stream().collect(toList());
-        Map<String,Henkilo> henkilosByOid = henkiloResults.stream().collect(toMap(Henkilo::getOidHenkilo, h -> h));
+        Map<String,HenkiloRestDto> henkilosByOid = henkiloResults.stream().collect(toMap(HenkiloRestDto::getOidHenkilo, h -> h));
         Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getSpecification())
                     .and(henkiloOidIn(henkilosByOid.keySet()))).stream()
                 .sorted(comparing(Oikeustulkki::getAlkaa)).collect(groupingBy(ot -> ot.getTulkki().getHenkiloOid(), mapping(ot->ot, toList())));
@@ -347,7 +408,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
                 .map(List::stream).orElseGet(Stream::empty)).map(combiner.apply(henkilosByOid::get)).collect(toList());
     }
 
-    private PaginationObject<Henkilo> listHenkilosByTermi(HenkiloApi api, String term, Integer count, Integer index) {
+    private PaginationObject<HenkiloRestDto> listHenkilosByTermi(HenkiloApi api, String term, Integer count, Integer index) {
         return api.listHenkilos(term, null, count, index, singletonList(oikeustulkkirekisteriOrganisaatioOid),
                 null, null, null, false, true, false, false, null, false);
     }

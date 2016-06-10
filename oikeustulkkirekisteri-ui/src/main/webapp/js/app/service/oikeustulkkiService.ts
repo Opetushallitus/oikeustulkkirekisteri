@@ -29,12 +29,17 @@ angular.module('registryApp').service('OikeustulkkiService', ['$http', ($http) =
   const removeTulkki = (id:number) => {
     return $http.delete(root + id);
   };
+  
+  const updateTulkki = (tulkki) => {
+    return $http.put(root, tulkki);
+  };
 
   return {
     getTulkit: getTulkit,
     getTulkki: getTulkki,
     removeTulkki: removeTulkki,
-    createTulkki: createTulkki
+    createTulkki: createTulkki,
+    updateTulkki: updateTulkki
   };
 
 }]);

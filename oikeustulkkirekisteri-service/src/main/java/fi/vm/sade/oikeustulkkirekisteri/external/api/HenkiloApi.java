@@ -1,8 +1,8 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
 import com.wordnik.swagger.annotations.ApiParam;
-import fi.vm.sade.authentication.model.Henkilo;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloCreateDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.PaginationObject;
 
 import javax.ws.rs.*;
@@ -19,7 +19,7 @@ import static fi.vm.sade.oikeustulkkirekisteri.external.api.Constants.JSON;
 public interface HenkiloApi {
     @GET
     @Produces(JSON)
-    PaginationObject<Henkilo> listHenkilos(
+    PaginationObject<HenkiloRestDto> listHenkilos(
             @ApiParam("Hakuparametri, henkilötunnus, nimi tai henkilö-oid") @QueryParam("q") String queryParam,
             @ApiParam("Henkilötyypin määre") @QueryParam("ht") String henkiloTyyppi,
             @ApiParam("Haun määrärajoite, arvo 0 tarkoittaa hae kaikki") @QueryParam("count") Integer count,
@@ -38,7 +38,7 @@ public interface HenkiloApi {
     @GET
     @Produces(JSON)
     @Path("/{oid}")
-    Henkilo findByOid(@ApiParam("Haettavan henkilön OID") @PathParam("oid") String oid);
+    HenkiloRestDto findByOid(@ApiParam("Haettavan henkilön OID") @PathParam("oid") String oid);
     
     @POST
     @Produces("application/json")
@@ -49,5 +49,5 @@ public interface HenkiloApi {
     @Path("/{oid}")
     @Produces("application/json")
     @Consumes(JSON)
-    String updateHenkilo(@PathParam("oid") String oid, Henkilo henkilo);
+    String updateHenkilo(@PathParam("oid") String oid, HenkiloRestDto henkilo);
 }

@@ -10,19 +10,19 @@ import java.util.List;
 
 /**
  * User: tommiratamaa
- * Date: 2.6.2016
- * Time: 13.01
+ * Date: 10.6.2016
+ * Time: 17.03
  */
 @Getter @Setter
-public class OikeustulkkiVirkailijaListDto implements Serializable {
+public class OikeustulkkiPublicViewDto implements Serializable {
     private Long id;
-    private String henkiloOid;
-    private String hetu;
-    private String etunimi;
+    private String etunimet;
     private String sukunimi;
-    private LocalDate alkaa;
+    private String email;
+    private String puhelinnumero;
+    private String muuYhteystieto;
     private LocalDate paattyy;
     private boolean kokoSuomi;
-    private List<String> maakunnat = new ArrayList<>();
+    private List<String> maakuntaKoodis = new ArrayList<>();
     private List<KieliPariDto> kieliParit = new ArrayList<>();
 }

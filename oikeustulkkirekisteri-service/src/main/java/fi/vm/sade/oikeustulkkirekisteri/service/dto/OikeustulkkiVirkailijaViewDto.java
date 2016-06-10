@@ -15,6 +15,9 @@ import java.util.List;
  */
 @Getter @Setter
 public class OikeustulkkiVirkailijaViewDto extends OikeustulkkiBaseDto implements Serializable {
+    private Long id;
     private LocalDate paattyy;
     private List<OikeustulkkiMuokkausHistoriaDto> muokkaushistoria = new ArrayList<>();
+    private List<OikeustulkkiVirkailijaViewDto> aiemmat = new ArrayList<>();
+    private Long uusinId;
 }

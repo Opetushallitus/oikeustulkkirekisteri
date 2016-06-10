@@ -11,7 +11,6 @@ import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -26,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 @SuppressWarnings("TransactionalAnnotations")
 public class KoodistoServiceImpl implements KoodistoService {
-    private static final String EI_TIEDOSSA_KUNTA = "999";
+    private static final String EI_TIEDOSSA_MAAKUNTA = "99";
     private static final Function<KoodistoKoodiDto, KoodiDto> CONVERT_DTO = k -> new KoodiDto(k.getKoodiArvo(), k.getKoodiUri(), k.getNimi());
     private static final Comparator<Map<String,String>> NIMI_COMPARATOR = comparing((Map<String,String> m) -> m.get("FI"), nullsLast(naturalOrder()))
                 .thenComparing(m -> m.get("SV"), nullsLast(naturalOrder()));
@@ -43,11 +42,11 @@ public class KoodistoServiceImpl implements KoodistoService {
     @Override
     @Cacheable("maakunnat")
     public List<KoodiDto> getMaakunnat() {
-        return convertedAndSorted(koodistoResourceClient.listKoodis("maakunta").stream()).collect(toList());
+        return convertedAndSorted(koodistoResourceClient.listKoodis("maakunta").stream()
+                .filter(k -> !EI_TIEDOSSA_MAAKUNTA.equals(k.getKoodiArvo()))).collect(toList());
     }
     
     private Stream<KoodiDto> convertedAndSorted(Stream<KoodistoKoodiDto> from) {
-        return from.map(CONVERT_DTO).sorted(comparing(KoodiDto::getNimi, NIMI_COMPARATOR))
-                .filter(k -> !EI_TIEDOSSA_KUNTA.equals(k.getArvo()));
+        return from.map(CONVERT_DTO).sorted(comparing(KoodiDto::getNimi, NIMI_COMPARATOR));
     }
 }

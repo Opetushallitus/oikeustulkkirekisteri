@@ -63,75 +63,68 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="postitoimipaikka" class="col-sm-2 control-label required">Postitoimipaikka</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.osoite.postitoimipaikka" type="text" class="form-control" id="postitoimipaikka"
-               name="postitoimipaikka" placeholder="Postitoimipaikka" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.postitoimipaikka.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-          <div ng-message="custom">{{tulkkiForm.postitoimipaikka.$customError}}</div>
-        </div>
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="tulkki.osoiteJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
+      <div class="form-group">
+          <label for="postitoimipaikka" class="col-sm-2 control-label required">Postitoimipaikka</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.osoite.postitoimipaikka" type="text" class="form-control" id="postitoimipaikka"
+                     name="postitoimipaikka" placeholder="Postitoimipaikka" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.postitoimipaikka.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.postitoimipaikka.$customError}}</div>
+              </div>
+          </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="email" class="col-sm-2 control-label required">Sähköpostiosoite</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.email" class="form-control" id="email" name="email"
-               placeholder="Sähköpostiosoite" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.email.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-          <div ng-message="email">Virheellinen sähköpostiosoite</div>
-          <div ng-message="custom">{{tulkkiForm.email.$customError}}</div>
-        </div>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="tulkki.sahkopostiJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
+      <div class="form-group">
+          <label for="email" class="col-sm-2 control-label required">Sähköpostiosoite</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.email" class="form-control" id="email" name="email"
+                     placeholder="Sähköpostiosoite" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.email.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="email">Virheellinen sähköpostiosoite</div>
+                  <div ng-message="custom">{{tulkkiForm.email.$customError}}</div>
+              </div>
+              <div class="checkbox">
+                  <label>
+                      <input type="checkbox" ng-model="tulkki.julkaisulupaEmail">
+                      Julkaistu
+                  </label>
+              </div>
+          </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
-        <div ng-if="showErrors" ng-messages="tulkkiForm.puhelinnumero.$error" role="alert" class="error-msg">
-          <div ng-message="custom">{{tulkkiForm.puhelinnumero.$customError}}</div>
-        </div>
-        <div class="checkbox" ng-if="tulkki.puhelinnumero">
-          <label>
-            <input type="checkbox" ng-model="tulkki.puhelinnumeroJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
+      <div class="form-group">
+          <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
+              <div ng-if="showErrors" ng-messages="tulkkiForm.puhelinnumero.$error" role="alert" class="error-msg">
+                  <div ng-message="custom">{{tulkkiForm.puhelinnumero.$customError}}</div>
+              </div>
+              <div class="checkbox" ng-if="tulkki.puhelinnumero">
+                  <label>
+                      <input type="checkbox" ng-model="tulkki.julkaisulupaPuhelinnumero">
+                      Julkaistu
+                  </label>
+              </div>
+          </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
-        <div ng-if="showErrors" ng-messages="tulkkiForm.muuYhteystieto.$error" role="alert" class="error-msg">
-          <div ng-message="custom">{{tulkkiForm.muuYhteystieto.$customError}}</div>
-        </div>
-        <div class="checkbox" ng-if="tulkki.muuYhteystieto">
-          <label>
-            <input type="checkbox" ng-model="tulkki.muuYhteystietoJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
+      <div class="form-group">
+          <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
+              <div ng-if="showErrors" ng-messages="tulkkiForm.muuYhteystieto.$error" role="alert" class="error-msg">
+                  <div ng-message="custom">{{tulkkiForm.muuYhteystieto.$customError}}</div>
+              </div>
+              <div class="checkbox" ng-if="tulkki.muuYhteystieto">
+                  <label>
+                      <input type="checkbox" ng-model="tulkki.julkaisulupaMuuYhteystieto">
+                      Julkaistu
+                  </label>
+              </div>
+          </div>
       </div>
-    </div>
 
     <div class="form-group">
       <label for="alkaa" class="col-sm-2 control-label required">Alku pvm</label>
@@ -153,7 +146,7 @@
         </label>
         <br/>
         <label>
-          <input ng-model="tulkki.tutkinto" type="radio" name="tutkinto" value="MUU_KORKEAKOULUTUTKINTO">Korkeakoulututkinto<br>
+          <input ng-model="tulkki.tutkintoTyyppi" type="radio" name="tutkinto" value="MUU_KORKEAKOULUTUTKINTO">Korkeakoulututkinto<br>
         </label>
       </div>
     </div>
@@ -251,6 +244,7 @@
       <div class="col-sm-offset-2 col-sm-8">
         <button class="btn btn-primary" ng-click="save()">Tallenna</button>
         <button class="btn btn-default">Peruuta</button>
+          <a type="button" class="btn btn-default" href="#/">Peruuta</a>
       </div>
     </div>
 

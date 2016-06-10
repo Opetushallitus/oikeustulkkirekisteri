@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
  * Time: 18.41
  */
 @Getter @Setter
-public class OikeustulkkiMuokkausDto extends OikeustulkkiBaseDto {
+public class OikeustulkkiEditDto extends OikeustulkkiBaseDto {
     @NotNull 
     private Long id;
     @NotNull

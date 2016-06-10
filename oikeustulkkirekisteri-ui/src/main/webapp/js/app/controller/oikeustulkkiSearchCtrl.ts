@@ -1,4 +1,4 @@
-import {Kieli, Kielipari} from "../kielet.ts";
+import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 
 angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "Page", "KoodistoService",
   "OikeustulkkiService", ($scope, Page, KoodistoService, OikeustulkkiService) => {
@@ -13,11 +13,17 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
     $scope.termi = '';
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
-
+    
     KoodistoService.getKielet().then(r => {
       $scope.kielet = r.data;
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
       $scope.kieleen = {selected: $scope.kielet[1]};
+    });
+    $scope.maakunnat = [];
+    $scope.maakunnatByArvo = {};
+    KoodistoService.getMaakunnat().then(r => {
+      $scope.maakunnat = r.data;
+      r.data.map(k => $scope.maakunnatByArvo[k.arvo] = k);
     });
 
     $scope.search = () => {
@@ -30,11 +36,18 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
       return _.find($scope.kielet, {'arvo': arvo}).nimi.FI;
     };
 
+    $scope.maakunta = (koodiArvo:string) => {
+      if ($scope.maakunnatByArvo[koodiArvo]) {
+        return $scope.maakunnatByArvo[koodiArvo].nimi['FI'] || $scope.maakunnat[koodiArvo].nimi['SV'];
+      }
+      return '';
+    };
+
     $scope.addKielipari = () => {
-      const kielipari:Kielipari = new Kielipari($scope.kielesta.selected, $scope.kieleen.selected);
+      const kielipari:Kielipari = {kielesta: $scope.kielesta.selected, kieleen: $scope.kieleen.selected};
 
       var kielipariAlreadyExists = _.some($scope.kieliparit, (kpari) => {
-        return kielipari.isMatch(kpari);
+        return kielipariMatch(kielipari, kpari);
       });
 
       if (kielipariAlreadyExists) {

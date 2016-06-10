@@ -19,7 +19,7 @@ public interface OikeustulkkiService {
     long createOikeustulkki(OikeustulkkiCreateDto dto);
 
     @PreAuthorize(CRUD_PERMISSION)
-    void editOikeustulkki(OikeustulkkiMuokkausDto dto) throws ValidationException;
+    void editOikeustulkki(OikeustulkkiEditDto dto) throws ValidationException;
 
     @PreAuthorize(CRUD_PERMISSION)
     void deleteOikeustulkki(long id);
@@ -32,4 +32,7 @@ public interface OikeustulkkiService {
 
     @PreAuthorize(PUBLIC)
     List<OikeustulkkiPublicListDto> haeJulkinen(OikeustulkkiPublicHakuDto hakuDto);
+    
+    @PreAuthorize(PUBLIC)
+    OikeustulkkiPublicViewDto getJulkinen(long id);
 }

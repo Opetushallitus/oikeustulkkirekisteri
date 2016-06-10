@@ -1,243 +1,276 @@
 <div class="container">
 
-  <h1>Muokkaa tulkkia</h1>
+  <h1 ng-if="action == 'edit'">Muokkaa oikeustulkkia</h1>
+  <h1 ng-if="action == 'create'">Lisää oikeustulkille uusi hakemus</h1>
 
   <form class="form-horizontal" name="tulkkiForm" novalidate>
 
-    <div class="form-group">
-      <label for="etunimi" class="col-sm-2 control-label required">Etunimi</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.etunimet" name="etunimi" type="text" class="form-control" id="etunimi"
-               placeholder="Etunimi" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.etunimi.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
+      <div class="form-group">
+          <label for="etunimet" class="col-sm-2 control-label required">Etunimet</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.etunimet" name="etunimet" type="text" class="form-control" id="etunimet"
+                     placeholder="Etunimet" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.etunimet.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.etunimet.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="sukunimi" class="col-sm-2 control-label required">Sukunimi</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.sukunimi" name="sukunimi" type="text" class="form-control" id="sukunimi"
+                     placeholder="Sukunimi" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.sukunimi.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.sukunimi.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="hetu" class="col-sm-2 control-label required">Hetu</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu" placeholder="Hetu" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.hetu.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.hetu.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="katuosoite" class="col-sm-2 control-label required">Katuosoite</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.osoite.katuosoite" type="text" class="form-control" id="katuosoite"
+                     name="katuosoite" placeholder="Katuosoite" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.katuosoite.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.katuosoite.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="postinumero" class="col-sm-2 control-label required">Postinumero</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.osoite.postinumero" type="text" class="form-control" id="postinumero"
+                     name="postinumero" placeholder="Postinumero" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.postinumero.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.postinumero.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="postitoimipaikka" class="col-sm-2 control-label required">Postitoimipaikka</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.osoite.postitoimipaikka" type="text" class="form-control" id="postitoimipaikka"
+                     name="postitoimipaikka" placeholder="Postitoimipaikka" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.postitoimipaikka.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.postitoimipaikka.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="email" class="col-sm-2 control-label required">Sähköpostiosoite</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.email" class="form-control" id="email" name="email"
+                     placeholder="Sähköpostiosoite" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.email.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="email">Virheellinen sähköpostiosoite</div>
+                  <div ng-message="custom">{{tulkkiForm.email.$customError}}</div>
+              </div>
+              <div class="checkbox">
+                  <label>
+                      <input type="checkbox" ng-model="tulkki.julkaisulupaEmail">
+                      Julkaistu
+                  </label>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
+              <div ng-if="showErrors" ng-messages="tulkkiForm.puhelinnumero.$error" role="alert" class="error-msg">
+                  <div ng-message="custom">{{tulkkiForm.puhelinnumero.$customError}}</div>
+              </div>
+              <div class="checkbox" ng-if="tulkki.puhelinnumero">
+                  <label>
+                      <input type="checkbox" ng-model="tulkki.julkaisulupaPuhelinnumero">
+                      Julkaistu
+                  </label>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
+              <div ng-if="showErrors" ng-messages="tulkkiForm.muuYhteystieto.$error" role="alert" class="error-msg">
+                  <div ng-message="custom">{{tulkkiForm.muuYhteystieto.$customError}}</div>
+              </div>
+              <div class="checkbox" ng-if="tulkki.muuYhteystieto">
+                  <label>
+                      <input type="checkbox" ng-model="tulkki.julkaisulupaMuuYhteystieto">
+                      Julkaistu
+                  </label>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="alkaa" class="col-sm-2 control-label required">Alku pvm</label>
+          <div class="col-sm-8">
+              <input class="form-control" ng-model="tulkki.alkaa" id="alkaa" required date-time min-view="date"
+                     view="date" format="dd.MM.yyyy">
+              <div ng-if="showErrors" ng-messages="tulkkiForm.alkaa.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.alkaa.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group" ng-if="action == 'edit'">
+          <label for="paattyy" class="col-sm-2 control-label required">Päättyy pvm</label>
+          <div class="col-sm-8">
+              <input class="form-control" ng-model="tulkki.paattyy" id="paattyy" required date-time min-view="date"
+                     view="date" format="dd.MM.yyyy">
+              <div ng-if="showErrors" ng-messages="tulkkiForm.paattyy.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.paattyy.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="tutkinto" class="col-sm-2 control-label required">Suoritettu tutkinto</label>
+          <div class="col-sm-8">
+              <label>
+                  <input id="tutkinto" ng-model="tulkki.tutkintoTyyppi" type="radio" name="tutkinto" value="OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO">Oikeustulkin erikoisammattitutkinto<br>
+              </label>
+              <br/>
+              <label>
+                  <input ng-model="tulkki.tutkintoTyyppi" type="radio" name="tutkinto" value="MUU_KORKEAKOULUTUTKINTO">Korkeakoulututkinto<br>
+              </label>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="languagePairs" class="col-sm-2 control-label required">Kieliparit</label>
+
+          <div class="col-sm-8">
+              <div>
+                  <p ng-repeat="kielipari in tulkki.kieliparit">
+                      {{kielipari.kielesta.nimi.FI}} - {{kielipari.kieleen.nimi.FI}}
+                      <button type="button" class="btn btn-default btn-xs" ng-click="removeKielipari(kielipari)">
+                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                      </button>
+                  </p>
+              </div>
+
+              <div>
+                  <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
+                      <ui-select-match placeholder="Kielestä">
+                          <span ng-bind="$select.selected.nimi.FI"></span>
+                      </ui-select-match>
+                      <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
+                          <span ng-bind="kieli.nimi.FI"></span>
+                      </ui-select-choices>
+                  </ui-select>
+
+                  <ui-select ng-model="kieleen.selected" class="col-sm-4">
+                      <ui-select-match placeholder="Kieleen">
+                          <span ng-bind="$select.selected.nimi.FI"></span>
+                      </ui-select-match>
+                      <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
+                          <span ng-bind="kieli.nimi.FI"></span>
+                      </ui-select-choices>
+                  </ui-select>
+
+                  <button class="btn btn-primary" ng-click="addKielipari()">Lisää</button>
+              </div>
+
+              <div ng-if="showErrors && tulkki.kieliparit.length === 0" class="error-msg">
+                  <div>Kielipareja ei ole lisätty</div>
+              </div>
+
+          </div>
+      </div>
+
+      <div class="form-group">
+          <label for="lisatiedot" class="col-sm-2 control-label">Lisätietoa</label>
+          <div class="col-sm-8">
+              <textarea class="form-control" rows="3" ng-model="tulkki.lisatiedot" id="lisatiedot" placeholder="Lisätietoa"></textarea>
+          </div>
+      </div>
+
+
+      <div class="form-group">
+          <label for="kokoSuomi" class="col-sm-2 control-label required">Toiminta-alue</label>
+          <div class="col-sm-2">
+              <label>
+                  <input id="kokoSuomi" ng-model="tulkki.kokoSuomi" type="radio" ng-value="true">Koko Suomi<br>
+              </label>
+              <br/>
+              <label>
+                  <input ng-model="tulkki.kokoSuomi" type="radio" ng-value="false">Maakunnat<br>
+              </label>
+          </div>
+          <div class="col-sm-6" ng-if="!tulkki.kokoSuomi">
+              <ui-select multiple tagging ng-model="tulkki.toimintaAlue" id="region" required name="toimintaAlue">
+                  <ui-select-match placeholder="Toiminta-alue">
+                      <span ng-bind="$item.nimi.FI"></span>
+                  </ui-select-match>
+                  <ui-select-choices repeat="region in (regions | selectFilter: $select.search) track by region.arvo">
+                      <span ng-bind="region.nimi.FI"></span>
+                  </ui-select-choices>
+              </ui-select>
+
+              <br/>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.toimintaAlue.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-8">
+              <div class="checkbox">
+                  <label>
+                      <input type="checkbox" ng-model="tulkki.julkaisulupa" id="infoPublished">
+                      Julkaistu
+                  </label>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group" ng-if="action == 'edit'">
+          <label for="sukunimi" class="col-sm-2 control-label required">Muokkausviesti</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.muokkausviesti" name="muokkausviesti" type="text" class="form-control" id="muokkausviesti"
+                     placeholder="Kuvaus muokkauksesta" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.muokkausviesti.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.muokkausviesti.$customError}}</div>
+              </div>
+          </div>
+      </div>
+      
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-8">
+          <button class="btn btn-primary" ng-click="save()">Tallenna</button>
+          <a type="button" class="btn btn-default" href="#/oikeustulkki/{{tulkki.id}}">Peruuta</a>
         </div>
       </div>
-    </div>
-
-    <div class="form-group">
-      <label for="sukunimi" class="col-sm-2 control-label required">Sukunimi</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.sukunimi" name="sukunimi" type="text" class="form-control" id="sukunimi"
-               placeholder="Sukunimi" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.sukunimi.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="hetu" class="col-sm-2 control-label required">Hetu</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu" placeholder="Hetu" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.hetu.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="katuosoite" class="col-sm-2 control-label required">Katuosoite</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.osoite.katuosoite" type="text" class="form-control" id="katuosoite"
-               name="katuosoite" placeholder="Katuosoite" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.katuosoite.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="postinumero" class="col-sm-2 control-label required">Postinumero</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.osoite.postinumero" type="text" class="form-control" id="postinumero"
-               name="postinumero" placeholder="Postinumero" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.postinumero.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="postitoimipaikka" class="col-sm-2 control-label required">Postitoimipaikka</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.osoite.postitoimipaikka" type="text" class="form-control" id="postitoimipaikka"
-               name="postitoimipaikka" placeholder="Postitoimipaikka" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.postitoimipaikka.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-        </div>
-
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="tulkki.osoiteJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="email" class="col-sm-2 control-label required">Sähköpostiosoite</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.email" class="form-control" id="email" name="email"
-               placeholder="Sähköpostiosoite" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.email.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-          <div ng-message="email">Virheellinen sähköpostiosoite</div>
-        </div>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="tulkki.sahkopostiJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
-        <div class="checkbox" ng-if="tulkki.puhelinnumero">
-          <label>
-            <input type="checkbox" ng-model="tulkki.puhelinnumeroJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
-      <div class="col-sm-8">
-        <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
-        <div class="checkbox" ng-if="tulkki.muuYhteystieto">
-          <label>
-            <input type="checkbox" ng-model="tulkki.muuYhteystietoJulkaisulupa">
-            Julkaistu
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="alkaa" class="col-sm-2 control-label required">alkaa</label>
-      <div class="col-sm-8">
-        <input class="form-control" ng-model="tulkki.alkaa" id="alkaa" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.alkaa.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="tutkinto" class="col-sm-2 control-label required">Suoritettu tutkinto</label>
-      <div class="col-sm-8">
-        <label>
-          <input id="tutkinto" ng-model="tulkki.tutkintoTyyppi" type="radio" name="tutkinto" value="OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO">Oikeustulkin erikoisammattitutkinto<br>
-        </label>
-        <br/>
-        <label>
-          <input ng-model="tulkki.tutkinto" type="radio" name="tutkinto" value="MUU_KORKEAKOULUTUTKINTO">Korkeakoulututkinto<br>
-        </label>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="languagePairs" class="col-sm-2 control-label required">Kieliparit</label>
-
-      <div class="col-sm-8">
-        <div>
-          <p ng-repeat="kielipari in tulkki.kieliParit">
-            {{kielipari.kielesta.nimi.FI}} - {{kielipari.kieleen.nimi.FI}}
-            <button type="button" class="btn btn-default btn-xs" ng-click="removeKielipari(kielipari)">
-              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button>
-          </p>
-        </div>
-
-        <div>
-          <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
-            <ui-select-match placeholder="Kielestä">
-              <span ng-bind="$select.selected.nimi.FI"></span>
-            </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo">
-              <span ng-bind="kieli.nimi.FI"></span>
-            </ui-select-choices>
-          </ui-select>
-
-          <ui-select ng-model="kieleen.selected" class="col-sm-4">
-            <ui-select-match placeholder="Kieleen">
-              <span ng-bind="$select.selected.nimi.FI"></span>
-            </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo">
-              <span ng-bind="kieli.nimi.FI"></span>
-            </ui-select-choices>
-          </ui-select>
-
-          <button class="btn btn-primary" ng-click="addKielipari()">Lisää</button>
-        </div>
-
-        <div ng-if="showErrors && tulkki.kieliParit.length === 0" class="error-msg">
-          <div>Kielipareja ei ole lisätty</div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="extraInfo" class="col-sm-2 control-label">Lisätietoa</label>
-      <div class="col-sm-8">
-        <textarea class="form-control" rows="3" id="extraInfo" placeholder="Lisätietoa"></textarea>
-      </div>
-    </div>
-
-
-    <div class="form-group">
-      <label for="kokoSuomi" class="col-sm-2 control-label required">Toiminta-alue</label>
-      <div class="col-sm-2">
-        <label>
-          <input id="kokoSuomi" ng-model="tulkki.kokoSuomi" type="radio" ng-value="true">Koko Suomi<br>
-        </label>
-        <br/>
-        <label>
-          <input ng-model="tulkki.kokoSuomi" type="radio" ng-value="false">Maakunnat<br>
-        </label>
-      </div>
-      <div class="col-sm-6" ng-if="!tulkki.kokoSuomi">
-        <ui-select multiple tagging ng-model="tulkki.toimintaAlue" id="region" required name="toimintaAlue">
-          <ui-select-match placeholder="Toiminta-alue">
-            <span ng-bind="$item.nimi.FI"></span>
-          </ui-select-match>
-          <ui-select-choices repeat="region in (regions | filter: $select.search) track by region.arvo">
-            <span ng-bind="region.nimi.FI"></span>
-          </ui-select-choices>
-        </ui-select>
-
-        <br/>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.toimintaAlue.$error" role="alert" class="error-msg">
-          <div ng-message="required">Pakollinen kenttä</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-8">
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" ng-model="tulkki.julkaisulupa" id="infoPublished">
-            Julkaistu
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-8">
-        <button class="btn btn-primary" ng-click="save()">Tallenna</button>
-        <button class="btn btn-default">Peruuta</button>
-      </div>
-    </div>
 
   </form>
 

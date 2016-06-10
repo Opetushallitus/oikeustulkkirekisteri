@@ -15,9 +15,11 @@ import java.util.List;
  */
 @Getter @Setter
 public class OikeustulkkiPublicListDto implements Serializable {
-    private String etunimi;
+    private Long id;
+    private String etunimet;
     private String sukunimi;
-    private String maakuntaKoodi;
     private LocalDate paattyy;
+    private boolean kokoSuomi;
+    private List<String> maakunnat = new ArrayList<>();
     private List<KieliPariDto> kieliParit = new ArrayList<>();
 }

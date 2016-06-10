@@ -1,6 +1,8 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -11,6 +13,8 @@ import java.io.Serializable;
  * Time: 11.17
  */
 @Getter @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class KieliRajausDto implements Serializable, KieliRajaus {
     private String kielesta;
     private String kieleen;

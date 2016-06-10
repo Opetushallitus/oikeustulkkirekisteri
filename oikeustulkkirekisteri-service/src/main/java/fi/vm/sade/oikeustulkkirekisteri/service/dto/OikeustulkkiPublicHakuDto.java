@@ -13,10 +13,12 @@ import java.util.List;
  * Time: 15.15
  */
 @Getter @Setter
-public class OikeustulkkiPublicHakuDto implements Serializable, OikeustulkkiHakuehto {
+public class OikeustulkkiPublicHakuDto implements Serializable, OikeustulkkiHakuehto, KieliRajaus {
     private String termi; // nimi|hetu|oid
     private String maakuntaKoodi;
     private List<KieliRajausDto> kieliparit = new ArrayList<>();
+    private String kielesta;
+    private String kieleen;
     private Integer page;
     private Integer count;
 }

@@ -65,7 +65,7 @@
         <th>Nimi</th>
         <th>Hetu</th>
         <th>Kieliparit</th>
-        <th>Loppupvm</th>
+        <th>Voimassa</th>
         <th>Toiminta-alue</th>
       </tr>
       </thead>
@@ -79,10 +79,11 @@
           </span>
         </td>
         <td>{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} - {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</td>
-        <td>Pirkanmaa</td>
+        <td>
+            <span ng-if="tulkki.kokoSuomi">Koko Suomi</span>
+            <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
+        </td>
       </tr>
-
-
       </tbody>
     </table>
 
