@@ -22,8 +22,8 @@ public class OikeustulkkiResource {
     @Autowired
     private OikeustulkkiService oikeustulkkiService;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public List<OikeustulkkiVirkailijaListDto> hae(OikeustulkkiVirkailijaHakuDto haku) {
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public List<OikeustulkkiVirkailijaListDto> hae(@RequestBody OikeustulkkiVirkailijaHakuDto haku) {
         return oikeustulkkiService.haeVirkailija(haku);
     }
 
