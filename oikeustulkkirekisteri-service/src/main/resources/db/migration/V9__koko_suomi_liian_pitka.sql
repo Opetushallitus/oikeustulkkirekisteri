@@ -1,0 +1,1 @@
+ALTER TABLE public.sijainti ALTER COLUMN tyyppi TYPE VARCHAR(10) USING tyyppi::VARCHAR(10);
