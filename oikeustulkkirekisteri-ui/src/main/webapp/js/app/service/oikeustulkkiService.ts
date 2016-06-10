@@ -12,7 +12,7 @@ angular.module('registryApp').service('OikeustulkkiService', ['$http', ($http) =
       termi: termi,
       page: 1,
       count: 5,
-      'kieliparit[]': kieliparitHaku
+      kieliparit: kieliparitHaku
     };
 
     return $http.post(root+'hae', params);

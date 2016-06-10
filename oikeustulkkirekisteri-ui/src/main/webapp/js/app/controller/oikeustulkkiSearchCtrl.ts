@@ -9,6 +9,7 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
     $scope.kielesta = null;
     $scope.kieleen = null;
     $scope.kielet = [];
+    $scope.results = null;
     $scope.termi = '';
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
@@ -23,6 +24,10 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
       OikeustulkkiService.getTulkit($scope.termi, $scope.kieliparit).then((results)=> {
         $scope.results = results.data;
       });
+    };
+
+    $scope.getKieliNimi = (arvo:string) => {
+      return _.find($scope.kielet, {'arvo': arvo}).nimi.FI;
     };
 
     $scope.addKielipari = () => {

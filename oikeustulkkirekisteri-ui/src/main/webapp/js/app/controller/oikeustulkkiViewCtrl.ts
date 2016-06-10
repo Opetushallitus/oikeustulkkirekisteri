@@ -4,7 +4,10 @@ angular.module('registryApp').controller('oikeustulkkiViewCtrl', ["$scope", "Pag
 
     $scope.showRemoveDialog = false;
     $scope.showErrorDialog = false;
-    OikeustulkkiService.getTulkki($routeParams.id);
+
+    OikeustulkkiService.getTulkki($routeParams.id).then((results) => {
+      $scope.tulkki = results.data;
+    });
 
     $scope.history = [{
       muokattuPvm: '1.6.2014',
@@ -29,7 +32,7 @@ angular.module('registryApp').controller('oikeustulkkiViewCtrl', ["$scope", "Pag
     };
 
     $scope.remove = () => {
-      OikeustulkkiService.removeTulkki(33).then(()=> {
+      OikeustulkkiService.removeTulkki($routeParams.id).then(()=> {
         $window.location.href = "#search";
       }, ()=> {
         $scope.showErrorDialog = true;

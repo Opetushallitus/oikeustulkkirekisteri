@@ -28,6 +28,7 @@
   </div>
 
 
+  <!--<pre>{{tulkki | json}}</pre>-->
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-9 col-md-10 main">
@@ -37,7 +38,7 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title">Erkki Esimerkki</h3>
+        <h3 class="panel-title">{{tulkki.etunimet}} {{tulkki.sukunimi}}</h3>
       </div>
       <div class="panel-body">
 
@@ -45,7 +46,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Hetu</label>
           <div class="col-sm-10">
-            <p class="form-control-static">280465-8095</p>
+            <p class="form-control-static">{{tulkki.hetu}}</p>
           </div>
         </div>
 
@@ -53,7 +54,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Osoite</label>
           <div class="col-sm-10">
-            <p class="form-control-static">Yliopistonkatu 58, 33100 Tampere</p>
+            <p class="form-control-static">{{tulkki.osoite.katuosoite}}, {{tulkki.osoite.postinumero}}, {{tulkki.osoite.postitoimipaikka}}</p>
           </div>
         </div>
 
@@ -61,7 +62,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Sähköpostiosoite</label>
           <div class="col-sm-10">
-            <p class="form-control-static">erkki.esimerkki@example.com</p>
+            <p class="form-control-static">{{tulkki.email}}</p>
           </div>
         </div>
 
@@ -69,7 +70,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Puhelinnumero</label>
           <div class="col-sm-10">
-            <p class="form-control-static">123456789</p>
+            <p class="form-control-static">{{tulkki.puhelinnumero}}</p>
           </div>
         </div>
 
@@ -77,7 +78,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Yhteystiedot</label>
           <div class="col-sm-10">
-            <p class="form-control-static">lorem ipsum...</p>
+            <p class="form-control-static">{{tulkki.muuYhteystieto}}</p>
           </div>
         </div>
 
