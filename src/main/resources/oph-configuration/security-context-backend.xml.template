@@ -72,9 +72,9 @@
         <intercept-url pattern="(/.*)?/secured(/.*)?" access="isAuthenticated()"/>
         <intercept-url pattern="/public(/.*)?" access="permitAll"/>
         <intercept-url pattern="/api/public(/.*)?" access="permitAll"/>
-        <intercept-url pattern="/api/api-docs" access="permitAll"/>
         <intercept-url pattern="/api/api-docs/public(/.*)?" access="permitAll"/>
-        <intercept-url pattern="/api/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/api/api-docs" access="permitAll"/>
+        <intercept-url pattern="/api(/.*)?" access="isAuthenticated()"/>
         <intercept-url pattern="/**" access="${spring_security_default_access}"/>
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
         <logout logout-success-url="/user/logout"/> <!-- huom! vain haku tarvitsee tata? -->

@@ -67,12 +67,12 @@ public class ErrorHandlerAdvice {
                         messageSource.getMessage("error_NotFoundException", new Object[0], getLocale(req)));
     }
 
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized
-    @ExceptionHandler(AccessDeniedException.class) @ResponseBody
-    public Map<String,Object> notAuthorized(HttpServletRequest req, AccessDeniedException exception) {
-        return handleException(req, exception, "error_NotAuthorizedException",
-                messageSource.getMessage("error_NotAuthorizedException", new Object[0], getLocale(req)));
-    }
+//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized
+//    @ExceptionHandler(AccessDeniedException.class) @ResponseBody
+//    public Map<String,Object> notAuthorized(HttpServletRequest req, AccessDeniedException exception) {
+//        return handleException(req, exception, "error_NotAuthorizedException",
+//                messageSource.getMessage("error_NotAuthorizedException", new Object[0], getLocale(req)));
+//    }
 
     private Locale getLocale(HttpServletRequest req) {
         Locale locale;
