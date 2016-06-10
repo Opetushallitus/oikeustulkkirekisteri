@@ -17,9 +17,9 @@ oikeustulkkirekisteri.organisaatio.oid=12345.67890.12345.67890
 
 rekisteri.external.apis.dev.mode=false
 
-authentication-service.url=
-authentication-service.rekisteri.username=
-authentication-service.rekisteri.password=
+authentication-service.url=https://{{host_virkailija}}/authentication-service/
+authentication-service.rekisteri.username={{oikeustulkkirekisteri_authentication_service_username}}
+authentication-service.rekisteri.password={{oikeustulkkirekisteri_authentication_service_password}}
 
 #Spring security configurations
 server.name={{ansible_hostname}}
