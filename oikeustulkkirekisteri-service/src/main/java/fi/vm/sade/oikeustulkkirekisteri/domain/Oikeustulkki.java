@@ -56,6 +56,9 @@ public class Oikeustulkki extends Mutable {
     @Column(name = "julklaisulupa_muu_yhteystieto", nullable = false)
     private boolean julkaisulupaMuuYhteystieto;
     
+    @Column(name = "julkaisulupa", nullable = false)
+    private boolean julkaisulupa;
+    
     @Column(name = "muu_yhteystieto")
     private String muuYhteystieto;
     

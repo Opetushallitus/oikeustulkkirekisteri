@@ -115,6 +115,10 @@ public class OikeustulkkiHakuSpecificationBuilder {
         return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("alkaa"), loppu);
     }
 
+    public static Specification<Oikeustulkki> julkaisulupa() {
+        return (root, query, cb) -> cb.equal(root.get("julkaisulupa"), true);
+    }
+
     public static Specification<Oikeustulkki> henkiloOidIn(Set<String> in) {
         if (in == null || in.isEmpty()) {
             return null;

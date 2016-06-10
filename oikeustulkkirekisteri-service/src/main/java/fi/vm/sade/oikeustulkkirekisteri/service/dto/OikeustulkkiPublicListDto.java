@@ -19,7 +19,5 @@ public class OikeustulkkiPublicListDto implements Serializable {
     private String sukunimi;
     private String maakuntaKoodi;
     private LocalDate paattyy;
-    private String kielesta;
-    private String kieleen;
     private List<KieliPariDto> kieliParit = new ArrayList<>();
 }

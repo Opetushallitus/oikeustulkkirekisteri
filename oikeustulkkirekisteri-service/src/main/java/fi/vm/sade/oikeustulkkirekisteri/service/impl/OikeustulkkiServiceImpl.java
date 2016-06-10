@@ -212,6 +212,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         oikeustulkki.setJulkaisulupaPuhelinnumero(dto.isJulkaisulupaPuhelinnumero());
         oikeustulkki.setJulkaisulupaMuuYhteystieto(dto.isJulkaisulupaMuuYhteystieto());
         oikeustulkki.setJulkaisulupaEmail(dto.isJulkaisulupaEmail());
+        oikeustulkki.setJulkaisulupa(dto.isJulkaisulupa());
         oikeustulkki.setMuuYhteystieto(dto.getMuuYhteystieto()); // missing from henkilöpalvelu, thus saved here
         if (dto.isKokoSuomi()) {
             oikeustulkki.getSijainnit().add(new Sijainti(oikeustulkki, KOKO_SUOMI));
@@ -228,6 +229,10 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         to.setAlkaa(from.getAlkaa());
         to.setTutkintoTyyppi(from.getTutkintoTyyppi());
         to.setLisatiedot(from.getLisatiedot());
+        to.setEtunimet(henkilo.getEtunimet());
+        to.setSukunimi(henkilo.getSukunimi());
+        to.setHetu(henkilo.getHetu());
+        to.setJulkaisulupa(from.isJulkaisulupa());
         to.setJulkaisulupaPuhelinnumero(from.isJulkaisulupaPuhelinnumero());
         to.setJulkaisulupaEmail(from.isJulkaisulupaEmail());
         to.setJulkaisulupaMuuYhteystieto(from.isJulkaisulupaMuuYhteystieto());
@@ -295,7 +300,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     
     private static Specifications<Oikeustulkki> spec(OikeustulkkiPublicHakuDto dto) {
         Specifications<Oikeustulkki> where = eiPoistettu.and(voimassaoloRajausLoppu(now()))
-                .and(kieliparit(dto.getKieliparit()))
+                .and(julkaisulupa()).and(kieliparit(dto.getKieliparit()))
                 .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())));
         return where(latest(where)).and(where);
     }

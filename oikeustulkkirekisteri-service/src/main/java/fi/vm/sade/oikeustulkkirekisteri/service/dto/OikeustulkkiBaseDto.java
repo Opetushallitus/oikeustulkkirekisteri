@@ -39,6 +39,7 @@ public abstract class OikeustulkkiBaseDto implements Serializable {
     private String muuYhteystieto;
     private boolean julkaisulupaMuuYhteystieto;
     private String lisatiedot;
+    private boolean julkaisulupa;
     @NotNull
     private TutkintoTyyppi tutkintoTyyppi;
     @NotNull @NotEmpty
