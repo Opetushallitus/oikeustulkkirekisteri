@@ -9,3 +9,4 @@ require('./app/controller/oikeustulkkiViewCtrl.ts');
 require('./app/controller/oikeustulkkiEditCtrl.ts');
 require("../css/main.scss");
 require("../css/select.min.css");
+require("../css/angular-datepicker.css");

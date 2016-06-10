@@ -16,8 +16,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
   });
 
   $scope.tulkki = new Tulkki();
-  //TODO lisätään datepicker
-  $scope.tulkki.alkaa = $filter('date')(new Date(), 'd.M.yyyy');
+  $scope.tulkki.alkaa = new Date();
   $scope.regions = [];
 
   KoodistoService.getMaakunnat().then(r => {
@@ -44,8 +43,33 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
 
   $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.tulkki.kieliparit, kielipari);
 
+  const clearCustomErrors = () => {
+    _.forEach($scope.tulkkiForm, (item)=> {
+      if (item && item.$customError) {
+        item.$customError = null;
+      }
+    });
+  };
+
   $scope.save = () => {
-    OikeustulkkiService.createTulkki($scope.tulkki.getTulkkiPostData());
+    clearCustomErrors();
+
+    OikeustulkkiService.createTulkki($scope.tulkki.getTulkkiPostData()).then((results)=>{
+      //TODO siirrytään tarkastelemaan tietoja
+    }, (error) => {
+      if(error.data.violations){
+        _.forEach(error.data.violations, (violation) => {
+
+          if(!$scope.tulkkiForm[violation.path]){
+            console.log(violation);
+          }else{
+            $scope.tulkkiForm[violation.path].$customError = violation.message;
+            $scope.tulkkiForm[violation.path].$setValidity('custom', false);
+          }
+        });
+
+      }
+    });
 
     if (!_.isEmpty($scope.tulkkiForm.$error)) {
       $scope.showErrors = true;

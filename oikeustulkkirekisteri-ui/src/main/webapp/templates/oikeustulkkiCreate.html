@@ -5,12 +5,13 @@
   <form class="form-horizontal" name="tulkkiForm" novalidate>
 
     <div class="form-group">
-      <label for="etunimi" class="col-sm-2 control-label required">Etunimi</label>
+      <label for="etunimet" class="col-sm-2 control-label required">Etunimi</label>
       <div class="col-sm-8">
-        <input ng-model="tulkki.etunimet" name="etunimi" type="text" class="form-control" id="etunimi"
+        <input ng-model="tulkki.etunimet" name="etunimet" type="text" class="form-control" id="etunimet"
                placeholder="Etunimi" required>
-        <div ng-if="showErrors" ng-messages="tulkkiForm.etunimi.$error" role="alert" class="error-msg">
+        <div ng-if="showErrors" ng-messages="tulkkiForm.etunimet.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="custom">{{tulkkiForm.etunimet.$customError}}</div>
         </div>
       </div>
     </div>
@@ -22,6 +23,7 @@
                placeholder="Sukunimi" required>
         <div ng-if="showErrors" ng-messages="tulkkiForm.sukunimi.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="custom">{{tulkkiForm.sukunimi.$customError}}</div>
         </div>
       </div>
     </div>
@@ -32,6 +34,7 @@
         <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu" placeholder="Hetu" required>
         <div ng-if="showErrors" ng-messages="tulkkiForm.hetu.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="custom">{{tulkkiForm.hetu.$customError}}</div>
         </div>
       </div>
     </div>
@@ -43,6 +46,7 @@
                name="katuosoite" placeholder="Katuosoite" required>
         <div ng-if="showErrors" ng-messages="tulkkiForm.katuosoite.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="custom">{{tulkkiForm.katuosoite.$customError}}</div>
         </div>
       </div>
     </div>
@@ -54,6 +58,7 @@
                name="postinumero" placeholder="Postinumero" required>
         <div ng-if="showErrors" ng-messages="tulkkiForm.postinumero.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="custom">{{tulkkiForm.postinumero.$customError}}</div>
         </div>
       </div>
     </div>
@@ -65,6 +70,7 @@
                name="postitoimipaikka" placeholder="Postitoimipaikka" required>
         <div ng-if="showErrors" ng-messages="tulkkiForm.postitoimipaikka.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="custom">{{tulkkiForm.postitoimipaikka.$customError}}</div>
         </div>
 
         <div class="checkbox">
@@ -84,6 +90,7 @@
         <div ng-if="showErrors" ng-messages="tulkkiForm.email.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
           <div ng-message="email">Virheellinen sähköpostiosoite</div>
+          <div ng-message="custom">{{tulkkiForm.email.$customError}}</div>
         </div>
         <div class="checkbox">
           <label>
@@ -98,6 +105,9 @@
       <label for="phone" class="col-sm-2 control-label">Puhelinnumero</label>
       <div class="col-sm-8">
         <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
+        <div ng-if="showErrors" ng-messages="tulkkiForm.puhelinnumero.$error" role="alert" class="error-msg">
+          <div ng-message="custom">{{tulkkiForm.puhelinnumero.$customError}}</div>
+        </div>
         <div class="checkbox" ng-if="tulkki.puhelinnumero">
           <label>
             <input type="checkbox" ng-model="tulkki.puhelinnumeroJulkaisulupa">
@@ -111,6 +121,9 @@
       <label for="contactInfo" class="col-sm-2 control-label">Muu yhteystieto</label>
       <div class="col-sm-8">
         <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
+        <div ng-if="showErrors" ng-messages="tulkkiForm.muuYhteystieto.$error" role="alert" class="error-msg">
+          <div ng-message="custom">{{tulkkiForm.muuYhteystieto.$customError}}</div>
+        </div>
         <div class="checkbox" ng-if="tulkki.muuYhteystieto">
           <label>
             <input type="checkbox" ng-model="tulkki.muuYhteystietoJulkaisulupa">
@@ -123,9 +136,11 @@
     <div class="form-group">
       <label for="alkaa" class="col-sm-2 control-label required">Alku pvm</label>
       <div class="col-sm-8">
-        <input class="form-control" ng-model="tulkki.alkaa" id="alkaa" required>
+        <input class="form-control" ng-model="tulkki.alkaa" id="alkaa" required date-time min-view="date"
+               view="date" format="dd.MM.yyyy">
         <div ng-if="showErrors" ng-messages="tulkkiForm.alkaa.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
+          <div ng-message="custom">{{tulkkiForm.alkaa.$customError}}</div>
         </div>
       </div>
     </div>
@@ -186,9 +201,9 @@
     </div>
 
     <div class="form-group">
-      <label for="extraInfo" class="col-sm-2 control-label">Lisätietoa</label>
+      <label for="lisatiedot" class="col-sm-2 control-label">Lisätietoa</label>
       <div class="col-sm-8">
-        <textarea class="form-control" rows="3" id="extraInfo" placeholder="Lisätietoa"></textarea>
+        <textarea class="form-control" rows="3" ng-model="tulkki.lisatiedot" id="lisatiedot" placeholder="Lisätietoa"></textarea>
       </div>
     </div>
 
