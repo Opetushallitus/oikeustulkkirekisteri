@@ -22,6 +22,6 @@ insert into text(id, version, lang, text, textgroup_id) values ((select nextval(
                                                                 'EN', 'Oikeustulkkirekisterin ylläpito', (select max(id) from text_group));
 insert into kayttooikeus(id, version, palvelu_id, rooli, textgroup_id)
 values ((select nextval('hibernate_sequence')*10), 0, (select id from palvelu where name = 'OIKEUSTULKKIREKISTERI'),
-        'OIKEUSTULKKIREKISTERI_CRUD', (select max(id) from text_group));
+        'OIKEUSTULKKI_CRUD', (select max(id) from text_group));
 
 commit;
