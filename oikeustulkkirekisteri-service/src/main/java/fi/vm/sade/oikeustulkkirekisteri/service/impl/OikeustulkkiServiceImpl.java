@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.*;
@@ -279,6 +280,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
             dto.setHenkiloOid(henkilo.getOidHenkilo());
             dto.setEtunimi(henkilo.getEtunimet());
             dto.setSukunimi(henkilo.getSukunimi());
+            dto.setKieliParit(convert(ot.getKielet().stream()));
             return dto;
         };
     }
@@ -305,8 +307,15 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
             dto.setPaattyy(ot.getPaattyy());
             dto.setEtunimi(henkilo.getEtunimet());
             dto.setSukunimi(henkilo.getSukunimi());
+            dto.setKieliParit(convert(ot.getKielet().stream()));
             return dto;
         };
+    }
+    
+    private List<KieliPariDto> convert(Stream<Kielipari> from) {
+        return from.map(kp -> new KieliPariDto(kp.getKielesta().getKoodi(), kp.getKieleen().getKoodi()))
+                .sorted(comparing(KieliPariDto::getKielesta).thenComparing(KieliPariDto::getKieleen))
+                .collect(toList());
     }
 
     @Getter @AllArgsConstructor

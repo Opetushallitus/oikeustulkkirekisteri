@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: tommiratamaa
@@ -20,4 +22,5 @@ public class OikeustulkkiVirkailijaListDto implements Serializable {
     private String sukunimi;
     private LocalDate alkaa;
     private LocalDate paattyy;
+    private List<KieliPariDto> kieliParit = new ArrayList<>();
 }
