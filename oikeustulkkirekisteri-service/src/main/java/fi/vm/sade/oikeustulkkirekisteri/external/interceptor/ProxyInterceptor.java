@@ -27,7 +27,7 @@ public class ProxyInterceptor extends AbstractPhaseInterceptor<Message> {
     
     @Value("${rekisteri.external.apis.dev.mode:true}")
     private boolean devMode=false;
-    @Value("${web.cas.url:}")
+    @Value("${web.url.cas:}")
     private String webCasUrl;
     @Value("${rekisteri.external.apis.caller.service:oikeustulkkirekisteri}")
     private String callerService;

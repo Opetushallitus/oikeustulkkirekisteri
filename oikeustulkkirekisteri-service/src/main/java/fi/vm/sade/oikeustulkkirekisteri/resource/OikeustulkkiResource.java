@@ -4,16 +4,11 @@ import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User: tommiratamaa
@@ -24,8 +19,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/oikeustulkki")
 public class OikeustulkkiResource {
-    private static final Logger logger = LoggerFactory.getLogger(OikeustulkkiResource.class);
-    
     @Autowired
     private OikeustulkkiService oikeustulkkiService;
 
@@ -36,8 +29,6 @@ public class OikeustulkkiResource {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public OikeustulkkiVirkailijaViewDto getOikeustulkki(@PathVariable Long id) {
-        logger.info("getOikeustulkki {} with user roles={}", id, SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
         return oikeustulkkiService.getOikeustulkkiVirkailija(id);
     }
 
