@@ -1,5 +1,33 @@
 <div class="container">
 
+  <div class="modal" role="dialog" style="display: block;" ng-if="showRemoveDialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="hideDialog()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Poista tiedot</h4>
+        </div>
+        <div class="modal-body">
+          <p>Haluatko varmasti poistaa tulkin?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideDialog()">Peruuta</button>
+          <button type="button" class="btn btn-danger" ng-click="remove()">Poista</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="alert alert-danger" role="alert" ng-if="showErrorDialog">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="hideErrorDialog()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    Tietojen poistaminen epäonnistui
+  </div>
+
+
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-9 col-md-10 main">
@@ -104,7 +132,7 @@
 
         <div class="btn-container-right">
           <a type="button" class="btn btn-primary" href="#/oikeustulkki/33/edit">Muokkaa</a>
-          <button type="button" class="btn btn-danger">Poista</button>
+          <button type="button" class="btn btn-danger" ng-click="showRemoveDialog = true;">Poista</button>
         </div>
 
       </div>

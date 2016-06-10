@@ -2,7 +2,7 @@ import {Kieli, Kielipari} from "../kielet.ts";
 import {Tulkki} from "../tulkki.ts";
 
 angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService", "OikeustulkkiService",
-  "$filter", ($scope, Page, KoodistoService, OikeustulkkiService, $filter) => {
+  "$filter", ($scope, Page, KoodistoService, OikeustulkkiService) => {
 
   Page.setPage('addOikeustulkki');
   $scope.showErrors = false;
@@ -11,7 +11,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
 
   KoodistoService.getKielet().then(r => {
     $scope.kielet = r.data;
-    $scope.kielesta = {selected: $scope.kielet[0]};
+    $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
     $scope.kieleen = {selected: $scope.kielet[1]};
   });
 
@@ -53,6 +53,12 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
 
   $scope.save = () => {
     clearCustomErrors();
+    $scope.showErrors = false;
+
+    if (!_.isEmpty($scope.tulkkiForm.$error)) {
+      $scope.showErrors = true;
+      return;
+    }
 
     OikeustulkkiService.createTulkki($scope.tulkki.getTulkkiPostData()).then((results)=>{
       //TODO siirrytään tarkastelemaan tietoja
@@ -67,14 +73,8 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
             $scope.tulkkiForm[violation.path].$setValidity('custom', false);
           }
         });
-
       }
     });
-
-    if (!_.isEmpty($scope.tulkkiForm.$error)) {
-      $scope.showErrors = true;
-    }
-    console.log('save', $scope.tulkki);
   };
 
   $scope.addAllRegions = () => {
