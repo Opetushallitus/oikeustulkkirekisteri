@@ -1,10 +1,10 @@
 angular.module('registryApp').controller('oikeustulkkiViewCtrl', ["$scope", "Page", "$location",
-  "OikeustulkkiService", "$window", ($scope, Page, $location, OikeustulkkiService, $window) => {
+  "OikeustulkkiService", "$window", "$routeParams", ($scope, Page, $location, OikeustulkkiService, $window, $routeParams) => {
     Page.setPage('viewOikeustulkki');
 
     $scope.showRemoveDialog = false;
     $scope.showErrorDialog = false;
-    OikeustulkkiService.getTulkki(33);
+    OikeustulkkiService.getTulkki($routeParams.id);
 
     $scope.history = [{
       muokattuPvm: '1.6.2014',

@@ -1,8 +1,8 @@
 import {Kieli, Kielipari} from "../kielet.ts";
 import {Tulkki} from "../tulkki.ts";
 
-angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService", "OikeustulkkiService",
-  "$filter", ($scope, Page, KoodistoService, OikeustulkkiService) => {
+angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService",
+  "OikeustulkkiService", "$window", "$filter", ($scope, Page, KoodistoService, OikeustulkkiService, $window) => {
 
   Page.setPage('addOikeustulkki');
   $scope.showErrors = false;
@@ -61,7 +61,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
     }
 
     OikeustulkkiService.createTulkki($scope.tulkki.getTulkkiPostData()).then((results)=>{
-      //TODO siirrytään tarkastelemaan tietoja
+      $window.location.href = "#search";
     }, (error) => {
       if(error.data.violations){
         _.forEach(error.data.violations, (violation) => {

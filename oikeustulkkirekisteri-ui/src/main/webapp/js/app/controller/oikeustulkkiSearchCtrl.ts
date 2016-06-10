@@ -4,7 +4,6 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
   "OikeustulkkiService", ($scope, Page, KoodistoService, OikeustulkkiService) => {
 
     Page.setPage('searchOikeustulkki');
-    $scope.showResults = false;
 
     $scope.kieliparit = [];
     $scope.kielesta = null;
@@ -14,10 +13,6 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
 
-    // $scope.myfilter = (a, b, c) => {
-    //   console.log('filter', a.nimi.FI, b);
-    // };
-
     KoodistoService.getKielet().then(r => {
       $scope.kielet = r.data;
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
@@ -25,8 +20,9 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
     });
 
     $scope.search = () => {
-      OikeustulkkiService.getTulkit($scope.termi, $scope.kieliparit);
-      $scope.showResults = true;
+      OikeustulkkiService.getTulkit($scope.termi, $scope.kieliparit).then((results)=> {
+        $scope.results = results.data;
+      });
     };
 
     $scope.addKielipari = () => {
