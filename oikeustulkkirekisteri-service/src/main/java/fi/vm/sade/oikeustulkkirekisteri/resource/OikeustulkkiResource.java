@@ -22,7 +22,7 @@ public class OikeustulkkiResource {
     @Autowired
     private OikeustulkkiService oikeustulkkiService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "/hae", method = RequestMethod.POST)
     public List<OikeustulkkiVirkailijaListDto> hae(@RequestBody OikeustulkkiVirkailijaHakuDto haku) {
         return oikeustulkkiService.haeVirkailija(haku);
     }
