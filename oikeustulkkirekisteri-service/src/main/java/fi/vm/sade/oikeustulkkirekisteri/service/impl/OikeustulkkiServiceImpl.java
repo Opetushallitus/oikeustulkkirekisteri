@@ -248,6 +248,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         osoite.setPostinumero(findYhteystieto(henkilo, YHTEYSTIETO_POSTINUMERO).orElse(null));
         osoite.setPostitoimipaikka(findYhteystieto(henkilo, YHTEYSTIETO_KUNTA).orElse(null));
         to.setOsoite(osoite);
+        to.setKieliParit(convert(from.getKielet().stream()));
         return to;
     }
 
