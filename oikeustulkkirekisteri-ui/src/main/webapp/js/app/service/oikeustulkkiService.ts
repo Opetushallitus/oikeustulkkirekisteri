@@ -15,7 +15,7 @@ angular.module('registryApp').service('OikeustulkkiService', ['$http', ($http) =
       'kieliparit[]': kieliparitHaku
     };
 
-    return $http.get(root, {params: params});
+    return $http.post(root+'hae', params);
   };
 
   const createTulkki = (tulkki:Tulkki) => {

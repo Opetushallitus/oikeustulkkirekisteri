@@ -29,7 +29,7 @@
             <ui-select-match placeholder="Kielestä">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
@@ -38,7 +38,7 @@
             <ui-select-match placeholder="Kieleen">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
@@ -56,7 +56,8 @@
   </form>
 
   <br/>
-  <div class="table-responsive" ng-show="showResults">
+  <!--<pre>{{results|json}}</pre>-->
+  <div class="table-responsive" ng-show="results">
     <table class="table table-striped table-hover translator-list-table">
       <thead>
       <tr>
@@ -68,11 +69,11 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="a in [1,2,3,4,5]">
-        <td><a href="#/oikeustulkki/33">Erkki Esimerkki</a></td>
-        <td>280465-8095</td>
+      <tr ng-repeat="tulkki in results">
+        <td><a ng-href="#/oikeustulkki/{{tulkki.id}}">{{tulkki.etunimi}} {{tulkki.sukunimi}}</a></td>
+        <td>{{tulkki.hetu}}</td>
         <td>suomi - ruotsi</td>
-        <td>01.01.2020</td>
+        <td>{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} - {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</td>
         <td>Pirkanmaa</td>
       </tr>
 
