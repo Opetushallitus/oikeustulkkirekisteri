@@ -14,6 +14,10 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
 
+    // $scope.myfilter = (a, b, c) => {
+    //   console.log('filter', a.nimi.FI, b);
+    // };
+
     KoodistoService.getKielet().then(r => {
       $scope.kielet = r.data;
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};

@@ -29,7 +29,7 @@
             <ui-select-match placeholder="Kielestä">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
@@ -38,7 +38,7 @@
             <ui-select-match placeholder="Kieleen">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>

@@ -176,7 +176,7 @@
             <ui-select-match placeholder="Kielestä">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
@@ -185,7 +185,7 @@
             <ui-select-match placeholder="Kieleen">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | filter: $select.search) track by kieli.arvo">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
@@ -224,7 +224,7 @@
           <ui-select-match placeholder="Toiminta-alue">
             <span ng-bind="$item.nimi.FI"></span>
           </ui-select-match>
-          <ui-select-choices repeat="region in (regions | filter: $select.search) track by region.arvo">
+          <ui-select-choices repeat="region in (regions | selectFilter: $select.search) track by region.arvo">
             <span ng-bind="region.nimi.FI"></span>
           </ui-select-choices>
         </ui-select>

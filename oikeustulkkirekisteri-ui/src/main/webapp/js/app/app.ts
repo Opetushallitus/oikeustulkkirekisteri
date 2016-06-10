@@ -9,3 +9,15 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.select',
     activePage: (pageName) => { return page === pageName; }
   };
 });
+
+angular.module('registryApp').filter('selectFilter', () => {
+  return (items, input) => {
+    if (input.length === 0) {
+      return items;
+    }
+
+    return _.filter(items, (item) => {
+      return item.nimi.FI.indexOf(input) === 0;
+    });
+  };
+});
