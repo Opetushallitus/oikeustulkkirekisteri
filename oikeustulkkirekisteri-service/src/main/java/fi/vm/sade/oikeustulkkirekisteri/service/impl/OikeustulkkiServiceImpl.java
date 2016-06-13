@@ -80,6 +80,22 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Value("${oikeustulkki.voimassaolo:P5Y}")
     private String oikeustulkkiVoimassaolo;
     
+    private static Specifications<Oikeustulkki> spec(OikeustulkkiVirkailijaHakuDto dto) {
+        Specifications<Oikeustulkki> where =  eiPoistettu.and(voimassaoloRajausAlku(dto.getVoimassaAlku()))
+                .and(voimassaoloRajausLoppu(dto.getVoimassaLoppu()))
+                .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())))
+                .and(kieliparit(dto.getKieliparit()))
+                .and(dto.getVoimassaNyt() == null ? null : dto.getVoimassaNyt() ? voimassa(now()) : Specifications.not(voimassa(now())));
+        return where(latest(where)).and(where);
+    }
+    
+    private static Specifications<Oikeustulkki> spec(OikeustulkkiPublicHakuDto dto) {
+        Specifications<Oikeustulkki> where = eiPoistettu.and(voimassaoloRajausLoppu(now()))
+                .and(julkaisulupa()).and(kieliparit(dto.getKieliparit()))
+                .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())));
+        return where(latest(where)).and(where);
+    }
+    
     @Override
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) {
@@ -98,7 +114,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         oikeustulkkiRepository.save(oikeustulkki);
         return oikeustulkki.getId();
     }
-    
+
     @Override
     @Transactional
     public void editOikeustulkki(OikeustulkkiEditDto dto) throws ValidationException {
@@ -115,7 +131,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         muokkaus.setMuokkausviesti(dto.getMuokkausviesti());
         oikeustulkki.getMuokkaukset().add(muokkaus);
     }
-    
+
     @Override
     @Transactional
     public void deleteOikeustulkki(long id) {
@@ -188,7 +204,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     }
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
-        HenkiloRestDto henkilo = henkiloResourceReadClient.findByOid(henkiloOid);
+        HenkiloRestDto henkilo = henkiloResourceClient.findByOid(henkiloOid);
         updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
         updateYhteystieto(henkilo, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
@@ -272,13 +288,13 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         to.setKieliParit(convert(from.getKielet().stream()));
         return to;
     }
-
+    
     private Optional<String> findYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
         return henkilo.getYhteystiedotRyhma().stream().filter(YT_RYHMA_FILTER_READ).flatMap(yt -> yt.getYhteystiedot().stream())
             .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
             .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
     }
-
+    
     @Override
     @Transactional(readOnly = true)
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
@@ -286,16 +302,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
                 new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
                 this::combineHenkiloVirkailija);
     }
-    
-    private static Specifications<Oikeustulkki> spec(OikeustulkkiVirkailijaHakuDto dto) {
-        Specifications<Oikeustulkki> where =  eiPoistettu.and(voimassaoloRajausAlku(dto.getVoimassaAlku()))
-                .and(voimassaoloRajausLoppu(dto.getVoimassaLoppu()))
-                .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())))
-                .and(kieliparit(dto.getKieliparit()))
-                .and(dto.getVoimassaNyt() == null ? null : dto.getVoimassaNyt() ? voimassa(now()) : Specifications.not(voimassa(now())));
-        return where(latest(where)).and(where);
-    }
-    
+
     private Function<Oikeustulkki, OikeustulkkiVirkailijaListDto> combineHenkiloVirkailija(Function<String, HenkiloRestDto> h) {
         return ot -> {
             HenkiloRestDto henkilo = h.apply(ot.getTulkki().getHenkiloOid());
@@ -348,13 +355,6 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         return viewDto;
     }
 
-    private static Specifications<Oikeustulkki> spec(OikeustulkkiPublicHakuDto dto) {
-        Specifications<Oikeustulkki> where = eiPoistettu.and(voimassaoloRajausLoppu(now()))
-                .and(julkaisulupa()).and(kieliparit(dto.getKieliparit()))
-                .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())));
-        return where(latest(where)).and(where);
-    }
-
     private Function<Oikeustulkki, OikeustulkkiPublicListDto> combineHenkilo(Function<String, HenkiloRestDto> h) {
         return ot -> {
             HenkiloRestDto henkilo = h.apply(ot.getTulkki().getHenkiloOid());
@@ -385,13 +385,6 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
                 .collect(toList());
     }
 
-    @Getter @AllArgsConstructor
-    private static class Haku<HakuType extends OikeustulkkiHakuehto> {
-        private final HakuType haku;
-        private final String term;
-        private final Specification<Oikeustulkki> specification;
-    }
-
     private <DtoType,HakuType extends OikeustulkkiHakuehto> List<DtoType> doHaku(HenkiloApi api, Haku<HakuType> haku,
                              Function<Function<String,HenkiloRestDto>, Function<Oikeustulkki, DtoType>> combiner) {
         HakuType hakuDto = haku.getHaku();
@@ -411,5 +404,12 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     private PaginationObject<HenkiloRestDto> listHenkilosByTermi(HenkiloApi api, String term, Integer count, Integer index) {
         return api.listHenkilos(term, null, count, index, singletonList(oikeustulkkirekisteriOrganisaatioOid),
                 null, null, null, false, true, false, false, null, false);
+    }
+
+    @Getter @AllArgsConstructor
+    private static class Haku<HakuType extends OikeustulkkiHakuehto> {
+        private final HakuType haku;
+        private final String term;
+        private final Specification<Oikeustulkki> specification;
     }
 }
