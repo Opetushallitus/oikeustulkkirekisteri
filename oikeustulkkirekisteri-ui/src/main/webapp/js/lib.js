@@ -1,6 +1,8 @@
 require('angular');
 require('angular-route');
 require('angular-messages');
+require('angular-resource');
+require('angular-cookies');
 require('bootstrap-loader');
 require('lodash');
 require('moment');

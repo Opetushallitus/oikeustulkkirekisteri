@@ -1,7 +1,13 @@
-declare var angular:any;
-declare var _:any;
+declare const angular:any;
+declare const _:any;
+declare const jQuery:any;
+declare const $:any;
 
-const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.select', 'datePicker']).factory('Page', () => {
+if (!window['CONFIG']) {
+  window['CONFIG'] = window['CONFIG'] || {env: {}};
+}
+
+const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ngCookies', 'localisation', 'ui.select', 'datePicker']).factory('Page', () => {
   let page = 'main';
   return {
     page: () => {
@@ -17,6 +23,11 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.select',
 }).config(['uiSelectConfig', (uiSelectConfig) => {
   uiSelectConfig.theme = 'bootstrap';
   uiSelectConfig.matcher = (term:string, text:string) => term && text.toLowerCase().substr(0, term.length) == term.toLowerCase();
+}]).run(['$http', '$cookies', ($http, $cookies) => {
+  $http.defaults.headers.common['clientSubSystemCode'] = "oikeustulkkirekisteri.oikeustulkkirekisteri-ui.frontend";
+  if($cookies['CSRF']) {
+    $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
+  }
 }]);
 
 angular.module('registryApp').filter('selectFilter', () => {
@@ -29,7 +40,7 @@ angular.module('registryApp').filter('selectFilter', () => {
       return item.nimi.FI.toLowerCase().indexOf(input.toLowerCase()) === 0;
     });
   };
-})
+});
 
 angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$location',
   ($q, $location) => {
@@ -45,3 +56,56 @@ angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$location'
   }]).config(['$provide', '$httpProvider', ($provide, $httpProvider) => {
   $httpProvider.interceptors.push('RequestsErrorHandler');
 }]);
+
+window['appInit'] = () => {
+  var init_counter = 0;
+  var fail = false;
+
+  jQuery.support.cors = true;
+
+  function initFail(id, xhr, status) {
+    fail = true;
+    console.log("Init failure: " + id + " -> "+status, xhr);
+  }
+
+  function initFunction(id, xhr, status) {
+    init_counter--;
+    console.log("Got ready signal from: " + id + " -> "+status+" -> IC="+init_counter/*, xhr*/);
+    if (!fail && init_counter == 0) {
+      angular.element(document).ready(function() {
+        angular.module('registryAppInitialized', ['registryApp']);
+        angular.bootstrap(document, ['registryAppInitialized']);
+      });
+    }
+  }
+
+  function logRequest(xhr, status) {
+    console.log("LOG "+status+": "+xhr.status+" "+xhr.statusText, xhr);
+  }
+
+  if ( !(window['CONFIG'].mode && window['CONFIG'].mode == 'dev-without-backend') ) {
+    //
+    // Preload application localisations for Osoitepalvelu
+    //
+    var localisationUrl = window['CONFIG'].env.localisationRestUrl
+        + "?category=oikeustulkkirekisteri&value=cached";
+    console.log("** Loading localisation info; from: ", localisationUrl);
+    init_counter++;
+    jQuery.ajax(localisationUrl, {
+      dataType: "json",
+      crossDomain:true,
+      complete: logRequest,
+      success: function(xhr, status) {
+        window['CONFIG'].env["oikeustulkkirekisteri.localisations"] = xhr;
+        initFunction("localisations", xhr, status);
+      },
+      error: function(xhr, status) {
+        window['CONFIG'].env["oikeustulkkirekisteri.localisations"] = [];
+        initFail("localisations", xhr, status);
+      }
+    });
+  } else {
+    init_counter++;
+    initFunction('dev', {}, 200);
+  }
+}

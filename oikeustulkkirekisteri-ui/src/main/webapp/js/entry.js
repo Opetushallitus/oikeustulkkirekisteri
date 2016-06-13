@@ -1,3 +1,4 @@
+require('./i18n/i18n.js');
 require('./app/app.ts');
 require('./app/router.ts');
 require('./app/service/koodistoService.ts');
