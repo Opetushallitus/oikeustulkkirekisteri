@@ -1,268 +1,315 @@
 <div class="container">
 
-  <div class="modal" role="dialog" style="display: block;" ng-if="showRemoveDialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="hideDialog()">
+    <div class="modal" role="dialog" style="display: block;" ng-if="showRemoveDialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                            ng-click="hideDialog()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Poista tiedot</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Haluatko varmasti poistaa tulkin?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                            ng-click="hideDialog()">Peruuta
+                    </button>
+                    <button type="button" class="btn btn-danger" ng-click="remove()">Poista</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-danger" role="alert" ng-if="showErrorDialog">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                ng-click="hideErrorDialog()">
             <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title">Poista tiedot</h4>
-        </div>
-        <div class="modal-body">
-          <p>Haluatko varmasti poistaa tulkin?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="hideDialog()">Peruuta</button>
-          <button type="button" class="btn btn-danger" ng-click="remove()">Poista</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="alert alert-danger" role="alert" ng-if="showErrorDialog">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="hideErrorDialog()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    Tietojen poistaminen epäonnistui
-  </div>
-
-
-  <!--<pre>{{tulkki | json}}</pre>-->
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-9 col-md-10 main">
-        <h2 class="sub-header">Oikeustulkin tiedot</h2>
-      </div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title">{{tulkki.etunimet}} {{tulkki.sukunimi}}</h3>
-      </div>
-      <div class="panel-body">
-          
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Hetu</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.hetu}}</p>
-          </div>
-        </div>
-
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Osoite</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.osoite.katuosoite}}, {{tulkki.osoite.postinumero}}, {{tulkki.osoite.postitoimipaikka}}</p>
-          </div>
-        </div>
-
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Sähköpostiosoite</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.email}}</p>
-          </div>
-        </div>
-
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Puhelinnumero</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.puhelinnumero}}</p>
-          </div>
-        </div>
-
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Yhteystiedot</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.muuYhteystieto}}</p>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Rekisteröinnin alkupvm</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}}</p>
-          </div>
-        </div>
-        <div style="clear: both;"></div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Rekisteröinnin loppupvm</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</p>
-          </div>
-        </div>
-        <div style="clear: both;"></div>
-
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Kieliparit</label>
-          <div class="col-sm-10">
-            <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;">
-              <li ng-repeat="k in tulkki.kieliParit">{{kieli(k.kielesta)}} - {{kieli(k.kieleen)}}</li>                  
-            </ul>
-          </div>
-        </div>
-        <div style="clear: both;"></div>
-
-      <div class="form-group">
-          <label class="col-sm-2 control-label">Koulutus</label>
-          <div class="col-sm-10">
-              <p class="form-control-static inline" ng-if="tulkki.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'">Oikeustulkin erikoisammattitutkinto</p>
-              <p class="form-control-static inline" ng-if="tulkki.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'">Korkeakoulututkinto</p>
-          </div>
-      </div>
-      <div style="clear: both;"></div>
-          
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Lisätietoa</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.lisatiedot}}</p>
-          </div>
-        </div>
-        <div style="clear: both;"></div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Toiminta-alue</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline" ng-if="tulkki.kokoSuomi">Koko Suomi</p>
-            <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;" ng-if="!tulkki.kokoSuomi">
-                <li ng-repeat="mk in tulkki.maakunnat">{{maakunta(mk)}}</li>
-            </ul>
-          </div>
-        </div>
-        <div style="clear: both;"></div>
-
-        <div class="form-group">
-          <label class="col-sm-2 control-label">Julkaistu</label>
-          <div class="col-sm-10">
-            <p class="form-control-static inline">{{tulkki.julkaisulupa ? 'Kyllä' : 'Ei'}}</p>
-          </div>
-        </div>
-
-        <div class="btn-container-right">
-            <a ng-if="tulkki.uusinId" type="button" class="btn btn-default" href="#/oikeustulkki/{{tulkki.uusinId}}">Näytä uusin</a>
-            <a ng-if="!tulkki.uusinId" type="button" class="btn btn-primary" href="#/oikeustulkki/{{tulkki.id}}/create">Uusi hakemus</a>
-            <a type="button" class="btn btn-primary" href="#/oikeustulkki/{{tulkki.id}}/edit">Muokkaa</a>
-            <button type="button" class="btn btn-danger" ng-click="showRemoveDialog = true;">Poista</button>
-        </div>
-
-      </div>
+        </button>
+        Tietojen poistaminen epäonnistui
     </div>
 
 
-    <div class="row" ng-if="tulkki.muokkaushistoria.length">
-      <div class="col-sm-9 col-md-10 main">
-        <h3 class="sub-header">Muokkaushistoria</h3>
-      </div>
-    </div>
-    <div class="panel panel-default history-panel" ng-repeat="item in tulkki.muokkaushistoria">
-        <div class="panel-heading" ng-click="showItem(item)">{{item.muokattuPvm[2]}}.{{item.muokattuPvm[1]}}.{{item.muokattuPvm[0]}} - {{item.muokkajanNimi}}</div>
-        <div class="panel-body" ng-if="item.visible && item.muokkausviesti">
-          <p>{{item.muokkausviesti}}</p>
+    <!--<pre>{{tulkki | json}}</pre>-->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-9 col-md-10 main">
+                <h2 class="sub-header">Oikeustulkin tiedot</h2>
+            </div>
         </div>
-    </div>
 
-    <div class="row" ng-if="tulkki.aiemmat.length">
-        <div class="col-sm-9 col-md-10 main">
-            <h3 class="sub-header">Historia</h3>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{tulkki.etunimet}} {{tulkki.sukunimi}}</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Hetu</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{tulkki.hetu}}</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Osoite</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{tulkki.osoite.katuosoite}},
+                            {{tulkki.osoite.postinumero}}, {{tulkki.osoite.postitoimipaikka}}</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Sähköpostiosoite</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{tulkki.email}}</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Puhelinnumero</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{tulkki.puhelinnumero}}</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Yhteystiedot</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{tulkki.muuYhteystieto}}</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Rekisteröinnin alkupvm</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">
+                            {{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}}</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Rekisteröinnin loppupvm</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">
+                            {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Äidinkieli</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline" ng-if="tulkki.aidinkieli">
+                            {{kieli(tulkki.aidinkieli)}}</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Kieliparit</label>
+                    <div class="col-sm-10">
+                        <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;">
+                            <li ng-repeat="k in tulkki.kieliParit">{{kieli(k.kielesta)}} -
+                                {{kieli(k.kieleen)}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Koulutus</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline"
+                           ng-if="tulkki.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'">Oikeustulkin
+                            erikoisammattitutkinto</p>
+                        <p class="form-control-static inline"
+                           ng-if="tulkki.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'">Korkeakoulututkinto</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Lisätietoa</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{tulkki.lisatiedot}}</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Toiminta-alue</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline" ng-if="tulkki.kokoSuomi">Koko Suomi</p>
+                        <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;"
+                            ng-if="!tulkki.kokoSuomi">
+                            <li ng-repeat="mk in tulkki.maakunnat">{{maakunta(mk)}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Julkaistu</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{tulkki.julkaisulupa ? 'Kyllä' : 'Ei'}}</p>
+                    </div>
+                </div>
+
+                <div class="btn-container-right">
+                    <a ng-if="tulkki.uusinId" type="button" class="btn btn-default"
+                       href="#/oikeustulkki/{{tulkki.uusinId}}">Näytä uusin</a>
+                    <a ng-if="!tulkki.uusinId" type="button" class="btn btn-primary"
+                       href="#/oikeustulkki/{{tulkki.id}}/create">Uusi hakemus</a>
+                    <a type="button" class="btn btn-primary"
+                       href="#/oikeustulkki/{{tulkki.id}}/edit">Muokkaa</a>
+                    <button type="button" class="btn btn-danger" ng-click="showRemoveDialog = true;">Poista
+                    </button>
+                </div>
+
+            </div>
         </div>
+
+
+        <div class="row" ng-if="tulkki.muokkaushistoria.length">
+            <div class="col-sm-9 col-md-10 main">
+                <h3 class="sub-header">Muokkaushistoria</h3>
+            </div>
+        </div>
+        <div class="panel panel-default history-panel" ng-repeat="item in tulkki.muokkaushistoria">
+            <div class="panel-heading" ng-click="showItem(item)">
+                {{item.muokattuPvm[2]}}.{{item.muokattuPvm[1]}}.{{item.muokattuPvm[0]}} -
+                {{item.muokkajanNimi}}
+            </div>
+            <div class="panel-body" ng-if="item.visible && item.muokkausviesti">
+                <p>{{item.muokkausviesti}}</p>
+            </div>
+        </div>
+
+        <div class="row" ng-if="tulkki.aiemmat.length">
+            <div class="col-sm-9 col-md-10 main">
+                <h3 class="sub-header">Historia</h3>
+            </div>
+        </div>
+        <div class="panel panel-default history-panel" ng-repeat="item in tulkki.aiemmat">
+            <div class="panel-heading" ng-click="showItem(item)">
+                {{item.alkaa[2]}}.{{item.alkaa[1]}}.{{item.alkaa[0]}} -
+                {{item.paattyy[2]}}.{{item.paattyy[1]}}.{{item.paattyy[0]}}
+            </div>
+            <div class="panel-body" ng-if="item.visible">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Hetu</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{item.hetu}}</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Osoite</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{item.osoite.katuosoite}},
+                            {{item.osoite.postinumero}}, {{item.osoite.postitoimipaikka}}</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Sähköpostiosoite</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{item.email}}</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Puhelinnumero</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{item.puhelinnumero}}</p>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Yhteystiedot</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{item.muuYhteystieto}}</p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Äidinkieli</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline" ng-if="item.aidinkieli">
+                            {{kieli(item.aidinkieli)}}</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Kieliparit</label>
+                    <div class="col-sm-10">
+                        <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;">
+                            <li ng-repeat="k in item.kieliParit">{{kieli(k.kielesta)}} -
+                                {{kieli(k.kieleen)}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Koulutus</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline"
+                           ng-if="item.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'">Oikeustulkin
+                            erikoisammattitutkinto</p>
+                        <p class="form-control-static inline"
+                           ng-if="item.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'">Korkeakoulututkinto</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Lisätietoa</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{item.lisatiedot}}</p>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Toiminta-alue</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline" ng-if="item.kokoSuomi">Koko Suomi</p>
+                        <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;"
+                            ng-if="!item.kokoSuomi">
+                            <li ng-repeat="mk in item.maakunnat">{{maakunta(mk)}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="clear: both;"></div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Julkaistu</label>
+                    <div class="col-sm-10">
+                        <p class="form-control-static inline">{{item.julkaisulupa ? 'Kyllä' : 'Ei'}}</p>
+                    </div>
+                </div>
+
+                <div class="btn-container-right">
+                    <a type="button" class="btn btn-default" href="#/oikeustulkki/{{item.id}}">Näytä</a>
+                </div>
+            </div>
+        </div>
+
+
     </div>
-    <div class="panel panel-default history-panel" ng-repeat="item in tulkki.aiemmat">
-      <div class="panel-heading" ng-click="showItem(item)">{{item.alkaa[2]}}.{{item.alkaa[1]}}.{{item.alkaa[0]}} - {{item.paattyy[2]}}.{{item.paattyy[1]}}.{{item.paattyy[0]}}</div>
-      <div class="panel-body" ng-if="item.visible">
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Hetu</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline">{{item.hetu}}</p>
-              </div>
-          </div>
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Osoite</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline">{{item.osoite.katuosoite}}, {{item.osoite.postinumero}}, {{item.osoite.postitoimipaikka}}</p>
-              </div>
-          </div>
-
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Sähköpostiosoite</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline">{{item.email}}</p>
-              </div>
-          </div>
-
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Puhelinnumero</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline">{{item.puhelinnumero}}</p>
-              </div>
-          </div>
-
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Yhteystiedot</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline">{{item.muuYhteystieto}}</p>
-              </div>
-          </div>
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Kieliparit</label>
-              <div class="col-sm-10">
-                  <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;">
-                      <li ng-repeat="k in item.kieliParit">{{kieli(k.kielesta)}} - {{kieli(k.kieleen)}}</li>
-                  </ul>
-              </div>
-          </div>
-          <div style="clear: both;"></div>
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Koulutus</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline" ng-if="item.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'">Oikeustulkin erikoisammattitutkinto</p>
-                  <p class="form-control-static inline" ng-if="item.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'">Korkeakoulututkinto</p>
-              </div>
-          </div>
-          <div style="clear: both;"></div>
-          
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Lisätietoa</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline">{{item.lisatiedot}}</p>
-              </div>
-          </div>
-          <div style="clear: both;"></div>
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Toiminta-alue</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline" ng-if="item.kokoSuomi">Koko Suomi</p>
-                  <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;" ng-if="!item.kokoSuomi">
-                      <li ng-repeat="mk in item.maakunnat">{{maakunta(mk)}}</li>
-                  </ul>
-              </div>
-          </div>
-          <div style="clear: both;"></div>
-
-          <div class="form-group">
-              <label class="col-sm-2 control-label">Julkaistu</label>
-              <div class="col-sm-10">
-                  <p class="form-control-static inline">{{item.julkaisulupa ? 'Kyllä' : 'Ei'}}</p>
-              </div>
-          </div>
-
-          <div class="btn-container-right">
-              <a type="button" class="btn btn-default" href="#/oikeustulkki/{{item.id}}">Näytä</a>
-          </div>
-      </div>
-    </div>
-
-
-  </div>
 </div>

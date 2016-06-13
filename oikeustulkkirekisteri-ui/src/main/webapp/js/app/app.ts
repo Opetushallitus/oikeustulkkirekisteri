@@ -14,7 +14,10 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.select',
       return page === pageName;
     }
   };
-});
+}).config(['uiSelectConfig', (uiSelectConfig) => {
+  uiSelectConfig.theme = 'bootstrap';
+  uiSelectConfig.matcher = (term:string, text:string) => term && text.toLowerCase().substr(0, term.length) == term.toLowerCase();
+}]);
 
 angular.module('registryApp').filter('selectFilter', () => {
   return (items, input) => {
@@ -26,7 +29,7 @@ angular.module('registryApp').filter('selectFilter', () => {
       return item.nimi.FI.toLowerCase().indexOf(input.toLowerCase()) === 0;
     });
   };
-});
+})
 
 angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$window', '$location',
   ($q, $window, $location) => {

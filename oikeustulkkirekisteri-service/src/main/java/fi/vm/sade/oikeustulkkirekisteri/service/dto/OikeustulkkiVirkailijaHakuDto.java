@@ -1,5 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
+import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki.TutkintoTyyppi;
 import lombok.Getter;
 import lombok.Setter;
 import org.joda.time.LocalDate;
@@ -18,6 +19,7 @@ public class OikeustulkkiVirkailijaHakuDto implements Serializable, Oikeustulkki
     private String termi; // hetu|nimi|oid
     private Boolean voimassaNyt;
     private String maakuntaKoodi;
+    private TutkintoTyyppi tutkintoTyyppi;
     private LocalDate voimassaAlku;
     private LocalDate voimassaLoppu;
     private List<KieliRajausDto> kieliparit = new ArrayList<>();

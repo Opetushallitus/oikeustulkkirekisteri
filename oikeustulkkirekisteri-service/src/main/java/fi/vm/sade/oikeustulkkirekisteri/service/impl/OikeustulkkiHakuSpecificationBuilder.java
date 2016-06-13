@@ -2,6 +2,7 @@ package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
 import fi.vm.sade.oikeustulkkirekisteri.domain.Kielipari;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki.TutkintoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.KieliRajaus;
@@ -32,6 +33,8 @@ public class OikeustulkkiHakuSpecificationBuilder {
                     cb.equal(root.get("poistettu"), false),
                     cb.equal(root.join("tulkki").get("poistettu"), false)
             ));
+    
+    private OikeustulkkiHakuSpecificationBuilder() {}
     
     public static Specification<Oikeustulkki> voimassa(LocalDate at) {
         if (at == null) {
@@ -106,7 +109,7 @@ public class OikeustulkkiHakuSpecificationBuilder {
             )));
         };
     }
-    
+
     public static Specification<Oikeustulkki> voimassaoloRajausAlku(LocalDate alku) {
         if (alku == null) {
             return null;
@@ -120,6 +123,13 @@ public class OikeustulkkiHakuSpecificationBuilder {
         }
         return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("alkaa"), loppu);
     }
+    
+    public static Specification<Oikeustulkki> tutkintoTyyppi(TutkintoTyyppi tyyppi) {
+        if (tyyppi == null) {
+            return null;
+        }
+        return (root, query, cb) -> cb.equal(root.get("tutkintoTyyppi"), tyyppi);
+    }
 
     public static Specification<Oikeustulkki> julkaisulupa() {
         return (root, query, cb) -> cb.equal(root.get("julkaisulupa"), true);
@@ -131,6 +141,4 @@ public class OikeustulkkiHakuSpecificationBuilder {
         }
         return (root, query, cb) -> root.join("tulkki").get("henkiloOid").in(in);
     }
-
-    private OikeustulkkiHakuSpecificationBuilder() {}
 }

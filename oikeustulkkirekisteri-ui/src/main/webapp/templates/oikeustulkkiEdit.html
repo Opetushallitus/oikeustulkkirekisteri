@@ -18,6 +18,18 @@
       </div>
 
       <div class="form-group">
+          <label for="etunimet" class="col-sm-2 control-label required">Kutsumanimi</label>
+          <div class="col-sm-8">
+              <input ng-model="tulkki.kutsumanimi" name="etunimet" type="text" class="form-control" id="etunimet"
+                     placeholder="Kutsumanimi" required>
+              <div ng-if="showErrors" ng-messages="tulkkiForm.etunimet.$error" role="alert" class="error-msg">
+                  <div ng-message="required">Pakollinen kenttä</div>
+                  <div ng-message="custom">{{tulkkiForm.kutsumanimi.$customError}}</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
           <label for="sukunimi" class="col-sm-2 control-label required">Sukunimi</label>
           <div class="col-sm-8">
               <input ng-model="tulkki.sukunimi" name="sukunimi" type="text" class="form-control" id="sukunimi"
@@ -165,6 +177,21 @@
       </div>
 
       <div class="form-group">
+          <label for="aidinkieli" class="col-sm-2 control-label required">Äidinkieli</label>
+          <div class="col-sm-8">
+              <ui-select ng-model="tulkki.aidinkieli" id="aidinkieli" class="col-sm-4">
+                  <ui-select-match>{{$select.selected.nimi.FI}}</ui-select-match>
+                  <ui-select-choices repeat="kieli.arvo as kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
+                      <span ng-bind="kieli.nimi.FI"></span>
+                  </ui-select-choices>
+              </ui-select>
+              <div ng-if="showErrors && !tulkki.aidinkieli" class="error-msg">
+                  <div>Äidinkieltä ei ole valittu</div>
+              </div>
+          </div>
+      </div>
+
+      <div class="form-group">
           <label for="languagePairs" class="col-sm-2 control-label required">Kieliparit</label>
 
           <div class="col-sm-8">
@@ -212,7 +239,6 @@
               <textarea class="form-control" rows="3" ng-model="tulkki.lisatiedot" id="lisatiedot" placeholder="Lisätietoa"></textarea>
           </div>
       </div>
-
 
       <div class="form-group">
           <label for="kokoSuomi" class="col-sm-2 control-label required">Toiminta-alue</label>

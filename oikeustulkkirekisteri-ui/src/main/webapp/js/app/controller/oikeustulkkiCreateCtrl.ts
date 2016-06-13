@@ -5,7 +5,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
     "OikeustulkkiService", "$window", "$filter", ($scope, Page, KoodistoService, OikeustulkkiService, $window) => {
         Page.setPage('addOikeustulkki');
         $scope.showErrors = false;
-
+        
         KoodistoService.getKielet().then(r => {
             $scope.kielet = r.data;
             $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};

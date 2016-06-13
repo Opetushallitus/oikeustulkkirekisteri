@@ -12,6 +12,7 @@ import fi.vm.sade.oikeustulkkirekisteri.repository.TullkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.repository.custom.CustomFlushRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.*;
+import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.joda.time.Period;
@@ -29,6 +30,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation.*;
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.*;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.KOKO_SUOMI;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.MAAKUNTA;
@@ -49,13 +51,13 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * Time: 14.11
  */
 @Service
-public class OikeustulkkiServiceImpl implements OikeustulkkiService {
+public class OikeustulkkiServiceImpl extends AbstractService implements OikeustulkkiService {
     private static final Integer DEFAULT_COUNT = 20;
     private static final String KOTIOSOITE_TYYPPI = "yhteystietotyyppi1";
     private static final String TYOOSOITE_TYYPPI = "yhteystietotyyppi2";
     private static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
     private static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_SET = YT_RYHMA_FILTER_READ.and(r -> !r.isReadOnly());
-    
+
     @Autowired
     private OikeustulkkiRepository oikeustulkkiRepository;
     
@@ -83,6 +85,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     private static Specifications<Oikeustulkki> spec(OikeustulkkiVirkailijaHakuDto dto) {
         Specifications<Oikeustulkki> where =  eiPoistettu.and(voimassaoloRajausAlku(dto.getVoimassaAlku()))
                 .and(voimassaoloRajausLoppu(dto.getVoimassaLoppu()))
+                .and(tutkintoTyyppi(dto.getTutkintoTyyppi()))
                 .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())))
                 .and(kieliparit(dto.getKieliparit()))
                 .and(dto.getVoimassaNyt() == null ? null : dto.getVoimassaNyt() ? voimassa(now()) : Specifications.not(voimassa(now())));
@@ -112,9 +115,13 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         oikeustulkki.setPaattyy(oikeustulkki.getAlkaa().plus(Period.parse(oikeustulkkiVoimassaolo)));
         updateHenkilo(oikeustulkki.getTulkki().getHenkiloOid(), dto);
         oikeustulkkiRepository.save(oikeustulkki);
+        auditLog.log(builder(OIKEUSTULKKI_CREATE)
+                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
+                .oikeustulkkiId(oikeustulkki.getId())
+                .build());
         return oikeustulkki.getId();
     }
-
+    
     @Override
     @Transactional
     public void editOikeustulkki(OikeustulkkiEditDto dto) throws ValidationException {
@@ -130,6 +137,10 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         muokkaus.setOikeustulkki(oikeustulkki);
         muokkaus.setMuokkausviesti(dto.getMuokkausviesti());
         oikeustulkki.getMuokkaukset().add(muokkaus);
+        auditLog.log(builder(OIKEUSTULKKI_UPDATE)
+                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
+                .oikeustulkkiId(oikeustulkki.getId())
+                .build());
     }
 
     @Override
@@ -137,6 +148,10 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     public void deleteOikeustulkki(long id) {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuById(id));
         oikeustulkki.markPoistettu(SecurityContextHolder.getContext().getAuthentication().getName());
+        auditLog.log(builder(OIKEUSTULKKI_DELETE)
+                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
+                .oikeustulkkiId(oikeustulkki.getId())
+                .build());
     }
 
     @Override
@@ -146,6 +161,10 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         OikeustulkkiVirkailijaViewDto dto = produceViewDto(oikeustulkki);
         dto.setAiemmat(oikeustulkkiRepository.listAiemmatEiPoistetutById(id).stream().map(this::produceViewDto).collect(toList()));
         dto.setUusinId(oikeustulkkiRepository.getUusinUuudempiEiPoistettuById(oikeustulkki.getId()));
+        auditLog.log(builder(OIKEUSTULKKI_READ)
+                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
+                .oikeustulkkiId(oikeustulkki.getId())
+                .build());
         return dto;
     }
 
@@ -183,7 +202,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         henkilo.setHetu(dto.getHetu());
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
-        henkilo.setKutsumanimi(firstName(dto.getEtunimet())); // required by henkilöpalvelu
+        henkilo.setKutsumanimi(dto.getKutsumanimi());
         henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA); // although deprecated is required by henkilöpalvelu impl, 
         // virkalija so that can be serached and edited through henkilopalvelu
         List<OrganisaatioHenkiloDto> orgHenkilos = new ArrayList<>();
@@ -193,14 +212,6 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         orgHenkilos.add(orgHenkilo);
         henkilo.setOrganisaatioHenkilo(orgHenkilos);
         return new Tulkki(henkiloResourceClient.createHenkilo(henkilo));
-    }
-
-    private String firstName(String etunimet) {
-        String[] prts = etunimet.split("\\s+");
-        if (prts.length > 0) {
-            return prts[0];
-        }
-        return etunimet;
     }
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
@@ -248,6 +259,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         oikeustulkki.setJulkaisulupaMuuYhteystieto(dto.isJulkaisulupaMuuYhteystieto());
         oikeustulkki.setJulkaisulupaEmail(dto.isJulkaisulupaEmail());
         oikeustulkki.setJulkaisulupa(dto.isJulkaisulupa());
+        oikeustulkki.setAidinkieli(ofNullable(dto.getAidinkieli()).map(Kieli::new).orElse(null));
         oikeustulkki.setMuuYhteystieto(dto.getMuuYhteystieto()); // missing from henkilöpalvelu, thus saved here
         oikeustulkki.getSijainnit().clear();
         oikeustulkki.getKielet().clear();
@@ -272,7 +284,9 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         to.setHetu(henkilo.getHetu());
         to.setJulkaisulupa(from.isJulkaisulupa());
         to.setJulkaisulupaPuhelinnumero(from.isJulkaisulupaPuhelinnumero());
+        to.setKutsumanimi(henkilo.getKutsumanimi());
         to.setJulkaisulupaEmail(from.isJulkaisulupaEmail());
+        to.setAidinkieli(ofNullable(from.getAidinkieli()).map(Kieli::getKoodi).orElse(null));
         to.setJulkaisulupaMuuYhteystieto(from.isJulkaisulupaMuuYhteystieto());
         to.setEmail(findYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
         to.setPuhelinnumero(findYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
@@ -298,9 +312,13 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Override
     @Transactional(readOnly = true)
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
-        return doHaku(henkiloResourceClient,
+        List<OikeustulkkiVirkailijaListDto> results = doHaku(henkiloResourceClient,
                 new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
                 this::combineHenkiloVirkailija);
+        auditLog.log(builder(OIKEUSTULKKI_READ)
+            .henkiloOidList(results.stream().map(OikeustulkkiVirkailijaListDto::getHenkiloOid).collect(toList()))
+            .build());
+        return results;
     }
 
     private Function<Oikeustulkki, OikeustulkkiVirkailijaListDto> combineHenkiloVirkailija(Function<String, HenkiloRestDto> h) {
@@ -397,6 +415,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getSpecification())
                     .and(henkiloOidIn(henkilosByOid.keySet()))).stream()
                 .sorted(comparing(Oikeustulkki::getAlkaa)).collect(groupingBy(ot -> ot.getTulkki().getHenkiloOid(), mapping(ot->ot, toList())));
+        
         return henkiloResults.stream().flatMap(ot -> ofNullable(oikeustulkkis.get(ot.getOidHenkilo()))
                 .map(List::stream).orElseGet(Stream::empty)).map(combiner.apply(henkilosByOid::get)).collect(toList());
     }
