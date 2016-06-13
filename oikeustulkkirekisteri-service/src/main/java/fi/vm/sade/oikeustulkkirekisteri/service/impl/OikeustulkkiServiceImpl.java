@@ -99,7 +99,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     @Override
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) {
-        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceReadClient, 
+        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceClient,
                 dto.getHetu(), 1, 0).getResults().stream().findFirst();
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {

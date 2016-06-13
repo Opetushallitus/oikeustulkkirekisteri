@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 @Getter @Setter
 public class OrganisaatioHenkiloDto implements Serializable {
+    private Long id;
     private String organisaatioOid;
     private String tehtavanimike;
 }

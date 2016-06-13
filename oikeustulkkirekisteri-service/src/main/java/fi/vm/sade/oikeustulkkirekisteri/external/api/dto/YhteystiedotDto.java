@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 @Getter @Setter
 public class YhteystiedotDto implements Serializable {
+    private Long id;
     private YhteystietoTyyppi yhteystietoTyyppi;
     private String yhteystietoArvo;
 }

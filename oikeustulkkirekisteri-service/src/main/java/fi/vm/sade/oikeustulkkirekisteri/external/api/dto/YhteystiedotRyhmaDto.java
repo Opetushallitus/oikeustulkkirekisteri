@@ -15,6 +15,7 @@ import java.util.Set;
  */
 @Getter @Setter
 public class YhteystiedotRyhmaDto implements Serializable {
+    private Long id;
     private String ryhmaKuvaus;
     private String ryhmaAlkuperaTieto;
     private boolean readOnly;
