@@ -72,6 +72,7 @@
         <intercept-url pattern="(/.*)?/secured(/.*)?" access="isAuthenticated()"/>
         <intercept-url pattern="/public(/.*)?" access="permitAll"/>
         <intercept-url pattern="/api/public(/.*)?" access="permitAll"/>
+        <intercept-url pattern="/api/app/settings.js" access="permitAll"/>
         <intercept-url pattern="/api/api-docs/public(/.*)?" access="permitAll"/>
         <intercept-url pattern="/api/api-docs" access="permitAll"/>
         <intercept-url pattern="/api(/.*)?" access="isAuthenticated()"/>
