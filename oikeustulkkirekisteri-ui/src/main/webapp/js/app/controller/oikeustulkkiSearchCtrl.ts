@@ -11,16 +11,17 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
     $scope.kielet = [];
     $scope.results = null;
     $scope.termi = '';
+    $scope.maakunnat = [];
+    $scope.maakunnatByArvo = {};
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
-    
+
     KoodistoService.getKielet().then(r => {
       $scope.kielet = r.data;
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
       $scope.kieleen = {selected: $scope.kielet[1]};
     });
-    $scope.maakunnat = [];
-    $scope.maakunnatByArvo = {};
+
     KoodistoService.getMaakunnat().then(r => {
       $scope.maakunnat = r.data;
       r.data.map(k => $scope.maakunnatByArvo[k.arvo] = k);

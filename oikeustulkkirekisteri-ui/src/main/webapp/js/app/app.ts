@@ -4,9 +4,15 @@ declare var _:any;
 const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.select', 'datePicker']).factory('Page', () => {
   let page = 'main';
   return {
-    page: () => { return page; },
-    setPage: (newPage) => { page = newPage; },
-    activePage: (pageName) => { return page === pageName; }
+    page: () => {
+      return page;
+    },
+    setPage: (newPage) => {
+      page = newPage;
+    },
+    activePage: (pageName) => {
+      return page === pageName;
+    }
   };
 });
 
@@ -21,3 +27,18 @@ angular.module('registryApp').filter('selectFilter', () => {
     });
   };
 });
+
+angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$window', '$location',
+  ($q, $window, $location) => {
+    const authenticationUrl = $location.$$absUrl + 'cas/login?service=' + $location.$$absUrl;
+    return {
+      responseError: (rejection) => {
+        if (rejection.data.errorType === 'AccessDeniedException') {
+          $window.location.href = authenticationUrl;
+        }
+        return $q.reject(rejection);
+      }
+    };
+  }]).config(['$provide', '$httpProvider', ($provide, $httpProvider) => {
+  $httpProvider.interceptors.push('RequestsErrorHandler');
+}]);
