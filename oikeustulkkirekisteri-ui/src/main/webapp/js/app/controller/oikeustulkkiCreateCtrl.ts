@@ -63,6 +63,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
                             } else {
                                 $scope.tulkkiForm[violation.path].$customError = violation.message;
                                 $scope.tulkkiForm[violation.path].$setValidity('custom', false);
+                                $scope.showErrors = true;
                             }
                         });
                     }
