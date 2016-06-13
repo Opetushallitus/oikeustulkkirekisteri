@@ -31,13 +31,13 @@ angular.module('registryApp').filter('selectFilter', () => {
   };
 })
 
-angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$window', '$location',
-  ($q, $window, $location) => {
+angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$location',
+  ($q, $location) => {
     const authenticationUrl = $location.$$absUrl + 'cas/login?service=' + $location.$$absUrl;
     return {
       responseError: (rejection) => {
         if (rejection.data.errorType === 'AccessDeniedException') {
-          $window.location.href = authenticationUrl;
+          window.location.href = authenticationUrl;
         }
         return $q.reject(rejection);
       }
