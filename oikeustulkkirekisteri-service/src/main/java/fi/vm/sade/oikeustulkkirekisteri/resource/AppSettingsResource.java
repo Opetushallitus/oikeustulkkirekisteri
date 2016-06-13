@@ -18,18 +18,20 @@ package fi.vm.sade.oikeustulkkirekisteri.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 import fi.vm.sade.oikeustulkkirekisteri.service.AppSettingsService;
 import fi.vm.sade.oikeustulkkirekisteri.settings.dto.AppSettingsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: ratamaa
@@ -54,5 +56,11 @@ public class AppSettingsResource {
     @ResponseBody
     @RequestMapping(value  =  "/testLoggedIn", method  =  RequestMethod.GET)
     public void testLoggedIn() throws IOException {
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized
+    @ExceptionHandler(AccessDeniedException.class) @ResponseBody
+    public Map<String,Object> notAuthorized(HttpServletRequest req, AccessDeniedException exception) {
+        return new HashMap<>();
     }
 }
