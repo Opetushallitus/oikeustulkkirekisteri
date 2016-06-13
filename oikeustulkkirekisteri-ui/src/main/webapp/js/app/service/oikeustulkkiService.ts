@@ -3,7 +3,7 @@ import {Tulkki} from "../tulkki.ts";
 angular.module('registryApp').service('OikeustulkkiService', ['$http', ($http) => {
   const root = '/oikeustulkkirekisteri-service/api/oikeustulkki/';
 
-  const getTulkit = (termi:string, kieliparit:any) => {
+  const getTulkit = (termi:string, kieliparit:any, tutkintoTyyppi: string) => {
     const kieliparitHaku = _.map(kieliparit, (kielipari) => {
       return {'kielesta': kielipari.kielesta.arvo, 'kieleen': kielipari.kieleen.arvo}
     });
@@ -12,7 +12,8 @@ angular.module('registryApp').service('OikeustulkkiService', ['$http', ($http) =
       termi: termi,
       page: 1,
       count: 5,
-      kieliparit: kieliparitHaku
+      kieliparit: kieliparitHaku,
+      tutkintoTyyppi: tutkintoTyyppi
     };
 
     return $http.post(root+'hae', params);

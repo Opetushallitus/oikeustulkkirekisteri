@@ -52,6 +52,22 @@
 
     <div style="clear: both;"/>
     <br/>
+
+    <div class="form-group">
+      <label for="tutkinto" class="col-sm-2 control-label">Suoritettu tutkinto</label>
+      <div class="col-sm-6 col-sm-offset-2">
+        <label>
+          <input id="tutkinto" ng-model="tutkinto.erikois" ng-click="tutkintoChanged('erikois')" type="checkbox">Oikeustulkin erikoisammattitutkinto<br>
+        </label>
+        <br/>
+        <label>
+          <input ng-model="tutkinto.korkeakoulu" ng-click="tutkintoChanged('korkeakoulu')" type="checkbox">Korkeakoulututkinto<br>
+        </label>
+      </div>
+    </div>
+
+    <div style="clear: both;"/>
+    <br/>
     <button class="btn btn-default" ng-click="search()">Hae</button>
   </form>
 

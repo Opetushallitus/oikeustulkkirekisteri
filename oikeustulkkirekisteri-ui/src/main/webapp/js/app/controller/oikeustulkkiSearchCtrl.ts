@@ -27,8 +27,24 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
       r.data.map(k => $scope.maakunnatByArvo[k.arvo] = k);
     });
 
+    $scope.tutkinto = {
+      erikois : true,
+      korkeakoulu : true
+    };
+
+    $scope.tutkintoChanged = (selectedTutkinto) => {
+      // make sure that one option is always selected
+      if (!$scope.tutkinto[selectedTutkinto]) {
+        const select = (selectedTutkinto === 'erikois') ? 'korkeakoulu' : 'erikois';
+        $scope.tutkinto[select] = true;
+      }
+    };
+
     $scope.search = () => {
-      OikeustulkkiService.getTulkit($scope.termi, $scope.kieliparit).then((results)=> {
+      let tutkintoTyyppi = $scope.tutkinto.erikois && !$scope.tutkinto.korkeakoulu ? 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO' : null;
+      tutkintoTyyppi = !$scope.tutkinto.erikois && $scope.tutkinto.korkeakoulu ? 'MUU_KORKEAKOULUTUTKINTO' : tutkintoTyyppi;
+
+      OikeustulkkiService.getTulkit($scope.termi, $scope.kieliparit, tutkintoTyyppi).then((results)=> {
         $scope.results = results.data;
       });
     };
