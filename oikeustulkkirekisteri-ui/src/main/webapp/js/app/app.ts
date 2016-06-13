@@ -44,7 +44,7 @@ angular.module('registryApp').filter('selectFilter', () => {
 
 angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$location',
   ($q, $location) => {
-    const authenticationUrl = '/cas/login?service=' + $location.$$absUrl;
+    const authenticationUrl = (window['CONFIG'].env['cas.login'] || '/cas/login') + '?service=' + $location.$$absUrl;
     return {
       responseError: (rejection) => {
         if (rejection.data.errorType === 'AccessDeniedException') {
@@ -84,9 +84,22 @@ window['appInit'] = () => {
   }
 
   if ( !(window['CONFIG'].mode && window['CONFIG'].mode == 'dev-without-backend') ) {
-    //
-    // Preload application localisations for Osoitepalvelu
-    //
+    // Ensure logged in
+    init_counter++;
+    jQuery.ajax(window['CONFIG'].env['test.logged.in.url'] || '/oikeustulkkirekisteri-service/api/app/testLoggedIn', {
+      crossDomain:true,
+      complete: logRequest,
+      success: function(xhr, status) {
+        initFunction("Login test", xhr, status);
+      },
+      error: function(xhr, status) {
+        const authenticationUrl = (window['CONFIG'].env['cas.login'] || '/cas/login') + '?service=' + window.location.href;
+        console.info('Login test failed.');
+        window.location.href = authenticationUrl;
+      }
+    });
+    
+    // Preload application localisations
     var localisationUrl = window['CONFIG'].env.localisationRestUrl
         + "?category=oikeustulkkirekisteri&value=cached";
     console.log("** Loading localisation info; from: ", localisationUrl);

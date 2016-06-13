@@ -40,7 +40,7 @@ import java.io.IOException;
 @Controller
 @Scope(value =  WebApplicationContext.SCOPE_APPLICATION)
 @RequestMapping(value  =  "/app")
-public class AppSettingsController {
+public class AppSettingsResource {
     @Autowired
     private AppSettingsService appSettingsService;
 
@@ -49,5 +49,10 @@ public class AppSettingsController {
     public String settingsJs() throws IOException {
         AppSettingsDto settings  =  appSettingsService.getUiSettings();
         return "window.CONFIG  =  "  +  new ObjectMapper().writeValueAsString(settings)  +  ";";
+    }
+    
+    @ResponseBody
+    @RequestMapping(value  =  "/testLoggedIn", method  =  RequestMethod.GET)
+    public void testLoggedIn() throws IOException {
     }
 }
