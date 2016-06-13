@@ -10,6 +10,8 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
     $scope.maakunnatByArvo = {};
     $scope.regions = [];
     $scope.action = $routeParams.action;
+    $scope.tulkkiId = $routeParams.id;
+
     if ($scope.action != 'edit' && $scope.action != 'create') {
       $scope.action = 'create';
     }
@@ -79,11 +81,6 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
       clearCustomErrors();
       $scope.showErrors = false;
 
-      // if (!_.isEmpty($scope.tulkkiForm.$error)) {
-      //   $scope.showErrors = true;
-      //   return;
-      // }
-      
       if ($scope.action == 'create') {
         OikeustulkkiService.createTulkki(getTulkkiPostData($scope.tulkki))
             .then(id => $window.location.href = "#/oikeustulkki/" + id.data, error => {
@@ -95,6 +92,7 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
                     } else {
                       $scope.tulkkiForm[violation.path].$customError = violation.message;
                       $scope.tulkkiForm[violation.path].$setValidity('custom', false);
+                      $scope.showErrors = true;
                     }
                   });
                 }

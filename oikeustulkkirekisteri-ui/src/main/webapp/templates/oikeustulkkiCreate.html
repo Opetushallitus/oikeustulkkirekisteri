@@ -5,10 +5,10 @@
   <form class="form-horizontal" name="tulkkiForm" novalidate>
 
     <div class="form-group">
-      <label for="etunimet" class="col-sm-2 control-label required">Etunimi</label>
+      <label for="etunimet" class="col-sm-2 control-label required">Etunimet</label>
       <div class="col-sm-8">
         <input ng-model="tulkki.etunimet" name="etunimet" type="text" class="form-control" id="etunimet"
-               placeholder="Etunimi" required>
+               placeholder="Etunimet" required>
         <div ng-if="showErrors" ng-messages="tulkkiForm.etunimet.$error" role="alert" class="error-msg">
           <div ng-message="required">Pakollinen kenttä</div>
           <div ng-message="custom">{{tulkkiForm.etunimet.$customError}}</div>
