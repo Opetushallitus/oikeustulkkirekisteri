@@ -44,7 +44,7 @@ angular.module('registryApp').filter('selectFilter', () => {
 
 angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$location',
   ($q, $location) => {
-    const authenticationUrl = $location.$$absUrl + 'cas/login?service=' + $location.$$absUrl;
+    const authenticationUrl = '/cas/login?service=' + $location.$$absUrl;
     return {
       responseError: (rejection) => {
         if (rejection.data.errorType === 'AccessDeniedException') {
