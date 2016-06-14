@@ -56,6 +56,10 @@ public class AppSettingsServiceImpl extends AbstractService implements AppSettin
         return settings;
     }
 
+    @Override
+    public void requireAuthentication() {
+    }
+
     protected Object parseExpression(Object exp) {
         if(exp instanceof String) {
             String expressionString  =  (String)exp;

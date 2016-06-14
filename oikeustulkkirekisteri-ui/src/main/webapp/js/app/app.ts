@@ -86,17 +86,19 @@ window['appInit'] = () => {
   if ( !(window['CONFIG'].mode && window['CONFIG'].mode == 'dev-without-backend') ) {
     // Ensure logged in
     init_counter++;
+    const redirectToLogin = () => {
+      const authenticationUrl = (window['CONFIG'].env['cas.login'] || '/cas/login') + '?service=' + window.location.href;
+      console.info('Login test failed.');
+      window.location.href = authenticationUrl;
+    };
     jQuery.ajax(window['CONFIG'].env['test.logged.in.url'] || '/oikeustulkkirekisteri-service/api/app/testLoggedIn', {
       crossDomain:true,
       complete: logRequest,
       success: function(xhr, status) {
         initFunction("Login test", xhr, status);
       },
-      error: function(xhr, status) {
-        const authenticationUrl = (window['CONFIG'].env['cas.login'] || '/cas/login') + '?service=' + window.location.href;
-        console.info('Login test failed.');
-        window.location.href = authenticationUrl;
-      }
+      statusCode: { 302: redirectToLogin },
+      error: redirectToLogin
     });
     
     // Preload application localisations

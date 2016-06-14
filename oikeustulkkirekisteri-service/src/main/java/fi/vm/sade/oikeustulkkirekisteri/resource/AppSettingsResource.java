@@ -56,6 +56,7 @@ public class AppSettingsResource {
     @ResponseBody
     @RequestMapping(value  =  "/testLoggedIn", method  =  RequestMethod.GET)
     public void testLoggedIn() throws IOException {
+        appSettingsService.requireAuthentication();
     }
 
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized

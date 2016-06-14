@@ -17,6 +17,7 @@
 package fi.vm.sade.oikeustulkkirekisteri.service;
 
 import fi.vm.sade.oikeustulkkirekisteri.settings.dto.AppSettingsDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * User: ratamaa
@@ -28,4 +29,7 @@ public interface AppSettingsService {
      * @return the env and app settings for UI
      */
     AppSettingsDto getUiSettings();
+    
+    @PreAuthorize("isAuthenticated()")
+    void requireAuthentication();
 }
