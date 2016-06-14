@@ -17,7 +17,7 @@ oikeustulkkirekisteri.organisaatio.oid={{oikeustulkkirekisteri_organisaatio_oid}
 
 rekisteri.external.apis.dev.mode=false
 
-authentication-service.url=https://{{host_virkailija}}/authentication-service/
+authentication-service.url=https://{{host_virkailija}}/authentication-service
 authentication-service.rekisteri.username={{oikeustulkkirekisteri_authentication_service_username}}
 authentication-service.rekisteri.password={{oikeustulkkirekisteri_authentication_service_password}}
 
