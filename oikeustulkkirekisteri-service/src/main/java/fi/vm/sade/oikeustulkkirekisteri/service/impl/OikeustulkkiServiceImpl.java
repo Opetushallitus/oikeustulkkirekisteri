@@ -102,8 +102,8 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Override
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) {
-        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceClient,
-                dto.getHetu(), 1, 0).getResults().stream().findFirst();
+        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceReadClient,
+                dto.getHetu(), 0, 0).getResults().stream().findFirst();
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
             oikeustulkki.setTulkki(tullkiRepository.findByHenkiloOid(existingHenkilo.get().getOidHenkilo()));
@@ -206,16 +206,25 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA); // although deprecated is required by henkilöpalvelu impl, 
         // virkalija so that can be serached and edited through henkilopalvelu
         List<OrganisaatioHenkiloDto> orgHenkilos = new ArrayList<>();
-        OrganisaatioHenkiloDto orgHenkilo = new OrganisaatioHenkiloDto();
-        orgHenkilo.setOrganisaatioOid(oikeustulkkirekisteriOrganisaatioOid);
-        orgHenkilo.setTehtavanimike(oikeustulkkiTehtavanimike);
-        orgHenkilos.add(orgHenkilo);
+        orgHenkilos.add(createOrganisaatioHenkilo());
         henkilo.setOrganisaatioHenkilo(orgHenkilos);
         return new Tulkki(henkiloResourceClient.createHenkilo(henkilo));
     }
 
+    private OrganisaatioHenkiloDto createOrganisaatioHenkilo() {
+        OrganisaatioHenkiloDto orgHenkilo = new OrganisaatioHenkiloDto();
+        orgHenkilo.setOrganisaatioOid(oikeustulkkirekisteriOrganisaatioOid);
+        orgHenkilo.setTehtavanimike(oikeustulkkiTehtavanimike);
+        return orgHenkilo;
+    }
+
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
-        HenkiloRestDto henkilo = henkiloResourceClient.findByOid(henkiloOid);
+        HenkiloRestDto henkilo = henkiloResourceReadClient.findByOid(henkiloOid);
+        if (!henkilo.getOrganisaatioHenkilos().stream()
+                .filter(oh -> oikeustulkkirekisteriOrganisaatioOid.equals(oh.getOrganisaatioOid())).findFirst().isPresent()) {
+            // Varmistetaan, että on olemassa organisaatiohenkilö
+            henkilo.getOrganisaatioHenkilos().add(createOrganisaatioHenkilo());
+        }
         updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
         updateYhteystieto(henkilo, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
