@@ -44,6 +44,7 @@ angular.module('registryApp').filter('selectFilter', () => {
 
 angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$location',
   ($q, $location) => {
+    console.info('config', window['CONFIG']);
     const authenticationUrl = (window['CONFIG'].env['cas.login'] || '/cas/login') + '?service=' + $location.$$absUrl;
     return {
       responseError: (rejection) => {
@@ -94,8 +95,21 @@ window['appInit'] = () => {
     jQuery.ajax(window['CONFIG'].env['test.logged.in.url'] || '/oikeustulkkirekisteri-service/api/app/testLoggedIn', {
       crossDomain:true,
       complete: logRequest,
-      success: function(xhr, status) {
-        initFunction("Login test", xhr, status);
+      success: function(data, status) {
+        if (!data) {
+          redirectToLogin();
+        } else {
+          try {
+            var json = data instanceof String ? JSON.parse(data) : data;
+            if (json && json.loggedIn) {
+              initFunction("Login test", data, status);
+            } else {
+              redirectToLogin();
+            }
+          } catch(e) {
+            redirectToLogin();
+          }
+        }
       },
       statusCode: { 302: redirectToLogin },
       error: redirectToLogin

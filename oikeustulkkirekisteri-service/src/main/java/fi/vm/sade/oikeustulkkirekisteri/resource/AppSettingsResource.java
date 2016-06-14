@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * User: ratamaa
@@ -52,7 +54,10 @@ public class AppSettingsResource {
     
     @ResponseBody
     @RequestMapping(value  =  "/testLoggedIn", method  =  RequestMethod.GET)
-    public void testLoggedIn() throws IOException {
+    public Map<String,Object> testLoggedIn() throws IOException {
         appSettingsService.requireAuthentication();
+        Map<String,Object> resultJson = new HashMap<>();
+        resultJson.put("loggedIn", true);
+        return resultJson;
     }
 }
