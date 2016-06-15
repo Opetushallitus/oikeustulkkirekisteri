@@ -4,7 +4,7 @@
     <div class="navbar-header">
       <a class="navbar-brand" href="#" tt="oikeustulkkirekisteri">Oikeustulkkirekisteri</a>
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
+        <span class="sr-only"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -13,12 +13,12 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li ng-class="{active: Page.activePage('searchOikeustulkki')}"><a href="#">Haku</a></li>
-        <li ng-class="{active: Page.activePage('addOikeustulkki')}"><a href="#addOikeustulkki">Lisää tulkki</a></li>
+        <li ng-class="{active: Page.activePage('searchOikeustulkki')}"><a href="#" tt="haku">Haku</a></li>
+        <li ng-class="{active: Page.activePage('addOikeustulkki')}"><a href="#addOikeustulkki" tt="oikeustulkki_lisaa">Lisää tulkki</a></li>
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">På svenska</a></li>
+        <li><a href="#" tt="toinen_kieli">På svenska</a></li>
       </ul>
     </div>
 

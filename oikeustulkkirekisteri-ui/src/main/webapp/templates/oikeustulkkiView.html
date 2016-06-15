@@ -8,16 +8,16 @@
                             ng-click="hideDialog()">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title">Poista tiedot</h4>
+                    <h4 class="modal-title" tt="poista_tiedot">Poista tiedot</h4>
                 </div>
                 <div class="modal-body">
-                    <p>Haluatko varmasti poistaa tulkin?</p>
+                    <p tt="poista_varmistus">Haluatko varmasti poistaa tulkin?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal"
-                            ng-click="hideDialog()">Peruuta
+                            ng-click="hideDialog()" tt="generic_cancel">Peruuta
                     </button>
-                    <button type="button" class="btn btn-danger" ng-click="remove()">Poista</button>
+                    <button type="button" class="btn btn-danger" ng-click="remove()" tt="generic_remove">Poista</button>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
                 ng-click="hideErrorDialog()">
             <span aria-hidden="true">&times;</span>
         </button>
-        Tietojen poistaminen epäonnistui
+        <span tt="poisto_epaonnistui">Tietojen poistaminen epäonnistui</span>
     </div>
 
 
@@ -36,7 +36,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-9 col-md-10 main">
-                <h2 class="sub-header">Oikeustulkin tiedot</h2>
+                <h2 class="sub-header" tt="oikeustulkki_tiedot">Oikeustulkin tiedot</h2>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
             <div class="panel-body">
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Hetu</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_hetu">Hetu</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{tulkki.hetu}}</p>
                     </div>
@@ -55,7 +55,7 @@
 
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Osoite</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_osoite">Osoite</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{tulkki.osoite.katuosoite}},
                             {{tulkki.osoite.postinumero}}, {{tulkki.osoite.postitoimipaikka}}</p>
@@ -64,7 +64,7 @@
 
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Sähköpostiosoite</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_sahkopostiosoite">Sähköpostiosoite</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{tulkki.email}}</p>
                     </div>
@@ -72,7 +72,7 @@
 
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Puhelinnumero</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_puhelinnumero">Puhelinnumero</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{tulkki.puhelinnumero}}</p>
                     </div>
@@ -80,14 +80,14 @@
 
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Yhteystiedot</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_yhteystiedot">Yhteystiedot</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{tulkki.muuYhteystieto}}</p>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Rekisteröinnin alkupvm</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_rekisterointi_alkupvm">Rekisteröinnin alkupvm</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">
                             {{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}}</p>
@@ -96,7 +96,7 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Rekisteröinnin loppupvm</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_rekisterointi_loppupvm">Rekisteröinnin loppupvm</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">
                             {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</p>
@@ -114,7 +114,7 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Kieliparit</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_kieliparit">Kieliparit</label>
                     <div class="col-sm-10">
                         <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;">
                             <li ng-repeat="k in tulkki.kieliParit">{{kieli(k.kielesta)}} -
@@ -126,19 +126,19 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Koulutus</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_koulutus">Koulutus</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline"
-                           ng-if="tulkki.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'">Oikeustulkin
+                           ng-if="tulkki.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'" tt="oikeustulkki_tutkinto_erikoisammattitutkinto">Oikeustulkin
                             erikoisammattitutkinto</p>
                         <p class="form-control-static inline"
-                           ng-if="tulkki.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'">Korkeakoulututkinto</p>
+                           ng-if="tulkki.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'" tt="oikeustulkki_korkeakoulu">Korkeakoulututkinto</p>
                     </div>
                 </div>
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Lisätietoa</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_lisatietoa">Lisätietoa</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{tulkki.lisatiedot}}</p>
                     </div>
@@ -146,9 +146,9 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Toiminta-alue</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_toimintaalue">Toiminta-alue</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static inline" ng-if="tulkki.kokoSuomi">Koko Suomi</p>
+                        <p class="form-control-static inline" ng-if="tulkki.kokoSuomi" tt="oikeustulkki_alue_koko_suomi">Koko Suomi</p>
                         <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;"
                             ng-if="!tulkki.kokoSuomi">
                             <li ng-repeat="mk in tulkki.maakunnat">{{maakunta(mk)}}</li>
@@ -158,7 +158,7 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Julkaistu</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_julkaistu">Julkaistu</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{tulkki.julkaisulupa ? 'Kyllä' : 'Ei'}}</p>
                     </div>
@@ -166,12 +166,12 @@
 
                 <div class="btn-container-right">
                     <a ng-if="tulkki.uusinId" type="button" class="btn btn-default"
-                       href="#/oikeustulkki/{{tulkki.uusinId}}">Näytä uusin</a>
+                       href="#/oikeustulkki/{{tulkki.uusinId}}" tt="nayta_uusin">Näytä uusin</a>
                     <a ng-if="!tulkki.uusinId" type="button" class="btn btn-primary"
-                       href="#/oikeustulkki/{{tulkki.id}}/create">Uusi hakemus</a>
+                       href="#/oikeustulkki/{{tulkki.id}}/create" tt="uusi_hakemus">Uusi hakemus</a>
                     <a type="button" class="btn btn-primary"
-                       href="#/oikeustulkki/{{tulkki.id}}/edit">Muokkaa</a>
-                    <button type="button" class="btn btn-danger" ng-click="showRemoveDialog = true;">Poista
+                       href="#/oikeustulkki/{{tulkki.id}}/edit" tt="generic_edit">Muokkaa</a>
+                    <button type="button" class="btn btn-danger" ng-click="showRemoveDialog = true;" tt="generic_delete">Poista
                     </button>
                 </div>
 
@@ -181,7 +181,7 @@
 
         <div class="row" ng-if="tulkki.muokkaushistoria.length">
             <div class="col-sm-9 col-md-10 main">
-                <h3 class="sub-header">Muokkaushistoria</h3>
+                <h3 class="sub-header" tt="oikeustulkki_muokkaushistoria">Muokkaushistoria</h3>
             </div>
         </div>
         <div class="panel panel-default history-panel" ng-repeat="item in tulkki.muokkaushistoria">
@@ -196,7 +196,7 @@
 
         <div class="row" ng-if="tulkki.aiemmat.length">
             <div class="col-sm-9 col-md-10 main">
-                <h3 class="sub-header">Historia</h3>
+                <h3 class="sub-header" tt="oikeustulkki_historia">Historia</h3>
             </div>
         </div>
         <div class="panel panel-default history-panel" ng-repeat="item in tulkki.aiemmat">
@@ -206,14 +206,14 @@
             </div>
             <div class="panel-body" ng-if="item.visible">
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Hetu</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_hetu">Hetu</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{item.hetu}}</p>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Osoite</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_osoite">Osoite</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{item.osoite.katuosoite}},
                             {{item.osoite.postinumero}}, {{item.osoite.postitoimipaikka}}</p>
@@ -222,7 +222,7 @@
 
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Sähköpostiosoite</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_sahkopostiosoite">Sähköpostiosoite</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{item.email}}</p>
                     </div>
@@ -230,7 +230,7 @@
 
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Puhelinnumero</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_puhelinnumero">Puhelinnumero</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{item.puhelinnumero}}</p>
                     </div>
@@ -238,7 +238,7 @@
 
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Yhteystiedot</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_yhteystiedot">Yhteystiedot</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{item.muuYhteystieto}}</p>
                     </div>
@@ -254,7 +254,7 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Kieliparit</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_kieliparit">Kieliparit</label>
                     <div class="col-sm-10">
                         <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;">
                             <li ng-repeat="k in item.kieliParit">{{kieli(k.kielesta)}} -
@@ -266,19 +266,19 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Koulutus</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_koulutus">Koulutus</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline"
-                           ng-if="item.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'">Oikeustulkin
+                           ng-if="item.tutkintoTyyppi == 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'" tt="oikeustulkki_tutkinto_erikoisammattitutkinto">Oikeustulkin
                             erikoisammattitutkinto</p>
                         <p class="form-control-static inline"
-                           ng-if="item.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'">Korkeakoulututkinto</p>
+                           ng-if="item.tutkintoTyyppi == 'MUU_KORKEAKOULUTUTKINTO'" tt="oikeustulkki_korkeakoulu">Korkeakoulututkinto</p>
                     </div>
                 </div>
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Lisätietoa</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_lisatietoa">Lisätietoa</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{item.lisatiedot}}</p>
                     </div>
@@ -286,9 +286,9 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Toiminta-alue</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_toimintaalue">Toiminta-alue</label>
                     <div class="col-sm-10">
-                        <p class="form-control-static inline" ng-if="item.kokoSuomi">Koko Suomi</p>
+                        <p class="form-control-static inline" ng-if="item.kokoSuomi" tt="oikeustulkki_alue_koko_suomi">Koko Suomi</p>
                         <ul style="padding-left: 15px; padding-top: 0px;margin-top: 0px;"
                             ng-if="!item.kokoSuomi">
                             <li ng-repeat="mk in item.maakunnat">{{maakunta(mk)}}</li>
@@ -298,14 +298,14 @@
                 <div style="clear: both;"></div>
 
                 <div class="form-group">
-                    <label class="col-sm-2 control-label">Julkaistu</label>
+                    <label class="col-sm-2 control-label" tt="oikeustulkki_julkaistu">Julkaistu</label>
                     <div class="col-sm-10">
                         <p class="form-control-static inline">{{item.julkaisulupa ? 'Kyllä' : 'Ei'}}</p>
                     </div>
                 </div>
 
                 <div class="btn-container-right">
-                    <a type="button" class="btn btn-default" href="#/oikeustulkki/{{item.id}}">Näytä</a>
+                    <a type="button" class="btn btn-default" href="#/oikeustulkki/{{item.id}}" tt="generic_show">Näytä</a>
                 </div>
             </div>
         </div>
