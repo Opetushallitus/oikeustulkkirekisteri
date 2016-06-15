@@ -1,9 +1,9 @@
 <div class="container">
-  <h2 class="sub-header">Haku</h2>
+  <h2 class="sub-header" tt="haku">Haku</h2>
   <form>
 
     <div class="form-group">
-      <label for="termi" class="col-sm-4">Nimi/Hetu/Henkilönumero</label>
+      <label for="termi" class="col-sm-4" tt="haku_termi">Nimi/Hetu/Henkilönumero</label>
       <div class="col-sm-6">
         <input type="text" class="form-control" id="termi" ng-model="termi">
       </div>
@@ -12,7 +12,7 @@
     <div style="clear: both;"/>
     <br/>
     <div class="form-group">
-      <label for="languagePairsSearch" class="col-sm-2 control-label">Kieliparit</label>
+      <label for="languagePairsSearch" class="col-sm-2 control-label" tt="haku_kieliparit">Kieliparit</label>
 
       <div class="col-sm-8 col-sm-offset-2">
         <div>
@@ -43,7 +43,7 @@
             </ui-select-choices>
           </ui-select>
 
-          <button class="btn btn-primary" ng-click="addKielipari()">Lisää</button>
+          <button class="btn btn-primary" ng-click="addKielipari()" tt="oikeustulkki_kielipari_lisaa">Lisää</button>
         </div>
 
       </div>
@@ -54,35 +54,36 @@
     <br/>
 
     <div class="form-group">
-      <label for="tutkinto" class="col-sm-2 control-label">Suoritettu tutkinto</label>
+      <label for="tutkinto" class="col-sm-2 control-label" tt="haku_suoritettu_tutkinto">Suoritettu tutkinto</label>
       <div class="col-sm-6 col-sm-offset-2">
         <label>
-          <input id="tutkinto" ng-model="tutkinto.erikois" ng-click="tutkintoChanged('erikois')" type="checkbox">Oikeustulkin erikoisammattitutkinto<br>
+          <input id="tutkinto" ng-model="tutkinto.erikois" ng-click="tutkintoChanged('erikois')" type="checkbox">
+          <span tt="oikeustulkki_tutkinto_erikoisammattitutkinto">Oikeustulkin erikoisammattitutkinto</span><br>
         </label>
         <br/>
         <label>
-          <input ng-model="tutkinto.korkeakoulu" ng-click="tutkintoChanged('korkeakoulu')" type="checkbox">Korkeakoulututkinto<br>
+          <input ng-model="tutkinto.korkeakoulu" ng-click="tutkintoChanged('korkeakoulu')" type="checkbox">
+          <span tt="oikeustulkki_korkeakoulu">Korkeakoulututkinto</span><br>
         </label>
       </div>
     </div>
 
     <div style="clear: both;"/>
     <br/>
-    <button class="btn btn-default" ng-click="search()">Hae</button>
+    <button class="btn btn-default" ng-click="search()" tt="haku_hae">Hae</button>
   </form>
 
   <br/>
-  <!--<pre>{{results|json}}</pre>-->
-  <div ng-if="results.length === 0">Haulla ei löytynyt tuloksia</div>
+  <div ng-if="results.length === 0" tt="haku_ei_tuloksia">Haulla ei löytynyt tuloksia</div>
   <div class="table-responsive" ng-if="results && results.length !== 0">
     <table class="table table-striped table-hover translator-list-table">
       <thead>
       <tr>
-        <th>Nimi</th>
-        <th>Hetu</th>
-        <th>Kieliparit</th>
-        <th>Voimassa</th>
-        <th>Toiminta-alue</th>
+        <th tt="haku_nimi">Nimi</th>
+        <th tt="haku_hetu">Hetu</th>
+        <th tt="haku_kieliparit">Kieliparit</th>
+        <th tt="haku_voimassa">Voimassa</th>
+        <th tt="haku_toimintaalue">Toiminta-alue</th>
       </tr>
       </thead>
       <tbody>
@@ -96,7 +97,7 @@
         </td>
         <td>{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} - {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</td>
         <td>
-            <span ng-if="tulkki.kokoSuomi">Koko Suomi</span>
+            <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>
             <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
         </td>
       </tr>
