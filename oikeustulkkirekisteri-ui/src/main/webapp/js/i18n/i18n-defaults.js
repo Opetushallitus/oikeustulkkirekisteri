@@ -20,9 +20,38 @@ angular.module("I18n", [], ["$provide", function($provider) {
         loading: 'Ladataan...',
         confirm_yes: 'Kyllä',
         confirm_no: 'Ei',
-        
+        generic_cancel: 'Peruuta',
+        generic_tallenna: 'Tallenna',
+
         oikeustulkki_aidinkieli: 'Äidinkieli',
-        
+        oikeustulkki_lisaa: 'Lisää tulkki',
+        oikeustulkki_alku_pvm: 'Alku pvm',
+        oikeustulkki_alue_koko_suomi: 'Koko Suomi',
+        oikeustulkki_alue_maakunnat: 'Maakunnat',
+        oikeustulkki_etunimet: 'Etunimet',
+        oikeustulkki_hetu: 'Hetu',
+        oikeustulkki_katusosoite: 'Katuosoite',
+        oikeustulkki_kielipari_lisaa: 'Lisää',
+        oikeustulkki_kieliparit: 'Kieliparit',
+        oikeustulkki_korkeakoulu: 'Korkeakoulututkinto',
+        oikeustulkki_kutsumanimi: 'Kutsumanimi',
+        oikeustulkki_lisatietoa: 'Lisätietoa',
+        oikeustulkki_muu_yhteystieto: 'Muu yhteystieto',
+        oikeustulkki_postinumero: 'Postinumero',
+        oikeustulkki_postitoimipaikka: 'Postitoimipaikka',
+        oikeustulkki_puhelinnumero: 'Puhelinnumero',
+        oikeustulkki_sahkopostiosoite: 'Sähköpostiosoite',
+        oikeustulkki_sukunimi: 'Sukunimi',
+        oikeustulkki_suoritettu_tutkinto: 'Suoritettu tutkinto',
+        oikeustulkki_toimintaalue: 'Toiminta-alue',
+        oikeustulkki_tutkinto_erikoisammattitutkinto: 'Oikeustulkin erikoisammattitutkinto',
+
+        pakollinen_kentta: 'Pakollinen kenttä',
+
+        virhe_aidinkieli_valitsematta: 'Äidinkieltä ei ole valittu',
+        virhe_kielipareja_ei_lisatty: 'Kielipareja ei ole lisätty',
+        virhe_sahkoposti_virheellinen: 'Virheellinen sähköpostiosoite',
+
         kieli_fi: 'suomi',
         kieli_sv: 'ruotsi',
         kieli_en: 'englanti'
