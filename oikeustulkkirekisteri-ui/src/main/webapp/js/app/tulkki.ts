@@ -47,7 +47,6 @@ const getTulkkiPostData = (tulkki:Tulkki) => {
   if (tulkki.paattyy) {
     postData.paattyy = tulkki.paattyy.getTime();
   }
-  console.info('toiminta-alue', tulkki.toimintaAlue);
   postData.maakunnat = _.map(tulkki.toimintaAlue, 'arvo');
   return postData;
 };
@@ -63,6 +62,6 @@ function newTulkki():Tulkki {
     toimintaAlue: [],
     tutkintoTyyppi: 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO'
   };
-};
+}
 
 export {Tulkki, newTulkki, getTulkkiPostData}
