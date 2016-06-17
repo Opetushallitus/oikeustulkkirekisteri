@@ -180,9 +180,9 @@
           <label for="aidinkieli" class="col-sm-2 control-label required" tt="oikeustulkki_aidinkieli">Äidinkieli</label>
           <div class="col-sm-8">
               <ui-select ng-model="tulkki.aidinkieli" id="aidinkieli" class="col-sm-4">
-                  <ui-select-match>{{$select.selected.nimi.FI}}</ui-select-match>
+                  <ui-select-match>{{$select.selected.nimi[currentLocale]}}</ui-select-match>
                   <ui-select-choices repeat="kieli.arvo as kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
-                      <span ng-bind="kieli.nimi.FI"></span>
+                      <span ng-bind="kieli.nimi[currentLocale]"></span>
                   </ui-select-choices>
               </ui-select>
               <div ng-if="showErrors && !tulkki.aidinkieli" class="error-msg">
@@ -197,7 +197,7 @@
           <div class="col-sm-8">
               <div>
                   <p ng-repeat="kielipari in tulkki.kieliparit">
-                      {{kielipari.kielesta.nimi.FI}} - {{kielipari.kieleen.nimi.FI}}
+                      {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}
                       <button type="button" class="btn btn-default btn-xs" ng-click="removeKielipari(kielipari)">
                           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                       </button>
@@ -207,19 +207,19 @@
               <div>
                   <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
                       <ui-select-match placeholder="Kielestä">
-                          <span ng-bind="$select.selected.nimi.FI"></span>
+                          <span ng-bind="$select.selected.nimi[currentLocale]"></span>
                       </ui-select-match>
                       <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
-                          <span ng-bind="kieli.nimi.FI"></span>
+                          <span ng-bind="kieli.nimi[currentLocale]"></span>
                       </ui-select-choices>
                   </ui-select>
 
                   <ui-select ng-model="kieleen.selected" class="col-sm-4">
                       <ui-select-match placeholder="Kieleen">
-                          <span ng-bind="$select.selected.nimi.FI"></span>
+                          <span ng-bind="$select.selected.nimi[currentLocale]"></span>
                       </ui-select-match>
                       <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
-                          <span ng-bind="kieli.nimi.FI"></span>
+                          <span ng-bind="kieli.nimi[currentLocale]"></span>
                       </ui-select-choices>
                   </ui-select>
 
@@ -254,10 +254,10 @@
           <div class="col-sm-6" ng-if="!tulkki.kokoSuomi">
               <ui-select multiple tagging ng-model="tulkki.toimintaAlue" id="region" required name="toimintaAlue">
                   <ui-select-match placeholder="Toiminta-alue">
-                      <span ng-bind="$item.nimi.FI"></span>
+                      <span ng-bind="$item.nimi[currentLocale]"></span>
                   </ui-select-match>
                   <ui-select-choices repeat="region in (regions | selectFilter: $select.search) track by region.arvo">
-                      <span ng-bind="region.nimi.FI"></span>
+                      <span ng-bind="region.nimi[currentLocale]"></span>
                   </ui-select-choices>
               </ui-select>
 

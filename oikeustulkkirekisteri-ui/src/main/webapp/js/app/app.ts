@@ -137,4 +137,4 @@ window['appInit'] = () => {
     init_counter++;
     initFunction('dev', {}, 200);
   }
-}
+};
