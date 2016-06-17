@@ -17,17 +17,7 @@ angular.module('registryApp').controller('oikeustulkkiViewCtrl', ["$scope", "Pag
     KoodistoService.getMaakunnat().then(r => {
       r.data.map(k => $scope.maakunnat[k.arvo] = k);
     });
-
-    $scope.history = [{
-      muokattuPvm: '1.6.2014',
-      kommentti: 'Uusittu voimassaolo',
-      visible: false
-    }, {
-      muokattuPvm: '1.11.2015',
-      kommentti: 'Lisätty kielipari',
-      visible: false
-    }];
-
+    
     $scope.hideDialog = () => {
       $scope.showRemoveDialog = false;
     };
