@@ -5,9 +5,24 @@
   <link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
 </head>
 <body>
-<h1>Oikeustulkkirekisteri Julkinen</h1>
 
-<div ng-app="publicRegistryApp">
+<div id="header">
+  <img src="img/opetushallitus.gif">
+  <p>Oikeustulkkirekisteri</p>
+  <a>På svenska</a>
+</div>
+
+<div id="nav-holder">
+  <ul class="scaling-active scaling-ready" id="main-nav">
+    <li class="first-child selected">
+      <a class="first-child-link">
+        <span>Etsi oikeustulkkia</span>
+      </a>
+    </li>
+  </ul>
+</div>
+
+<div ng-app="publicRegistryApp" id="content-area">
   <div ng-controller="mainCtrl">
     <!--<div ng-include="'templates/navbar.html'"></div>-->
     <div ng-view></div>
