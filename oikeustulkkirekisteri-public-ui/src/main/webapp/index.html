@@ -1,13 +1,21 @@
 <!DOCTYPE>
 <html>
-	<head>
-		<title>Oikeustulkkirekisteri</title>
-        <link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
-	</head>	
-	<body>
-		<h1>Oikeustulkkirekisteri Julkinen</h1>
-		
-        <script type="text/javascript" src="dist/lib.min.js" charset="utf-8"></script>
-        <script type="text/javascript" src="dist/app.min.js" charset="utf-8"></script>
-	</body>
+<head>
+  <title>Oikeustulkkirekisteri</title>
+  <link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
+</head>
+<body>
+<h1>Oikeustulkkirekisteri Julkinen</h1>
+
+<div ng-app="publicRegistryApp">
+  <div ng-controller="mainCtrl">
+    <!--<div ng-include="'templates/navbar.html'"></div>-->
+    <div ng-view></div>
+  </div>
+</div>
+
+<script type="text/javascript" src="dist/lib.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="dist/select.min.js" charset="utf-8"></script>
+<script type="text/javascript" src="dist/app.min.js" charset="utf-8"></script>
+</body>
 </html>

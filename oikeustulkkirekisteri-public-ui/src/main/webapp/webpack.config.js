@@ -5,7 +5,8 @@ var path = require('path'),
 module.exports = {
     entry: {
         'app.min': ['./js/entry.js'],
-        'lib.min': ['./js/lib.js']
+        'lib.min': ['./js/lib.js'],
+        'select.min': ['./js/select.js']
     },
     devtool: 'source-map',
     output: {
@@ -25,6 +26,12 @@ module.exports = {
     plugins: [ 
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
-        new ExtractTextPlugin("styles.min.css")
+        new ExtractTextPlugin("styles.min.css"),
+        new webpack.ProvidePlugin({
+            _: 'lodash',
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        })
     ]
 };
