@@ -61,6 +61,8 @@ angular.module("I18n", [], ["$provide", function($provider) {
         oikeustulkki_rekisterointi_loppupvm: 'Rekisteröinnin loppupvm',
         oikeustulkki_tiedot: 'Oikeustulkin tiedot',
         oikeustulkki_yhteystiedot: 'Yhteystiedot',
+        oikeustulkki_katuosoite: 'Katuosoite',
+        oikeustulkki_paattyy_pvm: 'Päättyy pvm',
 
         pakollinen_kentta: 'Pakollinen kenttä',
 
@@ -85,7 +87,11 @@ angular.module("I18n", [], ["$provide", function($provider) {
         poista_varmistus: 'Haluatko varmasti poistaa tulkin?',
         poisto_epaonnistui: 'Tietojen poistaminen epäonnistui',
         uusi_hakemus: 'Uusi hakemus',
-
+        julkaistu: 'Julkaistu',
+        lisaa_uusi_hakemus: 'Lisää oikeustulkille uusi hakemus',
+        muokkaa_tulkkia: 'Muokkaa oikeustulkkia',
+        muokkausviesti: 'Muokkausviesti',
+        
         kieli_fi: 'suomi',
         kieli_sv: 'ruotsi',
         kieli_en: 'englanti'
