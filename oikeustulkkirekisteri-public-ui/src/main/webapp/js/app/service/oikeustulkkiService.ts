@@ -1,8 +1,9 @@
 angular.module('publicRegistryApp').service('OikeustulkkiService', ['$http', '$q', ($http, $q) => {
   const root = '/oikeustulkkirekisteri-service/api/public/';
 
-  const getTulkit = (termi: string) => {
+  const getTulkit = (termi: string, kieliparit) => {
     const params:any = {
+      kieliparit: kieliparit,
       termi: termi,
       page: 1,
       count: 5

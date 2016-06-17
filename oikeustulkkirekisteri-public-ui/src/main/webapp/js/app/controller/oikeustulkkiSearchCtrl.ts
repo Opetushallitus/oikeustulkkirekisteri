@@ -32,7 +32,11 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     };
 
     $scope.search = () => {
-      OikeustulkkiService.getTulkit($scope.termi).then((r) => {
+      const kieliparit = _.map($scope.kieliparit, (kielipari) => {
+        return {'kielesta': kielipari.kielesta.arvo, 'kieleen': kielipari.kieleen.arvo}
+      });
+      
+      OikeustulkkiService.getTulkit($scope.termi, kieliparit).then((r) => {
         $scope.tulkit = r.data;
       });
     };
