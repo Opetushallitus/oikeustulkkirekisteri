@@ -6,7 +6,7 @@
   <form>
 
     <div class="form-group">
-      <label for="termi" class="col-sm-4">Nimi</label>
+      <label for="termi" class="col-sm-4">Haku nimen mukaan</label>
       <div class="col-sm-6">
         <input type="text" class="form-control" id="termi" ng-model="termi">
       </div>
@@ -16,10 +16,18 @@
     <br/>
 
     <div class="form-group">
-      <label for="languagePairsSearch" class="col-sm-2 control-label" tt="haku_kieliparit">Kieliparit</label>
+      <label for="languagePairsSearch" class="col-sm-2 control-label" tt="haku_kieliparit">
+        Haku kielipareittain
+        <span class="help-text">Molemman suuntainen pätevyys esim. suomi <-> englanti englanti <-> suomi</span>
+      </label>
 
       <div class="col-sm-8 col-sm-offset-2">
         <div>
+          <div ng-if="kieliparit.length === 0">
+            <span class="help-text">Ei valittua kieliparia</span>
+            <div style="clear: both;"/>
+            <br/>
+          </div>
           <p ng-repeat="kielipari in kieliparit">
             {{kielipari.kielesta.nimi.FI}} - {{kielipari.kieleen.nimi.FI}}
             <button type="button" class="btn btn-default btn-xs" ng-click="removeKielipari(kielipari)">
@@ -56,7 +64,9 @@
     <br/>
     <div style="clear: both;"></div>
 
-    <button class="btn btn-default" ng-click="search()">Hae</button>
+    <br/>
+    <br/>
+    <button class="btn btn-default btn-search" ng-click="search()">Hae</button>
 
   </form>
 
