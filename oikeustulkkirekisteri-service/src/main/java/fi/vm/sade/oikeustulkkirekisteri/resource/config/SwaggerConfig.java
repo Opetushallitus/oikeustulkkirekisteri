@@ -47,39 +47,12 @@ public class SwaggerConfig {
         return plugin;
     }
 
-    @Bean
-    public SwaggerSpringMvcPlugin swaggerPluginInternal(ServletContext ctx) {
-        RelativeSwaggerPathProvider relativeSwaggerPathProvider = new RelativeSwaggerPathProvider(ctx);
-        relativeSwaggerPathProvider.setApiResourcePrefix("api");
-        final TypeResolver typeResolver = new TypeResolver();
-        SwaggerSpringMvcPlugin plugin = new SwaggerSpringMvcPlugin(this.springSwaggerConfig)
-                .apiInfo(apiInfoInternal())
-                .pathProvider(relativeSwaggerPathProvider)
-                .genericModelSubstitutes(ResponseEntity.class, Optional.class)
-                .alternateTypeRules(Alternates.newRule(typeResolver.resolve(new GenericType<Callable<ResponseEntity<Object>>>() {
-                        }), typeResolver.resolve(Object.class)))
-                .swaggerGroup("internal");
-        return plugin;
-    }
-
     /**
      * API Info as it appears on the swagger-ui page
      */
     private ApiInfo apiInfo() {
         ApiInfo apiInfo = new ApiInfo(
-                "Oppijan verkkopalvelukokonaisuus / Oikeustulkkirekisterin julkinen rajapinta",
-                "Spring MVC API based on the swagger 1.2 spec",
-                "https://confluence.csc.fi/display/oppija/Rajapinnat+toisen+asteen+ja+perusasteen+toimijoille",
-                null,
-                "EUPL 1.1",
-                "http://ec.europa.eu/idabc/eupl"
-        );
-        return apiInfo;
-    }
-
-    private ApiInfo apiInfoInternal() {
-        ApiInfo apiInfo = new ApiInfo(
-                "Oppijan verkkopalvelukokonaisuus / Oikeustulkkirekisterin sisäinen rajapinta",
+                "Oppijan verkkopalvelukokonaisuus / Oikeustulkkirekisterin rajapinta",
                 "Spring MVC API based on the swagger 1.2 spec",
                 "https://confluence.csc.fi/display/oppija/Rajapinnat+toisen+asteen+ja+perusasteen+toimijoille",
                 null,

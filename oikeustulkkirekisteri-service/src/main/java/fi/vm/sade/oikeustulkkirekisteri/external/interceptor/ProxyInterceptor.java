@@ -59,7 +59,15 @@ public class ProxyInterceptor extends AbstractPhaseInterceptor<Message> {
         if (this.target != null) {
             return;
         }
-        if (this.devMode) {
+        if (this.username != null && this.password !=null) {
+            CasApplicationAsAUserInterceptor auth = new CasApplicationAsAUserInterceptor();
+            // TODO: caller service? better implementation?
+            auth.setWebCasUrl(this.webCasUrl);
+            auth.setTargetService(this.serviceUrl);
+            auth.setAppClientUsername(this.username);
+            auth.setAppClientPassword(this.password);
+            this.target = auth;
+        } else if (this.devMode) {
             CasFriendlyCxfInterceptor f = new CasFriendlyCxfInterceptor();
             f.setUseBasicAuthentication(true);
             f.setCallerService(this.callerService);
@@ -68,15 +76,7 @@ public class ProxyInterceptor extends AbstractPhaseInterceptor<Message> {
             f.setUseBlockingConcurrent(true);
             f.setAppClientPassword(this.password);
             this.target = f;
-        } else if (this.username != null && this.password !=null) {
-            CasApplicationAsAUserInterceptor auth = new CasApplicationAsAUserInterceptor();
-            // TODO: caller service? better implementation?
-            auth.setWebCasUrl(this.webCasUrl);
-            auth.setTargetService(this.serviceUrl);
-            auth.setAppClientUsername(this.username);
-            auth.setAppClientPassword(this.password);
-            this.target = auth;
-        } else {
+        } else  {
             // TODO: find better implementation
             CasFriendlyCxfInterceptor f = new CasFriendlyCxfInterceptor();
             f.setUseBasicAuthentication(false);
