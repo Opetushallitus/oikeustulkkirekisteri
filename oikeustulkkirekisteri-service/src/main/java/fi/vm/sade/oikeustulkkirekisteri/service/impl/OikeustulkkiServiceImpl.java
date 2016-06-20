@@ -416,7 +416,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         
         return henkiloResults.stream().flatMap(ot -> ofNullable(oikeustulkkis.get(ot.getOidHenkilo()))
                 .map(List::stream).orElseGet(Stream::empty)).map(combiner.apply(henkilosByOid::get))
-                //.skip(index).limit(count) //TODO?
+                //.skip(index).limit(count) //TODO:support in UI?
                 .collect(toList());
     }
 

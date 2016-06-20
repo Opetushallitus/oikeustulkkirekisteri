@@ -1,6 +1,7 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
+import lombok.Getter;
 
 import java.util.function.Predicate;
 
@@ -10,7 +11,9 @@ import java.util.function.Predicate;
  * Time: 17.50
  */
 public class HenkiloTermPredicate implements Predicate<HenkiloRestDto> {
+    @Getter
     private final String term;
+    @Getter 
     private boolean matchHetu;
 
     public HenkiloTermPredicate(String term) {
