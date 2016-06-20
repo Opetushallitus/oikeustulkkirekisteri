@@ -18,8 +18,9 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
 
     KoodistoService.getKielet().then(r => {
       $scope.kielet = r.data;
+      $scope.kielet.splice(0, 0, {arvo: null, nimi: {FI: 'Kaikki', SV: 'Alla', EN: 'All'}});
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
-      $scope.kieleen = {selected: $scope.kielet[1]};
+      $scope.kieleen = {selected: $scope.kielet[0]};
     });
 
     KoodistoService.getMaakunnat().then(r => {
