@@ -14,7 +14,7 @@ import java.util.List;
  * Time: 17.03
  */
 @Getter @Setter
-public class OikeustulkkiPublicViewDto implements Serializable {
+public class OikeustulkkiPublicViewDto implements JulkisetYhteystiedot, Serializable {
     private Long id;
     private String etunimet;
     private String sukunimi;

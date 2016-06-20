@@ -368,6 +368,11 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         viewDto.setKieliParit(convert(oikeustulkki.getKielet().stream()));
         viewDto.setKokoSuomi(isKokoSuomi(oikeustulkki.getSijainnit().stream()));
         viewDto.setMaakuntaKoodis(maakuntaKoodis(oikeustulkki.getSijainnit().stream()));
+        setJulkisetYhteystiedot(oikeustulkki, henkilo, viewDto);
+        return viewDto;
+    }
+
+    private void setJulkisetYhteystiedot(Oikeustulkki oikeustulkki, HenkiloRestDto henkilo, JulkisetYhteystiedot viewDto) {
         if (oikeustulkki.isJulkaisulupaEmail()) {
             viewDto.setEmail(findYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
         }
@@ -378,7 +383,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         if (oikeustulkki.isJulkaisulupaMuuYhteystieto()) {
             viewDto.setMuuYhteystieto(oikeustulkki.getMuuYhteystieto());
         }
-        return viewDto;
     }
 
     private Function<Oikeustulkki, OikeustulkkiPublicListDto> combineHenkilo(Function<String, HenkiloRestDto> h) {
@@ -392,6 +396,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
             dto.setKieliParit(convert(ot.getKielet().stream()));
             dto.setKokoSuomi(isKokoSuomi(ot.getSijainnit().stream()));
             dto.setMaakunnat(maakuntaKoodis(ot.getSijainnit().stream()));
+            setJulkisetYhteystiedot(ot, henkilo, dto);
             return dto;
         };
     }
