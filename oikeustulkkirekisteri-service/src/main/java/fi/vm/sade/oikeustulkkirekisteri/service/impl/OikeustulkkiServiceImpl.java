@@ -396,7 +396,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
             dto.setKieliParit(convert(ot.getKielet().stream()));
             dto.setKokoSuomi(isKokoSuomi(ot.getSijainnit().stream()));
             dto.setMaakunnat(maakuntaKoodis(ot.getSijainnit().stream()));
-            setJulkisetYhteystiedot(ot, henkilo, dto);
             return dto;
         };
     }
