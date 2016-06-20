@@ -38,8 +38,6 @@ public class Oikeustulkki extends Mutable {
     @Type(type = "localDate")
     @Column(name = "paattyy", nullable = false)
     private LocalDate paattyy;
-    @AttributeOverrides(@AttributeOverride(name = "koodi", column = @Column(name = "aidinkieli")))
-    private Kieli aidinkieli;
     @Column(name = "julklaisulupa_email", nullable = false)
     private boolean julkaisulupaEmail;
     @Column(name = "julklaisulupa_puhelinnumero", nullable = false)

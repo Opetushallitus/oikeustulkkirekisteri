@@ -173,6 +173,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         OikeustulkkiVirkailijaViewDto viewDto = convert(oikeustulkki, henkilo, new OikeustulkkiVirkailijaViewDto());
         viewDto.setPaattyy(oikeustulkki.getPaattyy());
         viewDto.setId(oikeustulkki.getId());
+        viewDto.setAidinkieli(ofNullable(henkilo.getAidinkieli()).map(KielisyysDto::getKieliKoodi).orElse(null));
         Map<String,HenkiloRestDto> fetched = new HashMap<>();
         Function<String,HenkiloRestDto> getHenkilos = or(fetched::get, oid -> {
             try {
@@ -268,7 +269,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         oikeustulkki.setJulkaisulupaMuuYhteystieto(dto.isJulkaisulupaMuuYhteystieto());
         oikeustulkki.setJulkaisulupaEmail(dto.isJulkaisulupaEmail());
         oikeustulkki.setJulkaisulupa(dto.isJulkaisulupa());
-        oikeustulkki.setAidinkieli(ofNullable(dto.getAidinkieli()).map(Kieli::new).orElse(null));
         oikeustulkki.setMuuYhteystieto(dto.getMuuYhteystieto()); // missing from henkilöpalvelu, thus saved here
         oikeustulkki.getSijainnit().clear();
         oikeustulkki.getKielet().clear();
@@ -295,7 +295,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         to.setJulkaisulupaPuhelinnumero(from.isJulkaisulupaPuhelinnumero());
         to.setKutsumanimi(henkilo.getKutsumanimi());
         to.setJulkaisulupaEmail(from.isJulkaisulupaEmail());
-        to.setAidinkieli(ofNullable(from.getAidinkieli()).map(Kieli::getKoodi).orElse(null));
         to.setJulkaisulupaMuuYhteystieto(from.isJulkaisulupaMuuYhteystieto());
         to.setEmail(findYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
         to.setPuhelinnumero(findYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
