@@ -23,11 +23,6 @@
 
       <div class="col-sm-8 col-sm-offset-2">
         <div>
-          <div ng-if="kieliparit.length === 0">
-            <span class="help-text">Ei valittua kieliparia</span>
-            <div style="clear: both;"/>
-            <br/>
-          </div>
           <p ng-repeat="kielipari in kieliparit">
             {{kielipari.kielesta.nimi.FI}} - {{kielipari.kieleen.nimi.FI}}
             <button type="button" class="btn btn-default btn-xs" ng-click="removeKielipari(kielipari)">
@@ -41,7 +36,8 @@
             <ui-select-match placeholder="Kielestä">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo"
+                               position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
@@ -50,13 +46,32 @@
             <ui-select-match placeholder="Kieleen">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo"
+                               position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
-
-          <button class="btn btn-primary" ng-click="addKielipari()" tt="oikeustulkki_kielipari_lisaa">Lisää</button>
         </div>
+
+      </div>
+    </div>
+
+    <div style="clear: both;"></div>
+    <br/>
+
+    <div class="form-group">
+      <label for="termi" class="col-sm-4">Haku maakunnan mukaan</label>
+      <div class="col-sm-6">
+        <ui-select ng-model="toimintaAlue.value">
+          <ui-select-match>
+            <span ng-bind="toimintaAlue.value.nimi.FI"></span>
+          </ui-select-match>
+
+          <ui-select-choices repeat="region in (regions | selectFilter: $select.search) track by region.arvo">
+            <span ng-bind="region.nimi.FI"></span>
+          </ui-select-choices>
+
+        </ui-select>
 
       </div>
     </div>
@@ -77,26 +92,51 @@
       <tr>
         <th tt="haku_nimi">Nimi</th>
         <th tt="haku_kieliparit">Kieliparit</th>
-        <th>Voimassaolo päättyy</th>
         <th tt="haku_toimintaalue">Toiminta-alue</th>
       </tr>
       </thead>
-      <tbody>
-      <tr ng-repeat="tulkki in tulkit">
-        <!--<td><a ng-href="#/oikeustulkki/{{tulkki.id}}">{{tulkki.etunimet}} {{tulkki.sukunimi}}</a></td>-->
-        <td>{{tulkki.etunimet}} {{tulkki.sukunimi}}</td>
-        <td>
-          <span ng-repeat="kielipari in tulkki.kieliParit">
-             {{ getKieliNimi(kielipari.kielesta) }} - {{ getKieliNimi(kielipari.kieleen) }}
-          </span>
-        </td>
-        <td>{{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</td>
-        <td>
-          <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>
-          <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
-        </td>
-      </tr>
+      <tbody ng-repeat="tulkki in tulkit">
+        <tr>
+          <!--<td><a ng-href="#/oikeustulkki/{{tulkki.id}}">{{tulkki.etunimet}} {{tulkki.sukunimi}}</a></td>-->
+          <td class="tulkki-name" ng-click="showTulkkiInfo(tulkki.id)">{{tulkki.etunimet}} {{tulkki.sukunimi}}</td>
+          <td>
+            <span ng-repeat="kielipari in tulkki.kieliParit">
+               {{ getKieliNimi(kielipari.kielesta) }} - {{ getKieliNimi(kielipari.kieleen) }}
+            </span>
+          </td>
+          <td>
+            <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>
+            <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
+          </td>
+        </tr>
+        <tr ng-show = "tulkkiInfoVisible.indexOf(tulkki.id)!=-1">
+          <td colspan="3">
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Sähköpostiosoite</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">email@example.com</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Puhelinnumero</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">123456789</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Muu yhteystieto</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">lorem ipsum</p>
+              </div>
+            </div>
+
+          </td>
+        </tr>
       </tbody>
     </table>
 
   </div>
+</div>

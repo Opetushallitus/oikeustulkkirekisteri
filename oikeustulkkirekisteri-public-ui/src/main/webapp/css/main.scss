@@ -1,9 +1,26 @@
+$oph-green: #00a651;
+
+@mixin oph-button($color, $font-color, $border-color) {
+  height: 33px;
+  background-color: $color !important;
+  border: $border-color 1px solid !important;
+  color: $font-color !important;
+
+  text-transform: uppercase;
+  font-size: 12px !important;
+  font-weight: bold !important;
+}
+
 body{
   font:100% Arial, Helvetica, sans-serif;
 
-  p, span{
+  p, span, table{
     font:100% Arial, Helvetica, sans-serif;
   }
+}
+
+table{
+  max-width: 940px !important;
 }
 
 .container{
@@ -20,25 +37,16 @@ input,
 }
 
 .btn-primary{
-  height: 33px;
-  background-color: #f4f6f6 !important;
-  border: #a8a8a8 1px solid !important;
-  color: #1b1b1b !important;
-
-  text-transform: uppercase;
-  font-size: 12px !important;
-  font-weight: bold !important;
+  @include oph-button(#f4f6f6, #1b1b1b, #a8a8a8);
 }
 
 .btn-search{
-  height: 33px;
-  background-color: #00a651 !important;
-  border: 0px !important;
-  color: white !important;
+  @include oph-button($oph-green, white, $oph-green);
+}
 
-  text-transform: uppercase;
-  font-size: 12px !important;
-  font-weight: bold !important;
+.tulkki-name{
+  color: $oph-green;
+  cursor: pointer;
 }
 
 .help-text{
@@ -110,7 +118,7 @@ input,
       float: left;
       border-left: 1px white solid;
       border-right: 1px white solid;
-      border-bottom: #00a651 5px solid;
+      border-bottom: $oph-green 5px solid;
       height: 50px;
       padding: 14px 5px 0 5px;
     }
