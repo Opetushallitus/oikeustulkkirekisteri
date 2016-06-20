@@ -61,16 +61,13 @@ public class OikeustulkkiCacheServiceImpl extends AbstractService implements Oik
 
     @Resource
     private HenkiloApi henkiloResourceReadClient;
-
+    
+    @Override
     @PostConstruct
     @Scheduled(fixedRateString = "${henkilo.fetch.rate.ms:"+A_DAY+"}",
-                fixedDelayString = "${henkilo.fetch.delay.ms:"+A_DAY+"}")
+                initialDelayString = "${henkilo.fetch.delay.ms:"+A_DAY+"}")
     @Transactional(readOnly = true)
-    public void scheduledFetch() {
-        fetch();
-    }
-    
-    private synchronized void fetch() {
+    public synchronized void scheduledFetch() {
         try {
             allHenkilosOrdererd = new CopyOnWriteArrayList<>(henkiloResourceReadClient.henkilotByHenkiloOidList(oikeustulkkiRepository.findEiPoistettuOids(),
                     ExternalPermissionService.OIKEUSTULKKIREKISTERI));

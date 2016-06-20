@@ -25,7 +25,11 @@ import static java.util.stream.Collectors.toList;
 public class OikeustulkkiCacheServiceMock implements OikeustulkkiCacheService {
     private Map<String,HenkiloRestDto> byOid = new HashMap<>();
     private Map<String,HenkiloRestDto> toUpdate = new HashMap<>();
-    
+
+    @Override
+    public void scheduledFetch() {
+    }
+
     @Override
     public void notifyHenkiloUpdated(String oid) {
         HenkiloRestDto dto = toUpdate.get(oid);

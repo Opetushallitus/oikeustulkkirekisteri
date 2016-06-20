@@ -14,6 +14,8 @@ import java.util.function.Predicate;
  * Time: 17.42
  */
 public interface OikeustulkkiCacheService {
+    void scheduledFetch();
+
     void notifyHenkiloUpdated(String oid);
     
     List<HenkiloRestDto> findHenkilos(Predicate<HenkiloRestDto> predicate);
