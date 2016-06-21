@@ -31,6 +31,7 @@ public class HenkiloRestDto {
     private boolean yksiloityVTJ;
     private boolean yksilointiYritetty;
     private boolean duplicate;
+    private KielisyysDto aidinkieli;
     private List<OrganisaatioHenkiloDto> organisaatioHenkilos = new ArrayList<>();
     private List<YhteystiedotRyhmaDto> yhteystiedotRyhma = new ArrayList<>();
 }

@@ -10,10 +10,7 @@ import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.*;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -50,28 +47,45 @@ public class OikeustulkkiHakuSpecificationBuilder {
         if (kieliRajaus == null || kieliRajaus.isEmpty()  || (kieliRajaus.size() == 1 && kieliRajaus.iterator().next() == null)) {
             return null;
         }
-        return kieliRajaus.stream().filter(kr -> kr.getKielesta() != null && kr.getKieleen() != null)
+        return kieliRajaus.stream().filter(kr -> kr.getKielesta() != null || kr.getKieleen() != null)
             .map(kr -> where((Specification<Oikeustulkki>) (root, query, cb) -> {
                 Subquery<Long> s = query.subquery(Long.class);
                 Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
-                Path<Kielipari> kp = t.join("kielet");
                 return cb.exists(s.select(t.get("id")).where(
                         cb.and(
                             cb.equal(t.get("id"), root.get("id")),
-                            cb.or(
-                                cb.and(
-                                        cb.equal(kp.get("kielesta").get("koodi"), kr.getKielesta()),
-                                        cb.equal(kp.get("kieleen").get("koodi"), kr.getKieleen())
-                                ),
-                                cb.and(
-                                        cb.equal(kp.get("kieleen").get("koodi"), kr.getKielesta()),
-                                        cb.equal(kp.get("kielesta").get("koodi"), kr.getKieleen())
-                                )
-                            )
+                            kielipariEq(t.join("kielet"), kr, cb)
                         )
                     )
                 );
             })).reduce(where(null), Specifications::and);
+    }
+    
+    private static Expression<Boolean> kielipariEq(Path<Kielipari> kp, KieliRajaus kr, CriteriaBuilder cb) {
+        if (kr.getKielesta() == null && kr.getKieleen() == null) {
+            return null;
+        }
+        if (kr.getKieleen() == null) {
+            return cb.or(
+                    cb.equal(kp.get("kielesta").get("koodi"), kr.getKielesta()),
+                    cb.equal(kp.get("kieleen").get("koodi"), kr.getKielesta())
+            );
+        } else if (kr.getKielesta() == null) {
+            return cb.or(
+                    cb.equal(kp.get("kieleen").get("koodi"), kr.getKieleen()),
+                    cb.equal(kp.get("kielesta").get("koodi"), kr.getKieleen())
+            );
+        }
+        return cb.or(
+                        cb.and(
+                                cb.equal(kp.get("kielesta").get("koodi"), kr.getKielesta()),
+                                cb.equal(kp.get("kieleen").get("koodi"), kr.getKieleen())
+                        ),
+                        cb.and(
+                                cb.equal(kp.get("kieleen").get("koodi"), kr.getKielesta()),
+                                cb.equal(kp.get("kielesta").get("koodi"), kr.getKieleen())
+                        )
+                );
     }
     
     public static Specification<Oikeustulkki> toimiiMaakunnissa(Collection<String> maakuntaKoodis) {

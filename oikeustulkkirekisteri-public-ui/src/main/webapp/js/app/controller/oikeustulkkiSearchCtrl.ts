@@ -8,16 +8,39 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     $scope.kielesta = null;
     $scope.kieleen = null;
     $scope.kielet = [];
+    $scope.regions = [];
+    $scope.toimintaAlue = {value: {}};
+    $scope.searching = false;
 
-    KoodistoService.getKielet().then(r => {
-      $scope.kielet = r.data;
-      $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
-      $scope.kieleen = {selected: $scope.kielet[1]};
-    });
+    //TODO localize
+    const kokoSuomi = {
+      "arvo": "00",
+      "nimi": {
+        "FI": "Koko Suomi",
+        "SV": ""
+      }
+    };
+
+    const kaikkiKielet = {
+      "arvo": null,
+      "nimi": {
+        "SV": "",
+        "FI": "Kaikki",
+        "EN": ""
+      }
+    };
 
     KoodistoService.getMaakunnat().then(r => {
-      $scope.maakunnat = r.data;
+      $scope.regions = _.concat(kokoSuomi, r.data);
+      $scope.toimintaAlue = {value: $scope.regions[0]};
       r.data.map(k => $scope.maakunnatByArvo[k.arvo] = k);
+    });
+
+    KoodistoService.getKielet().then(r => {
+      $scope.kielet = _.concat(kaikkiKielet, r.data);
+      // $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
+      $scope.kielesta = {selected: $scope.kielet[0]};
+      $scope.kieleen = {selected: $scope.kielet[0]};
     });
 
     $scope.getKieliNimi = (arvo:string) => {
@@ -32,12 +55,17 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     };
 
     $scope.search = () => {
-      const kieliparit = _.map($scope.kieliparit, (kielipari) => {
-        return {'kielesta': kielipari.kielesta.arvo, 'kieleen': kielipari.kieleen.arvo}
-      });
-      
-      OikeustulkkiService.getTulkit($scope.termi, kieliparit).then((r) => {
+      $scope.searching = true;
+      $scope.tulkit = [];
+
+      const kieliparit = [{
+        'kielesta': $scope.kielesta.selected.arvo,
+        'kieleen': $scope.kieleen.selected.arvo
+      }];
+      OikeustulkkiService.getTulkit($scope.termi, kieliparit, $scope.toimintaAlue.value.arvo).then((r) => {
         $scope.tulkit = r.data;
+      }).finally(()=> {
+        $scope.searching = false;
       });
     };
 
@@ -58,5 +86,18 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
 
+    $scope.toggleTulkkiInfo = (tulkki) => {
+      if (tulkki.detailsFetched) {
+        tulkki.visible = !tulkki.visible;
+      } else {
+        OikeustulkkiService.getTulkki(tulkki.id).then((res) => {
+          tulkki.email = res.data.email;
+          tulkki.puhelinnumero = res.data.puhelinnumero;
+          tulkki.muuYhteystieto = res.data.muuYhteystieto;
+          tulkki.visible = true;
+          tulkki.detailsFetched = true;
+        });
+      }
+    }
 
   }]);

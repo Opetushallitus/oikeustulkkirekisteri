@@ -1,5 +1,72 @@
+$oph-green: #00a651;
+$default-font-color: #1b1b1b;
+
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+@mixin oph-button($color, $font-color, $border-color) {
+  height: 33px;
+  background-color: $color !important;
+  border: $border-color 1px solid !important;
+  color: $font-color !important;
+
+  text-transform: uppercase;
+  font-size: 12px !important;
+  font-weight: bold !important;
+}
+
 body{
-  font: 1.4em/1.43em Arial,Helvetica,sans-serif;
+  font:100% Arial, Helvetica, sans-serif;
+  color: $default-font-color !important;
+
+  p, span, table{
+    font:100% Arial, Helvetica, sans-serif;
+  }
+}
+
+table{
+  max-width: 940px !important;
+}
+
+.language-dropdown{
+  padding-left: 0 !important;
+}
+
+.container{
+  label,
+  p {
+    color: $default-font-color !important;
+  }
+}
+
+input,
+.form-control,
+.btn{
+  border-radius: 0 !important;
+}
+
+.btn-primary{
+  @include oph-button(#f4f6f6, #1b1b1b, #a8a8a8);
+}
+
+.btn-search{
+  @include oph-button($oph-green, white, $oph-green);
+}
+
+.tulkki-name{
+  color: $oph-green;
+  cursor: pointer;
+}
+
+.help-text{
+  position: relative;
+  width: 200px;
+  color: #999999;
+  display: inline-block;
+  float: left;
+  font-size: 14px;
+  //font:100% Arial, Helvetica, sans-serif;
 }
 
 #header{
@@ -44,8 +111,6 @@ body{
   background-color: #efeeee;
   background-repeat: repeat-x;
   height: 50px;
-  margin: 0 -9999px;
-  padding: 0 9999px;
   background-image: url("../img/bg-section02.png");
 
   ul{
@@ -61,7 +126,7 @@ body{
       float: left;
       border-left: 1px white solid;
       border-right: 1px white solid;
-      border-bottom: #00a651 5px solid;
+      border-bottom: $oph-green 5px solid;
       height: 50px;
       padding: 14px 5px 0 5px;
     }
@@ -83,3 +148,7 @@ body{
   padding-left: 0;
 }
 
+.instructions{
+  padding: 40px 0;
+  max-width: 600px;
+}

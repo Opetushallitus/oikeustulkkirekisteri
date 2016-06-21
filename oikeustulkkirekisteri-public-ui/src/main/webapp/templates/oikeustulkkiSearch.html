@@ -1,22 +1,24 @@
 <div class="container">
 
-  <br/>
-  <p>lorem ipsum...</p>
+  <p class="instructions">TODO: kuvaus käytöstä. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tempor orci in sapien pellentesque, nec pretium lorem pulvinar. Nulla eget imperdiet ante. Nullam ullamcorper tempus neque, id porta augue malesuada nec. Nulla facilisi. Phasellus dui orci, facilisis ut quam eget, viverra dictum mauris. Nunc eu vestibulum mauris, tincidunt venenatis purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In eget convallis orci. </p>
 
   <form>
-
     <div class="form-group">
-      <label for="termi" class="col-sm-4">Nimi</label>
-      <div class="col-sm-6">
+      <label for="termi" class="col-sm-4">Haku nimen mukaan</label>
+      <div class="col-sm-3">
         <input type="text" class="form-control" id="termi" ng-model="termi">
       </div>
     </div>
 
     <div style="clear: both;"></div>
     <br/>
+    <br/>
 
     <div class="form-group">
-      <label for="languagePairsSearch" class="col-sm-2 control-label" tt="haku_kieliparit">Kieliparit</label>
+      <label for="languagePairsSearch" class="col-sm-2 control-label">
+        Haku kielipareittain
+        <span class="help-text">Molemman suuntainen pätevyys esim. suomi <-> englanti englanti <-> suomi</span>
+      </label>
 
       <div class="col-sm-8 col-sm-offset-2">
         <div>
@@ -29,26 +31,46 @@
         </div>
 
         <div>
-          <ui-select ng-model="kielesta.selected" id="languagePairsSearch" class="col-sm-4">
+          <ui-select ng-model="kielesta.selected" id="languagePairsSearch" class="col-sm-4 language-dropdown">
             <ui-select-match placeholder="Kielestä">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo"
+                               position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
 
-          <ui-select ng-model="kieleen.selected" class="col-sm-4">
+          <ui-select ng-model="kieleen.selected" class="col-sm-4 language-dropdown">
             <ui-select-match placeholder="Kieleen">
               <span ng-bind="$select.selected.nimi.FI"></span>
             </ui-select-match>
-            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo" position="down">
+            <ui-select-choices repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo"
+                               position="down">
               <span ng-bind="kieli.nimi.FI"></span>
             </ui-select-choices>
           </ui-select>
-
-          <button class="btn btn-primary" ng-click="addKielipari()" tt="oikeustulkki_kielipari_lisaa">Lisää</button>
         </div>
+
+      </div>
+    </div>
+
+    <div style="clear: both;"></div>
+    <br/>
+
+    <div class="form-group">
+      <label for="termi" class="col-sm-4">Haku maakunnan mukaan</label>
+      <div class="col-sm-3">
+        <ui-select ng-model="toimintaAlue.value">
+          <ui-select-match>
+            <span ng-bind="toimintaAlue.value.nimi.FI"></span>
+          </ui-select-match>
+
+          <ui-select-choices repeat="region in (regions | selectFilter: $select.search) track by region.arvo">
+            <span ng-bind="region.nimi.FI"></span>
+          </ui-select-choices>
+
+        </ui-select>
 
       </div>
     </div>
@@ -56,37 +78,64 @@
     <br/>
     <div style="clear: both;"></div>
 
-    <button class="btn btn-default" ng-click="search()">Hae</button>
+    <br/>
+    <br/>
+    <button class="btn btn-default btn-search" ng-click="search()" ng-if="!searching">Hae</button>
+    <p ng-if="searching">Haetaan...</p>
 
   </form>
 
-  <div ng-if="tulkit.length === 0" tt="haku_ei_tuloksia">Haulla ei löytynyt tuloksia</div>
+  <div ng-if="tulkit.length === 0 && !searching">Haulla ei löytynyt tuloksia</div>
   <div class="table-responsive" ng-if="tulkit && tulkit.length !== 0">
     <table class="table table-striped table-hover translator-list-table">
       <thead>
       <tr>
-        <th tt="haku_nimi">Nimi</th>
-        <th tt="haku_kieliparit">Kieliparit</th>
-        <th>Voimassaolo päättyy</th>
-        <th tt="haku_toimintaalue">Toiminta-alue</th>
+        <th>Nimi</th>
+        <th>Kieliparit</th>
+        <th>Toiminta-alue</th>
       </tr>
       </thead>
-      <tbody>
-      <tr ng-repeat="tulkki in tulkit">
-        <!--<td><a ng-href="#/oikeustulkki/{{tulkki.id}}">{{tulkki.etunimet}} {{tulkki.sukunimi}}</a></td>-->
-        <td>{{tulkki.etunimet}} {{tulkki.sukunimi}}</td>
-        <td>
-          <span ng-repeat="kielipari in tulkki.kieliParit">
-             {{ getKieliNimi(kielipari.kielesta) }} - {{ getKieliNimi(kielipari.kieleen) }}
-          </span>
-        </td>
-        <td>{{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</td>
-        <td>
-          <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>
-          <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
-        </td>
-      </tr>
+      <tbody ng-repeat="tulkki in tulkit">
+        <tr>
+          <td class="tulkki-name" ng-click="toggleTulkkiInfo(tulkki)">{{tulkki.etunimet}} {{tulkki.sukunimi}}</td>
+          <td>
+            <span ng-repeat="kielipari in tulkki.kieliParit">
+               {{ getKieliNimi(kielipari.kielesta) }} - {{ getKieliNimi(kielipari.kieleen) }}
+            </span>
+          </td>
+          <td>
+            <span ng-if="tulkki.kokoSuomi">Koko Suomi</span>
+            <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
+          </td>
+        </tr>
+        <tr ng-show="tulkki.visible">
+          <td colspan="3">
+
+            <div class="form-group" ng-if="tulkki.email">
+              <label class="col-sm-2 control-label">Sähköpostiosoite</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">{{tulkki.email}}</p>
+              </div>
+            </div>
+
+            <div class="form-group" ng-if="tulkki.puhelinnumero">
+              <label class="col-sm-2 control-label">Puhelinnumero</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">{{tulkki.puhelinnumero}}</p>
+              </div>
+            </div>
+
+            <div class="form-group" ng-if="tulkki.muuYhteystieto">
+              <label class="col-sm-2 control-label">Muu yhteystieto</label>
+              <div class="col-sm-10">
+                <p class="form-control-static">{{tulkki.muuYhteystieto}}</p>
+              </div>
+            </div>
+
+          </td>
+        </tr>
       </tbody>
     </table>
 
   </div>
+</div>
