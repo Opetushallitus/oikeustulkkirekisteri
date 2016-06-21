@@ -1,4 +1,3 @@
-console.log('router');
 angular.module('publicRegistryApp').config(["$routeProvider", ($routeProvider) => {
   $routeProvider
       .otherwise({
