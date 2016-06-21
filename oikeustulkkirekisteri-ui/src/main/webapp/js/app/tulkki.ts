@@ -15,6 +15,7 @@ interface Osoite{
 interface Tulkki{
   id?:number;
   etunimet?: string;
+  kutsumanimi?: string;
   sukunimi?: string;
   hetu?: string;
   osoite?: Osoite;
@@ -51,6 +52,14 @@ const getTulkkiPostData = (tulkki:Tulkki) => {
   return postData;
 };
 
+const isTulkkiKutsumanimiValid = (tulkki:Tulkki) => {
+  let names = _.split(tulkki.etunimet, ' ');
+  const separetedNames = _.flattenDeep(_.invokeMap(names, String.prototype.split, '-'));
+  names = _.concat(names, separetedNames);
+  const isNameValid = names.indexOf(tulkki.kutsumanimi) !== -1;
+  return isNameValid;
+};
+
 function newTulkki():Tulkki {
   return {
     kieliparit: [],
@@ -64,4 +73,4 @@ function newTulkki():Tulkki {
   };
 }
 
-export {Tulkki, newTulkki, getTulkkiPostData}
+export {Tulkki, newTulkki, getTulkkiPostData, isTulkkiKutsumanimiValid}

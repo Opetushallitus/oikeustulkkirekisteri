@@ -22,8 +22,9 @@
           <div class="col-sm-8">
               <input ng-model="tulkki.kutsumanimi" name="kutsumanimi" type="text" class="form-control" id="kutsumanimi"
                      placeholder="Kutsumanimi" required>
-              <div ng-if="showErrors" ng-messages="tulkkiForm.etunimet.$error" role="alert" class="error-msg">
+              <div ng-if="showErrors" ng-messages="tulkkiForm.kutsumanimi.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
+                  <div ng-message="kutsumainvalid" tt="kutsumanimi_virhe">Kutsumanimen pitää esiintyä Etunimissä</div>
                   <div ng-message="custom">{{tulkkiForm.kutsumanimi.$customError}}</div>
               </div>
           </div>

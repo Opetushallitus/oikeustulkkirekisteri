@@ -1,5 +1,5 @@
 import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
-import {Tulkki, newTulkki, getTulkkiPostData} from "../tulkki.ts";
+import {Tulkki, newTulkki, getTulkkiPostData, isTulkkiKutsumanimiValid} from "../tulkki.ts";
 
 angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService",
     "OikeustulkkiService", "$window", "$filter", ($scope, Page, KoodistoService, OikeustulkkiService, $window) => {
@@ -44,10 +44,16 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
             });
         };
 
+        const checkIfKutsumanimiValid = () => {
+            let nameIsValid = isTulkkiKutsumanimiValid($scope.tulkki);
+            $scope.tulkkiForm.kutsumanimi.$setValidity('kutsumainvalid', nameIsValid);
+        };
+
         $scope.save = () => {
             clearCustomErrors();
             $scope.showErrors = false;
 
+            checkIfKutsumanimiValid();
             if (!_.isEmpty($scope.tulkkiForm.$error)) {
                 $scope.showErrors = true;
                 return;
