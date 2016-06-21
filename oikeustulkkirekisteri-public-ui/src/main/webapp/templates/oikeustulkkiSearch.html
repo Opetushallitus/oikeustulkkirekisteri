@@ -15,7 +15,7 @@
     <br/>
 
     <div class="form-group">
-      <label for="languagePairsSearch" class="col-sm-2 control-label" tt="haku_kieliparit">
+      <label for="languagePairsSearch" class="col-sm-2 control-label">
         Haku kielipareittain
         <span class="help-text">Molemman suuntainen pätevyys esim. suomi <-> englanti englanti <-> suomi</span>
       </label>
@@ -85,14 +85,14 @@
 
   </form>
 
-  <div ng-if="tulkit.length === 0 && !searching" tt="haku_ei_tuloksia">Haulla ei löytynyt tuloksia</div>
+  <div ng-if="tulkit.length === 0 && !searching">Haulla ei löytynyt tuloksia</div>
   <div class="table-responsive" ng-if="tulkit && tulkit.length !== 0">
     <table class="table table-striped table-hover translator-list-table">
       <thead>
       <tr>
-        <th tt="haku_nimi">Nimi</th>
-        <th tt="haku_kieliparit">Kieliparit</th>
-        <th tt="haku_toimintaalue">Toiminta-alue</th>
+        <th>Nimi</th>
+        <th>Kieliparit</th>
+        <th>Toiminta-alue</th>
       </tr>
       </thead>
       <tbody ng-repeat="tulkki in tulkit">
@@ -104,7 +104,7 @@
             </span>
           </td>
           <td>
-            <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>
+            <span ng-if="tulkki.kokoSuomi">Koko Suomi</span>
             <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
           </td>
         </tr>
