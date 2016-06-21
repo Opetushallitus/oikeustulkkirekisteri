@@ -26,6 +26,7 @@ task(zipIt, type: Zip) {
     destinationDir new File(buildDir, "distributions")
     archiveName zipFileName
     from 'src/main/resources'
+    from 'oikeustulkkirekisteri-public-ui/target'
     from 'oikeustulkkirekisteri-service/target'
     from 'oikeustulkkirekisteri-ui/target'
 }
