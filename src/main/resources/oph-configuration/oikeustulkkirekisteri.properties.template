@@ -13,8 +13,6 @@ rekisteri.db.user={{oikeustulkkirekisteri_db_user}}
 rekisteri.db.password={{oikeustulkkirekisteri_db_password}}
 rekisteri.db.name=oikeustulkkirekisteri
 
-oikeustulkkirekisteri.organisaatio.oid={{oikeustulkkirekisteri_organisaatio_oid}}
-
 rekisteri.external.apis.dev.mode=false
 
 authentication-service.url=https://{{host_virkailija}}/authentication-service

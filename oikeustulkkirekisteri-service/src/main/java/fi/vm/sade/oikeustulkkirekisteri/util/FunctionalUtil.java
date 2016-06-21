@@ -17,4 +17,17 @@ public class FunctionalUtil {
             return t != null ? t : b.apply(f);
         };
     }
+    
+    public static <F,T> Function<F,T> retrying(Function<F,T> target, int times) {
+        return f -> {
+            RuntimeException failure;
+            int i = 0;
+            do try {
+                return target.apply(f);
+            } catch (RuntimeException e) {
+                failure = e;
+            } while (i++ < times);
+            throw failure;
+        };
+    }
 }

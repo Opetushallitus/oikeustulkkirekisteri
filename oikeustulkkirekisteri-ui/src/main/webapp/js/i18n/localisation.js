@@ -111,7 +111,7 @@ localisation.directive('tt', ['$log', 'LocalisationService', 'i18nDefaults',
                 } else {
                     LocalisationService.createMissingTranslations(key, locale, originalText);
 
-                    translation = "*CREATED* " + originalText;
+                    translation = originalText;
                 }
             }
 

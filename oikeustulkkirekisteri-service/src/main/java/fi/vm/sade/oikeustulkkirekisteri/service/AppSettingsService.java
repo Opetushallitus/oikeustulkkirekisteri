@@ -19,6 +19,8 @@ package fi.vm.sade.oikeustulkkirekisteri.service;
 import fi.vm.sade.oikeustulkkirekisteri.settings.dto.AppSettingsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import static fi.vm.sade.oikeustulkkirekisteri.service.Constants.PUBLIC;
+
 /**
  * User: ratamaa
  * Date: 3/18/14
@@ -28,6 +30,7 @@ public interface AppSettingsService {
     /**
      * @return the env and app settings for UI
      */
+    @PreAuthorize(PUBLIC)
     AppSettingsDto getUiSettings();
     
     @PreAuthorize("isAuthenticated()")
