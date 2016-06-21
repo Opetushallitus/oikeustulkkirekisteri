@@ -10,7 +10,7 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     $scope.kielet = [];
     $scope.regions = [];
     $scope.toimintaAlue = {value: {}};
-    $scope.tulkkiInfoVisible = [];
+    $scope.searching = false;
 
     //TODO localize
     const kokoSuomi = {
@@ -22,7 +22,7 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     };
 
     const kaikkiKielet = {
-      "arvo": "",
+      "arvo": null,
       "nimi": {
         "SV": "",
         "FI": "Kaikki",
@@ -33,6 +33,7 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     KoodistoService.getMaakunnat().then(r => {
       $scope.regions = _.concat(kokoSuomi, r.data);
       $scope.toimintaAlue = {value: $scope.regions[0]};
+      r.data.map(k => $scope.maakunnatByArvo[k.arvo] = k);
     });
 
     KoodistoService.getKielet().then(r => {
@@ -54,11 +55,8 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     };
 
     $scope.search = () => {
-      // const kieliparit = _.map($scope.kieliparit, (kielipari) => {
-      //   return {'kielesta': kielipari.kielesta.arvo, 'kieleen': kielipari.kieleen.arvo}
-      // });
-
-      console.log('post', $scope);
+      $scope.searching = true;
+      $scope.tulkit = [];
 
       const kieliparit = [{
         'kielesta': $scope.kielesta.selected.arvo,
@@ -66,6 +64,8 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
       }];
       OikeustulkkiService.getTulkit($scope.termi, kieliparit, $scope.toimintaAlue.value.arvo).then((r) => {
         $scope.tulkit = r.data;
+      }).finally(()=> {
+        $scope.searching = false;
       });
     };
 
@@ -86,11 +86,18 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
 
-    $scope.showTulkkiInfo = (tulkkiId) => {
-      $scope.tulkkiInfoVisible.push(tulkkiId);
-      OikeustulkkiService.getTulkki(tulkkiId).then((res) => {
-        console.log('res', res);
-      });
+    $scope.toggleTulkkiInfo = (tulkki) => {
+      if (tulkki.detailsFetched) {
+        tulkki.visible = !tulkki.visible;
+      } else {
+        OikeustulkkiService.getTulkki(tulkki.id).then((res) => {
+          tulkki.email = res.data.email;
+          tulkki.puhelinnumero = res.data.puhelinnumero;
+          tulkki.muuYhteystieto = res.data.muuYhteystieto;
+          tulkki.visible = true;
+          tulkki.detailsFetched = true;
+        });
+      }
     }
 
   }]);

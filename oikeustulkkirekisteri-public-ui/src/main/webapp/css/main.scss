@@ -1,4 +1,9 @@
 $oph-green: #00a651;
+$default-font-color: #1b1b1b;
+
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
 
 @mixin oph-button($color, $font-color, $border-color) {
   height: 33px;
@@ -13,6 +18,7 @@ $oph-green: #00a651;
 
 body{
   font:100% Arial, Helvetica, sans-serif;
+  color: $default-font-color !important;
 
   p, span, table{
     font:100% Arial, Helvetica, sans-serif;
@@ -23,10 +29,14 @@ table{
   max-width: 940px !important;
 }
 
+.language-dropdown{
+  padding-left: 0 !important;
+}
+
 .container{
   label,
   p {
-    color: #1b1b1b;
+    color: $default-font-color !important;
   }
 }
 
@@ -101,8 +111,6 @@ input,
   background-color: #efeeee;
   background-repeat: repeat-x;
   height: 50px;
-  margin: 0 -9999px;
-  padding: 0 9999px;
   background-image: url("../img/bg-section02.png");
 
   ul{
@@ -140,3 +148,7 @@ input,
   padding-left: 0;
 }
 
+.instructions{
+  padding: 40px 0;
+  max-width: 600px;
+}
