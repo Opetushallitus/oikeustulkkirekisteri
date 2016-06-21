@@ -3,10 +3,8 @@ declare const _:any;
 
 const app = angular.module('publicRegistryApp', ['ngRoute', 'ui.select']);
 
-// console.log('testttttttttttttt');
 angular.module('publicRegistryApp').controller('mainCtrl', ["$scope", ($scope) => {
 
-  console.log('test');
   // $scope.switchLanguage = () => {
   //   const toLocale = LocalisationService.getLocale() === 'fi' ? 'sv' : 'fi';
   //   LocalisationService.setLocale(toLocale);

@@ -20,11 +20,12 @@
         <div class="form-group">
             <label for="kutsumanimi" class="col-sm-2 control-label required" tt="oikeustulkki_kutsumanimi">Kutsumanimi</label>
             <div class="col-sm-8">
-                <input ng-model="tulkki.kutsumanimi" name="etunimet" type="text" class="form-control"
+                <input ng-model="tulkki.kutsumanimi" name="kutsumanimi" type="text" class="form-control"
                        id="kutsumanimi" placeholder="Kutsumanimi" required>
                 <div ng-if="showErrors" ng-messages="tulkkiForm.kutsumanimi.$error" role="alert"
                      class="error-msg">
                     <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
+                    <div ng-message="kutsumainvalid" tt="kutsumanimi_virhe">Kutsumanimen pitää esiintyä Etunimissä</div>
                     <div ng-message="custom">{{tulkkiForm.kutsumanimi.$customError}}</div>
                 </div>
             </div>
