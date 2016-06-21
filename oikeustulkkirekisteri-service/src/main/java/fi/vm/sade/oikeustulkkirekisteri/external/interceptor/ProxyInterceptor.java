@@ -70,7 +70,6 @@ public class ProxyInterceptor extends AbstractPhaseInterceptor<Message> {
         } else if (this.devMode) {
             CasFriendlyCxfInterceptor f = new CasFriendlyCxfInterceptor();
             f.setUseBasicAuthentication(true);
-            f.setCallerService(this.callerService);
             f.setUseSessionPerUser(true);
             f.setAppClientUsername(this.username);
             f.setUseBlockingConcurrent(true);

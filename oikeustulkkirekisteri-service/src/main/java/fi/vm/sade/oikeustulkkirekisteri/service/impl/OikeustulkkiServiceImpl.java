@@ -173,7 +173,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     }
 
     private OikeustulkkiVirkailijaViewDto produceViewDto(Oikeustulkki oikeustulkki) {
-        HenkiloRestDto henkilo = found(henkiloResourceClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
+        HenkiloRestDto henkilo = found(oikeustulkkiCacheService.findHenkiloByOid(oikeustulkki.getTulkki().getHenkiloOid()));
         OikeustulkkiVirkailijaViewDto viewDto = convert(oikeustulkki, henkilo, new OikeustulkkiVirkailijaViewDto());
         viewDto.setPaattyy(oikeustulkki.getPaattyy());
         viewDto.setId(oikeustulkki.getId());
@@ -214,7 +214,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     }
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
-        HenkiloRestDto henkilo = henkiloResourceReadClient.findByOid(henkiloOid);
+        HenkiloRestDto henkilo = henkiloResourceClient.findByOid(henkiloOid);
         updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
         updateYhteystieto(henkilo, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
