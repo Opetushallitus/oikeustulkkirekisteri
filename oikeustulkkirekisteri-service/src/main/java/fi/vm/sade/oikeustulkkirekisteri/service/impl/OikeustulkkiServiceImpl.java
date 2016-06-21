@@ -10,6 +10,7 @@ import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.*;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.repository.TullkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.repository.custom.CustomFlushRepository;
+import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiCacheService;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.*;
 import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
@@ -25,7 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -71,11 +75,11 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     private HenkiloApi henkiloResourceReadClient;
 
     @Autowired
+    private OikeustulkkiCacheService oikeustulkkiCacheService;
+
+    @Autowired
     private CustomFlushRepository customFlushRepository;
 
-    @Value("${oikeustulkkirekisteri.organisaatio.oid}")
-    private String oikeustulkkirekisteriOrganisaatioOid;
-    
     @Value("${oikeustulkki.tehtavanimike:Oikeustulkki}")
     private String oikeustulkkiTehtavanimike;
     
@@ -103,7 +107,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) {
         Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceReadClient,
-                dto.getHetu(), 0, 0).getResults().stream().findFirst();
+                dto.getHetu()).stream().findFirst();
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
             oikeustulkki.setTulkki(tullkiRepository.findByHenkiloOid(existingHenkilo.get().getOidHenkilo()));
@@ -169,7 +173,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     }
 
     private OikeustulkkiVirkailijaViewDto produceViewDto(Oikeustulkki oikeustulkki) {
-        HenkiloRestDto henkilo = found(henkiloResourceClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
+        HenkiloRestDto henkilo = found(oikeustulkkiCacheService.findHenkiloByOid(oikeustulkki.getTulkki().getHenkiloOid()));
         OikeustulkkiVirkailijaViewDto viewDto = convert(oikeustulkki, henkilo, new OikeustulkkiVirkailijaViewDto());
         viewDto.setPaattyy(oikeustulkki.getPaattyy());
         viewDto.setId(oikeustulkki.getId());
@@ -204,28 +208,13 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
         henkilo.setKutsumanimi(dto.getKutsumanimi());
-        henkilo.setHenkiloTyyppi(HenkiloTyyppi.VIRKAILIJA); // although deprecated is required by henkilöpalvelu impl, 
+        henkilo.setHenkiloTyyppi(HenkiloTyyppi.OPPIJA); // although deprecated is required by henkilöpalvelu impl, 
         // virkalija so that can be serached and edited through henkilopalvelu
-        List<OrganisaatioHenkiloDto> orgHenkilos = new ArrayList<>();
-        orgHenkilos.add(createOrganisaatioHenkilo());
-        henkilo.setOrganisaatioHenkilo(orgHenkilos);
         return new Tulkki(henkiloResourceClient.createHenkilo(henkilo));
     }
 
-    private OrganisaatioHenkiloDto createOrganisaatioHenkilo() {
-        OrganisaatioHenkiloDto orgHenkilo = new OrganisaatioHenkiloDto();
-        orgHenkilo.setOrganisaatioOid(oikeustulkkirekisteriOrganisaatioOid);
-        orgHenkilo.setTehtavanimike(oikeustulkkiTehtavanimike);
-        return orgHenkilo;
-    }
-
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
-        HenkiloRestDto henkilo = henkiloResourceReadClient.findByOid(henkiloOid);
-        if (!henkilo.getOrganisaatioHenkilos().stream()
-                .filter(oh -> oikeustulkkirekisteriOrganisaatioOid.equals(oh.getOrganisaatioOid())).findFirst().isPresent()) {
-            // Varmistetaan, että on olemassa organisaatiohenkilö
-            henkilo.getOrganisaatioHenkilos().add(createOrganisaatioHenkilo());
-        }
+        HenkiloRestDto henkilo = henkiloResourceClient.findByOid(henkiloOid);
         updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
         updateYhteystieto(henkilo, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
@@ -320,8 +309,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Override
     @Transactional(readOnly = true)
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
-        List<OikeustulkkiVirkailijaListDto> results = doHaku(henkiloResourceClient,
-                new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
+        List<OikeustulkkiVirkailijaListDto> results = doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
                 this::combineHenkiloVirkailija);
         auditLog.log(builder(OIKEUSTULKKI_READ)
             .henkiloOidList(results.stream().map(OikeustulkkiVirkailijaListDto::getHenkiloOid).collect(toList()))
@@ -350,8 +338,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Override
     @Transactional(readOnly = true)
     public List<OikeustulkkiPublicListDto> haeJulkinen(OikeustulkkiPublicHakuDto hakuDto) {
-        return doHaku(henkiloResourceReadClient,
-                new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
+        return doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
                 this::combineHenkilo);
     }
 
@@ -415,28 +402,33 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 .collect(toList());
     }
 
-    private <DtoType,HakuType extends OikeustulkkiHakuehto> List<DtoType> doHaku(HenkiloApi api, Haku<HakuType> haku,
+    private <DtoType,HakuType extends OikeustulkkiHakuehto> List<DtoType> doHaku(Haku<HakuType> haku,
                              Function<Function<String,HenkiloRestDto>, Function<Oikeustulkki, DtoType>> combiner) {
         HakuType hakuDto = haku.getHaku();
         Integer count = ofNullable(hakuDto.getCount()).orElse(DEFAULT_COUNT),
                 page = ofNullable(hakuDto.getPage()).orElse(1),
                 index = (page-1)*count;
-        List<HenkiloRestDto> henkiloResults = listHenkilosByTermi(api, haku.getTerm(), 0, 0)
-                .getResults().stream().collect(toList());
+        List<HenkiloRestDto> henkiloResults = listHenkilosByTermi(haku.getTerm()).stream().collect(toList());
         Map<String,HenkiloRestDto> henkilosByOid = henkiloResults.stream().collect(toMap(HenkiloRestDto::getOidHenkilo, h -> h));
         Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getSpecification())
                     .and(henkiloOidIn(henkilosByOid.keySet()))).stream()
                 .sorted(comparing(Oikeustulkki::getAlkaa)).collect(groupingBy(ot -> ot.getTulkki().getHenkiloOid(), mapping(ot->ot, toList())));
         
         return henkiloResults.stream().flatMap(ot -> ofNullable(oikeustulkkis.get(ot.getOidHenkilo()))
-                .map(List::stream).orElseGet(Stream::empty)).map(combiner.apply(henkilosByOid::get)).collect(toList());
+                .map(List::stream).orElseGet(Stream::empty)).map(combiner.apply(henkilosByOid::get))
+                //.skip(index).limit(count) //TODO:support in UI?
+                .collect(toList());
     }
 
-    private PaginationObject<HenkiloRestDto> listHenkilosByTermi(HenkiloApi api, String term, Integer count, Integer index) {
-        return api.listHenkilos(term, null, count, index, singletonList(oikeustulkkirekisteriOrganisaatioOid),
-                null, null, null, false, true, false, false, null, false);
+    private List<HenkiloRestDto> listHenkilosByTermi(String term) {
+        return oikeustulkkiCacheService.findHenkilos(new HenkiloTermPredicate(term));
     }
 
+    private List<HenkiloRestDto> listHenkilosByTermi(HenkiloApi api, String term) {
+        return api.listHenkilos(term, null, 0, 0, null, null, null, null,
+                false, true, false, false, null, false).getResults();
+    }
+    
     @Getter @AllArgsConstructor
     private static class Haku<HakuType extends OikeustulkkiHakuehto> {
         private final HakuType haku;

@@ -76,6 +76,7 @@
         <intercept-url pattern="/api/app/testLoggedIn" access="isAuthenticated()"/>
         <intercept-url pattern="/api/api-docs/public(/.*)?" access="permitAll"/>
         <intercept-url pattern="/api/api-docs" access="permitAll"/>
+        <intercept-url pattern="/api/permission(/.*)?" access="permitAll"/>
         <intercept-url pattern="/api(/.*)?" access="isAuthenticated()"/>
         <intercept-url pattern="/**" access="${spring_security_default_access}"/>
         <custom-filter ref="casFilter" position="CAS_FILTER"/>
