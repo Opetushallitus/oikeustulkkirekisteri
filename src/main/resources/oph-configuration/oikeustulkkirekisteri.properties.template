@@ -13,8 +13,6 @@ rekisteri.db.user={{oikeustulkkirekisteri_db_user}}
 rekisteri.db.password={{oikeustulkkirekisteri_db_password}}
 rekisteri.db.name=oikeustulkkirekisteri
 
-oikeustulkkirekisteri.organisaatio.oid={{oikeustulkkirekisteri_organisaatio_oid}}
-
 rekisteri.external.apis.dev.mode=false
 
 authentication-service.url=https://{{host_virkailija}}/authentication-service
@@ -41,5 +39,3 @@ ldap.url.with.base=ldap\://${host.ldap}/dc\=opintopolku,dc\=fi
 ldap.manager.userdn={{ldap_manager_userdn}}
 ldap.manager-dn=${ldap.manager.userdn}
 ldap.manager-password={{ldap_manager_password}}
-
-henkilo.integration.deploy.in.progress=true
