@@ -43,10 +43,10 @@ const translationSV = {
   muu_yhteystieto: 'Muu yhteystieto'
 };
 
-angular.module('publicRegistryApp').config(function ($translateProvider) {
+angular.module('publicRegistryApp').config(["$translateProvider", ($translateProvider) => {
   $translateProvider.translations('fi', translationFI);
   $translateProvider.translations('sv', translationSV);
   $translateProvider.preferredLanguage('fi');
   $translateProvider.useSanitizeValueStrategy('escape');
-});
+}]);
 
