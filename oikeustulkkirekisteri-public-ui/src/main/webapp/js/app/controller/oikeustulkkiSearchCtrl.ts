@@ -1,7 +1,7 @@
 import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 
 angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "OikeustulkkiService",
-  "KoodistoService", ($scope, OikeustulkkiService, KoodistoService) => {
+  "KoodistoService", "$translate", ($scope, OikeustulkkiService, KoodistoService, $translate) => {
     $scope.termi = '';
     $scope.maakunnatByArvo = {};
     $scope.kieliparit = [];
@@ -12,23 +12,20 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     $scope.toimintaAlue = {value: {}};
     $scope.searching = false;
 
-    //TODO localize
-    const kokoSuomi = {
+    let kokoSuomi = {
       "arvo": "00",
-      "nimi": {
-        "FI": "Koko Suomi",
-        "SV": ""
-      }
+      "nimi": {}
+    };
+    
+    let kaikkiKielet = {
+      "arvo": null,
+      "nimi": {}
     };
 
-    const kaikkiKielet = {
-      "arvo": null,
-      "nimi": {
-        "SV": "",
-        "FI": "Kaikki",
-        "EN": ""
-      }
-    };
+    $translate(['koko_suomi', 'kaikki']).then((fi) => {
+      kokoSuomi.nimi['FI'] = fi.koko_suomi;
+      kaikkiKielet.nimi['FI'] = fi.koko_suomi;
+    });
 
     KoodistoService.getMaakunnat().then(r => {
       $scope.regions = _.concat(kokoSuomi, r.data);
@@ -44,12 +41,14 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     });
 
     $scope.getKieliNimi = (arvo:string) => {
-      return _.find($scope.kielet, {'arvo': arvo}).nimi.FI;
+      const lang = $translate.proposedLanguage().toUpperCase();
+      return _.find($scope.kielet, {'arvo': arvo}).nimi[lang];
     };
 
     $scope.maakunta = (koodiArvo:string) => {
       if ($scope.maakunnatByArvo[koodiArvo]) {
-        return $scope.maakunnatByArvo[koodiArvo].nimi['FI'] || $scope.maakunnat[koodiArvo].nimi['SV'];
+        const lang = $translate.proposedLanguage().toUpperCase();
+        return $scope.maakunnatByArvo[koodiArvo].nimi[lang];
       }
       return '';
     };
@@ -68,23 +67,6 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
         $scope.searching = false;
       });
     };
-
-    $scope.addKielipari = () => {
-      const kielipari:Kielipari = {kielesta: $scope.kielesta.selected, kieleen: $scope.kieleen.selected};
-
-      var kielipariAlreadyExists = _.some($scope.kieliparit, (kpari) => {
-        return kielipariMatch(kielipari, kpari);
-      });
-
-      if (kielipariAlreadyExists) {
-        console.error("kielipari jo lisätty");
-        return;
-      }
-
-      $scope.kieliparit.push(kielipari);
-    };
-
-    $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
 
     $scope.toggleTulkkiInfo = (tulkki) => {
       if (tulkki.detailsFetched) {

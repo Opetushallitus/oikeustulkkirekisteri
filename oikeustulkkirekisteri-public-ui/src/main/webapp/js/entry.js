@@ -1,4 +1,5 @@
 require('./app/app.ts');
+require('./app/translations.ts');
 require('./app/router.ts');
 
 require('./app/kielet.ts');

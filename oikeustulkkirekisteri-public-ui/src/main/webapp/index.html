@@ -7,27 +7,28 @@
 </head>
 <body>
 
-<div id="header">
-  <img src="img/opetushallitus.gif">
-  <p>Oikeustulkkirekisteri</p>
-  <a>På svenska</a>
-</div>
-
-<div id="nav-holder">
-  <ul id="main-nav">
-    <li class="divider"></li>
-    <li class="first-child">
-      <a>
-        <span>Etsi oikeustulkkia</span>
-      </a>
-    </li>
-    <li class="divider"></li>
-  </ul>
-</div>
-
-<div ng-app="publicRegistryApp" id="content-area">
+<div ng-app="publicRegistryApp">
   <div ng-controller="mainCtrl">
-    <div ng-view></div>
+    <div id="header">
+      <img src="img/opetushallitus.gif">
+      <p translate="oikeustulkkirekisteri"></p>
+      <a ng-click="switchLanguage()" translate="toinen_kieli"></a>
+    </div>
+
+    <div id="nav-holder">
+      <ul id="main-nav">
+        <li class="divider"></li>
+        <li class="first-child">
+          <a>
+            <span translate="etsi_oikeustulkkia"></span>
+          </a>
+        </li>
+        <li class="divider"></li>
+      </ul>
+    </div>
+    <div id="content-area">
+      <div ng-view></div>
+    </div>
   </div>
 </div>
 
