@@ -213,7 +213,7 @@
                     </p>
                 </div>
 
-                <div>
+                <div class="language-pairs">
                     <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
                         <ui-select-match placeholder="Kielestä">
                             <span ng-bind="$select.selected.nimi[currentLocale]"></span>
@@ -285,18 +285,18 @@
         </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-8">
+            <div class="col-sm-8">
                 <div class="checkbox">
                     <label>
                         <input type="checkbox" ng-model="tulkki.julkaisulupa" id="infoPublished">
-                        <span tt="julkaistu">Julkaistu</span>
+                        <span tt="saa_julkaista">tiedot saa julkaista</span>
                     </label>
                 </div>
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-8">
+            <div class="col-sm-8">
                 <button class="btn btn-primary btn-save" ng-click="save()" tt="generic_tallenna">Tallenna</button>
                 <a type="button" class="btn btn-default" href="#/" tt="generic_cancel">Peruuta</a>
             </div>

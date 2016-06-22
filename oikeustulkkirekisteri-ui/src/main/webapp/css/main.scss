@@ -70,6 +70,7 @@ table{
 .container{
 
     max-width: 940px;
+    padding-left: 0 !important;
 
     label,
     p {
@@ -167,13 +168,18 @@ input,
 
         li{
             float: left;
-            border-left: 1px white solid;
-            border-right: 1px white solid;
             height: 50px;
             padding: 14px 5px 0 5px;
 
             &.active{
                 border-bottom: $oph-green 5px solid;
+            }
+
+            &.divider{
+                width: 0;
+                padding: 0;
+                border-left: 1px solid white;
+                border-bottom: white;
             }
         }
     }
@@ -255,4 +261,22 @@ input,
     color: white !important;
     background: #f24c48 !important;
     padding: 2px !important;
+    height: 17px;
 }
+
+.language-pairs div{
+    padding-left: 0 !important;
+
+    & span{
+        background-color: white !important;
+    }
+}
+
+#infoPublished{
+    margin-top: 0;
+}
+
+.ui-select-choices-row.active > a {
+    color: #000 !important;
+}
+
