@@ -28,16 +28,26 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
     $translate.use('fi');
 
     KoodistoService.getMaakunnat().then(r => {
-      $scope.regions = _.concat(kokoSuomi, r.data);
-      $scope.toimintaAlue = {value: $scope.regions[0]};
-      r.data.map(k => $scope.maakunnatByArvo[k.arvo] = k);
+      if (r.data) {
+        $scope.regions = _.concat(kokoSuomi, r.data);
+        $scope.toimintaAlue = {value: $scope.regions[0]};
+        r.data.map(k => $scope.maakunnatByArvo[k.arvo] = k);
+      } else {
+        $scope.regions = kokoSuomi;
+        console.error("maakuntia ei voitu hakea");
+      }
     });
 
     KoodistoService.getKielet().then(r => {
-      $scope.kielet = _.concat(kaikkiKielet, r.data);
-      $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
-      // $scope.kielesta = {selected: $scope.kielet[0]};
-      $scope.kieleen = {selected: $scope.kielet[0]};
+      if (r.data) {
+        $scope.kielet = _.concat(kaikkiKielet, r.data);
+        $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
+        // $scope.kielesta = {selected: $scope.kielet[0]};
+        $scope.kieleen = {selected: $scope.kielet[0]};
+      } else {
+        $scope.kielet = kaikkiKielet;
+        console.error("kieliä ei voitu hakea");
+      }
     });
 
     $scope.getKieliNimi = (arvo:string) => {
