@@ -15,9 +15,15 @@
     <div style="clear: both;"/>
     <br/>
     <div class="form-group">
-      <label for="languagePairsSearch" class="col-sm-2 control-label" tt="haku_kieliparit">Kieliparit</label>
+      <label for="languagePairsSearch" class="col-sm-2 control-label">
+        <span tt="haku_kieliparit">Haku kielipareittain</span>
+        <span class="help-text" tt="haku_kieliparit_info">Molemman suuntainen pätevyys esim. suomi <-> englanti englanti <-> suomi</span>
+      </label>
 
       <div class="col-sm-8 col-sm-offset-2">
+        <div ng-if="kieliparit.length === 0" class="no-selection">
+          <span tt="ei_kielipareja">Ei lisättyjä kielipareja</span>
+        </div>
         <div>
           <p ng-repeat="kielipari in kieliparit">
             {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}
@@ -111,7 +117,7 @@
       </tbody>
     </table>
 
-    <!--<nav style="text-align: center;">-->
+    <!--<nav style="text-align: right;">-->
       <!--<ul class="pagination">-->
         <!--<li>-->
           <!--<a href="#search" aria-label="Previous">-->

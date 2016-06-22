@@ -38,8 +38,8 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
 
     KoodistoService.getKielet().then(r => {
       $scope.kielet = _.concat(kaikkiKielet, r.data);
-      // $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
-      $scope.kielesta = {selected: $scope.kielet[0]};
+      $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
+      // $scope.kielesta = {selected: $scope.kielet[0]};
       $scope.kieleen = {selected: $scope.kielet[0]};
     });
 

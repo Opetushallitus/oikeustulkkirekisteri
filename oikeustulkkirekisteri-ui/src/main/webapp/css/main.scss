@@ -103,14 +103,23 @@ input,
     cursor: pointer;
 }
 
+@mixin oph-help-text() {
+    color: #999999;
+    font-size: 14px;
+}
+
 .help-text{
+    @include oph-help-text();
+
     position: relative;
     width: 200px;
-    color: #999999;
     display: inline-block;
     float: left;
-    font-size: 14px;
-    //font:100% Arial, Helvetica, sans-serif;
+}
+
+.no-selection{
+    @include oph-help-text();
+    padding-bottom: 10px;
 }
 
 #header{
@@ -280,3 +289,10 @@ input,
     color: #000 !important;
 }
 
+
+.pagination > li > a,
+.pagination > li > span {
+    background-color: white !important;
+    border: 1px solid #cccccc !important;
+    color: $default-font-color !important;
+}
