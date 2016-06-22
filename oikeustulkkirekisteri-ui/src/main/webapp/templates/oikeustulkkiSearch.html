@@ -1,5 +1,8 @@
 <div class="container">
-  <h2 class="sub-header" tt="haku">Haku</h2>
+  <div class="form-header">
+    <span tt="haku">Haku</span>
+  </div>
+
   <form>
 
     <div class="form-group">
@@ -18,7 +21,7 @@
         <div>
           <p ng-repeat="kielipari in kieliparit">
             {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}
-            <button type="button" class="btn btn-default btn-xs" ng-click="removeKielipari(kielipari)">
+            <button type="button" class="btn btn-default btn-xs remove-pair-btn" ng-click="removeKielipari(kielipari)">
               <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
             </button>
           </p>
@@ -70,7 +73,7 @@
 
     <div style="clear: both;"/>
     <br/>
-    <button class="btn btn-default" ng-click="search()" tt="haku_hae">Hae</button>
+    <button class="btn btn-default btn-search" ng-click="search()" tt="haku_hae">Hae</button>
   </form>
 
   <br/>
@@ -88,7 +91,11 @@
       </thead>
       <tbody>
       <tr ng-repeat="tulkki in results">
-        <td><a ng-href="#/oikeustulkki/{{tulkki.id}}">{{tulkki.etunimi}} {{tulkki.sukunimi}}</a></td>
+        <td>
+          <a class="tulkki-name" ng-href="#/oikeustulkki/{{tulkki.id}}">
+            {{tulkki.etunimi}} {{tulkki.sukunimi}}
+          </a>
+        </td>
         <td>{{tulkki.hetu}}</td>
         <td>
           <span ng-repeat="kielipari in tulkki.kieliParit">

@@ -1,9 +1,11 @@
 <div class="container">
 
-  <h1 ng-if="action == 'edit'" tt="muokkaa_tulkkia">Muokkaa oikeustulkkia</h1>
-  <h1 ng-if="action == 'create'" tt="lisaa_uusi_hakemus">Lisää oikeustulkille uusi hakemus</h1>
+    <div class="form-header">
+        <span ng-if="action == 'edit'" tt="muokkaa_tulkkia">Muokkaa oikeustulkkia</span>
+        <span ng-if="action == 'create'" tt="lisaa_uusi_hakemus">Lisää oikeustulkille uusi hakemus</span>
+    </div>
 
-  <form class="form-horizontal" name="tulkkiForm" novalidate>
+    <form class="form-horizontal" name="tulkkiForm" novalidate>
 
       <div class="form-group">
           <label for="etunimet" class="col-sm-2 control-label required" tt="oikeustulkki_etunimet">Etunimet</label>

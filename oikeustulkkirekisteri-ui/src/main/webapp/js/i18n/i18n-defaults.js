@@ -87,7 +87,7 @@ angular.module("I18n", [], ["$provide", function($provider) {
         poista_varmistus: 'Haluatko varmasti poistaa tulkin?',
         poisto_epaonnistui: 'Tietojen poistaminen epäonnistui',
         uusi_hakemus: 'Uusi hakemus',
-        julkaistu: 'Julkaistu',
+        julkaistu: 'saa julkaista',
         lisaa_uusi_hakemus: 'Lisää oikeustulkille uusi hakemus',
         muokkaa_tulkkia: 'Muokkaa oikeustulkkia',
         muokkausviesti: 'Muokkausviesti',

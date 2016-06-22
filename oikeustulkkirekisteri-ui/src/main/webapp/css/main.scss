@@ -2,13 +2,6 @@ body {
     padding-top: 50px;
 }
 
-.todo{
-    color: red;
-
-    &:before{
-        content: "TODO: ";
-    }
-}
 .btn-container-right{
     float: right;
 }
@@ -31,4 +24,235 @@ body {
 
 .form-control-static.inline {
     padding-top: 0px;
+}
+
+
+
+
+
+
+
+$oph-green: #00a651;
+$default-font-color: #1b1b1b;
+
+@-moz-document url-prefix() {
+    fieldset { display: table-cell; }
+}
+
+@mixin oph-button($color, $font-color, $border-color) {
+    height: 33px;
+    background-color: $color !important;
+    border: $border-color 1px solid !important;
+    color: $font-color !important;
+
+    text-transform: uppercase;
+    font-size: 12px !important;
+    font-weight: bold !important;
+}
+
+body{
+    font:100% Arial, Helvetica, sans-serif;
+    color: $default-font-color !important;
+
+    p, span, table{
+        font:100% Arial, Helvetica, sans-serif;
+    }
+}
+
+table{
+    max-width: 940px !important;
+}
+
+.language-dropdown{
+    padding-left: 0 !important;
+}
+
+.container{
+
+    max-width: 940px;
+
+    label,
+    p {
+        color: $default-font-color !important;
+    }
+}
+
+input,
+.form-control,
+.btn{
+    border-radius: 0 !important;
+}
+
+.btn-default,
+.btn-primary{
+    @include oph-button(#f4f6f6, #1b1b1b, #a8a8a8);
+}
+
+.btn-save,
+.btn-search{
+    @include oph-button($oph-green, white, $oph-green);
+}
+
+.btn-danger{
+    @include oph-button(#f24c48, white, #f24c48);
+}
+
+.tulkki-name{
+    color: $oph-green;
+    cursor: pointer;
+}
+
+.help-text{
+    position: relative;
+    width: 200px;
+    color: #999999;
+    display: inline-block;
+    float: left;
+    font-size: 14px;
+    //font:100% Arial, Helvetica, sans-serif;
+}
+
+#header{
+    margin-top: 20px;
+    max-width: 940px !important;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+
+    & img{
+        float: left;
+    }
+
+    & p{
+        padding-top: 20px;
+        font-size: 20px;
+        font-weight: bold;
+        font-color: #1b1b1b;
+        text-transform: uppercase;
+        display: inline-block;
+        height: 70px;
+        vertical-align: middle;
+    }
+
+    & a{
+        padding-top: 25px;
+        text-decoration: none;
+        float: right;
+        font-size: 14px;
+        color: #515151;
+        cursor: pointer;
+    }
+}
+
+#content-area{
+    max-width: 940px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#nav-holder{
+    background-color: #efeeee;
+    background-repeat: repeat-x;
+    height: 50px;
+    background-image: url("../img/bg-section02.png");
+
+    ul{
+        list-style: none;
+
+        a{
+            text-decoration: none;
+            font-size: 17px;
+            color: black;
+        }
+
+        li{
+            float: left;
+            border-left: 1px white solid;
+            border-right: 1px white solid;
+            height: 50px;
+            padding: 14px 5px 0 5px;
+
+            &.active{
+                border-bottom: $oph-green 5px solid;
+            }
+        }
+    }
+
+    &.first-child{
+        background: rgba(0, 0, 0, 0) no-repeat scroll 0 0;
+        float: left;
+        padding: 0 0 0 1px;
+        white-space: nowrap;
+        line-height: 1.176em;
+    }
+}
+
+#main-nav{
+    max-width: 940px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+}
+
+.instructions{
+    padding: 40px 0;
+    max-width: 600px;
+}
+
+.form-group{
+    label{
+        font-weight: normal;
+        font:100% Arial, Helvetica, sans-serif;
+        color: $default-font-color !important;
+        text-align: left !important;
+    }
+}
+
+.form-header{
+    padding: 20px 0;
+    font-size: 17px;
+    text-transform: uppercase;
+
+    span{
+        font-weight: bold;
+    }
+}
+
+.required-info{
+    float: right;
+    font-size: 12px;
+    color: #999999;
+    text-transform: none;
+
+    span{
+        font-weight: normal;
+    }
+}
+
+.checkbox-row{
+    input{
+        width: 65%;
+        float: left;
+    }
+
+    .checkbox{
+        width: 150px;
+        float: right;
+        height: 34px;
+
+        input{
+            width: 20px;
+            top: 2px;
+        }
+
+        span{
+            margin-left: 15px;
+        }
+    }
+}
+
+.remove-pair-btn{
+    color: white !important;
+    background: #f24c48 !important;
+    padding: 2px !important;
 }

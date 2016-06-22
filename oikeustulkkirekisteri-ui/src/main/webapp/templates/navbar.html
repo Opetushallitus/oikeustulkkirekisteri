@@ -1,26 +1,20 @@
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container">
+<div id="header">
+  <img src="img/opetushallitus.gif">
+  <p tt="oikeustulkkirekisteri">Oikeustulkkirekisteri</p>
+  <a ng-click="switchLanguage()" tt="toinen_kieli"></a>
+</div>
 
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#" tt="oikeustulkkirekisteri">Oikeustulkkirekisteri</a>
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
-
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-        <li ng-class="{active: Page.activePage('searchOikeustulkki')}"><a href="#" tt="haku">Haku</a></li>
-        <li ng-class="{active: Page.activePage('addOikeustulkki')}"><a href="#addOikeustulkki" tt="oikeustulkki_lisaa">Lisää tulkki</a></li>
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-        <li><a ng-click="switchLanguage()" tt="toinen_kieli"></a></li>
-      </ul>
-    </div>
-
-  </div>
-</nav>
+<div id="nav-holder">
+  <ul id="main-nav">
+    <li class="first-child" ng-class="{active: Page.activePage('searchOikeustulkki')}">
+      <a href="#">
+        <span tt="haku">Etsi oikeustulkkia</span>
+      </a>
+    </li>
+    <li class="first-child" ng-class="{active: Page.activePage('addOikeustulkki')}">
+      <a href="#addOikeustulkki">
+        <span tt="oikeustulkki_lisaa">Lisää oikeustulkki</span>
+      </a>
+    </li>
+  </ul>
+</div>
