@@ -36,8 +36,8 @@ const translationSV = {
   nimi: 'Nimi',
   kieliparit: 'Kieliparit',
   toiminta_alue: 'Toiminta-alue',
-  koko_suomi: 'Koko Suomi',
-  kaikki: 'Kaikki',
+  koko_suomi: 'Koko Suomi -sv',
+  kaikki: 'Kaikki - sv',
   email: 'Sähköpostiosoite',
   puhelinnumero: 'Puhelinnumero',
   muu_yhteystieto: 'Muu yhteystieto'

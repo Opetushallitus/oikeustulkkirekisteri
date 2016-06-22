@@ -1,7 +1,5 @@
-import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
-
 angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "OikeustulkkiService",
-  "KoodistoService", "$translate", ($scope, OikeustulkkiService, KoodistoService, $translate) => {
+  "KoodistoService", "$translate", "$filter", ($scope, OikeustulkkiService, KoodistoService, $translate, $filter) => {
     $scope.termi = '';
     $scope.maakunnatByArvo = {};
     $scope.kieliparit = [];
@@ -22,10 +20,12 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
       "nimi": {}
     };
 
-    $translate(['koko_suomi', 'kaikki']).then((fi) => {
-      kokoSuomi.nimi['FI'] = fi.koko_suomi;
-      kaikkiKielet.nimi['FI'] = fi.koko_suomi;
-    });
+    kokoSuomi.nimi['FI'] = $filter('translate')('koko_suomi');
+    kaikkiKielet.nimi['FI'] = $filter('translate')('kaikki');
+    $translate.use('sv');
+    kokoSuomi.nimi['SV'] = $filter('translate')('koko_suomi');
+    kaikkiKielet.nimi['SV'] = $filter('translate')('kaikki');
+    $translate.use('fi');
 
     KoodistoService.getMaakunnat().then(r => {
       $scope.regions = _.concat(kokoSuomi, r.data);
