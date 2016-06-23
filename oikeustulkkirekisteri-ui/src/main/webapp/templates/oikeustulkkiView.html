@@ -14,7 +14,7 @@
                     <p tt="poista_varmistus">Haluatko varmasti poistaa tulkin?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"
+                    <button type="button" class="btn btn-default btn-oph-default" data-dismiss="modal"
                             ng-click="hideDialog()" tt="generic_cancel">Peruuta
                     </button>
                     <button type="button" class="btn btn-danger" ng-click="remove()" tt="generic_remove">Poista</button>
@@ -165,11 +165,11 @@
                 </div>
 
                 <div class="btn-container-right">
-                    <a ng-if="tulkki.uusinId" type="button" class="btn btn-default"
+                    <a ng-if="tulkki.uusinId" type="button" class="btn btn-default btn-oph-default"
                        href="#/oikeustulkki/{{tulkki.uusinId}}" tt="nayta_uusin">Näytä uusin</a>
-                    <a ng-if="!tulkki.uusinId" type="button" class="btn btn-primary"
+                    <a ng-if="!tulkki.uusinId" type="button" class="btn btn-primary btn-oph-default"
                        href="#/oikeustulkki/{{tulkki.id}}/create" tt="uusi_hakemus">Uusi hakemus</a>
-                    <a type="button" class="btn btn-primary"
+                    <a type="button" class="btn btn-primary btn-oph-default"
                        href="#/oikeustulkki/{{tulkki.id}}/edit" tt="generic_edit">Muokkaa</a>
                     <button type="button" class="btn btn-danger" ng-click="showRemoveDialog = true;" tt="generic_delete">Poista
                     </button>
@@ -305,7 +305,8 @@
                 </div>
 
                 <div class="btn-container-right">
-                    <a type="button" class="btn btn-default" href="#/oikeustulkki/{{item.id}}" tt="generic_show">Näytä</a>
+                    <a type="button" class="btn btn-default btn-oph-default" href="#/oikeustulkki/{{item.id}}"
+                       tt="generic_show">Näytä</a>
                 </div>
             </div>
         </div>

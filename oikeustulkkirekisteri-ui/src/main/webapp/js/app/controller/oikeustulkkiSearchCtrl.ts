@@ -41,12 +41,27 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
       }
     };
 
+    $scope.switchToPreviousPage = () => {
+      if ($scope.pagination.current > 1) {
+        $scope.pagination.current -= 1;
+      }
+    };
+
+    $scope.switchToNextPage = () => {
+      if ($scope.pagination.current < $scope.pagination.pages.length) {
+        $scope.pagination.current += 1;
+      }
+    };
+
     $scope.search = () => {
       let tutkintoTyyppi = $scope.tutkinto.erikois && !$scope.tutkinto.korkeakoulu ? 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO' : null;
       tutkintoTyyppi = !$scope.tutkinto.erikois && $scope.tutkinto.korkeakoulu ? 'MUU_KORKEAKOULUTUTKINTO' : tutkintoTyyppi;
 
       OikeustulkkiService.getTulkit($scope.termi, $scope.kieliparit, tutkintoTyyppi).then((results)=> {
-        $scope.results = results.data;
+        $scope.pagination = {
+          pages: _.chunk(results.data, 10),
+          current: 1
+        };
       });
     };
 

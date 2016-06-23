@@ -20,7 +20,7 @@ body{
   font:100% Arial, Helvetica, sans-serif;
   color: $default-font-color !important;
 
-  p, span, table{
+  p, span, table, a{
     font:100% Arial, Helvetica, sans-serif;
   }
 }
@@ -34,6 +34,8 @@ table{
 }
 
 .container{
+  max-width: 940px;
+
   label,
   p {
     color: $default-font-color !important;
@@ -156,4 +158,22 @@ input,
 .instructions{
   padding: 40px 0;
   max-width: 600px;
+}
+
+.pagination > li {
+  &.active > a {
+    background-color: #f2f2f2 !important;
+  }
+
+  a {
+    background-color: white !important;
+    border: 1px solid #cccccc !important;
+    color: $default-font-color !important;
+    cursor: pointer;
+  }
+}
+
+.pagination > li > a, .pagination > li > span {
+  border-radius: 0 !important;
+  height: 34px !important;
 }

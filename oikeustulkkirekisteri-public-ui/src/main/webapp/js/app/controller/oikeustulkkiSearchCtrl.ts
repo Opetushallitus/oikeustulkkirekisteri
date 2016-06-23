@@ -63,6 +63,18 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
       return '';
     };
 
+    $scope.switchToPreviousPage = () => {
+      if ($scope.pagination.current > 1) {
+        $scope.pagination.current -= 1;
+      }
+    };
+
+    $scope.switchToNextPage = () => {
+      if ($scope.pagination.current < $scope.pagination.pages.length) {
+        $scope.pagination.current += 1;
+      }
+    };
+
     $scope.search = () => {
       $scope.searching = true;
       $scope.tulkit = [];
@@ -71,8 +83,12 @@ angular.module('publicRegistryApp').controller('oikeustulkkiSearchCtrl', ["$scop
         'kielesta': $scope.kielesta.selected.arvo,
         'kieleen': $scope.kieleen.selected.arvo
       }];
+      
       OikeustulkkiService.getTulkit($scope.termi, kieliparit, $scope.toimintaAlue.value.arvo).then((r) => {
-        $scope.tulkit = r.data;
+        $scope.pagination = {
+          pages: _.chunk(r.data, 10),
+          current: 1
+        };
       }).finally(()=> {
         $scope.searching = false;
       });

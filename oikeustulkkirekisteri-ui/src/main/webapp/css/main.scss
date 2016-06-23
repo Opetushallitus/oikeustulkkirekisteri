@@ -84,8 +84,7 @@ input,
     border-radius: 0 !important;
 }
 
-.btn-default,
-.btn-primary{
+.btn-oph-default{
     @include oph-button(#f4f6f6, #1b1b1b, #a8a8a8);
 }
 
@@ -289,10 +288,20 @@ input,
     color: #000 !important;
 }
 
+.pagination > li {
+    &.active > a {
+        background-color: #f2f2f2 !important;
+    }
 
-.pagination > li > a,
-.pagination > li > span {
-    background-color: white !important;
-    border: 1px solid #cccccc !important;
-    color: $default-font-color !important;
+    a {
+        background-color: white !important;
+        border: 1px solid #cccccc !important;
+        color: $default-font-color !important;
+        cursor: pointer;
+    }
+}
+
+.pagination > li > a, .pagination > li > span {
+    border-radius: 0 !important;
+    height: 34px !important;
 }

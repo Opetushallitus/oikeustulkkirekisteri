@@ -190,7 +190,7 @@
               <div>
                   <p ng-repeat="kielipari in tulkki.kieliparit">
                       {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}
-                      <button type="button" class="btn btn-default btn-xs"
+                      <button type="button" class="btn btn-default remove-pair-btn btn-xs"
                               ng-click="removeKielipari(kielipari)">
                           <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                       </button>
@@ -218,7 +218,7 @@
                       </ui-select-choices>
                   </ui-select>
 
-                  <button class="btn btn-primary" ng-click="addKielipari()" tt="oikeustulkki_kielipari_lisaa">Lisää</button>
+                  <button class="btn btn-primary btn-oph-default" ng-click="addKielipari()" tt="oikeustulkki_kielipari_lisaa">Lisää</button>
               </div>
 
               <div ng-if="showErrors && tulkki.kieliparit.length === 0" class="error-msg">
@@ -260,7 +260,7 @@
               <br/>
               <div ng-if="showErrors" ng-messages="tulkkiForm.toimintaAlue.$error" role="alert"
                    class="error-msg">
-                  <div ng-message="required" tt="pakollinen_kentta" tt="pakollinen_kentta">Pakollinen kenttä</div>
+                  <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
               </div>
           </div>
       </div>
@@ -290,8 +290,8 @@
       
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-8">
-          <button class="btn btn-primary" ng-click="save()" tt="generic_tallenna">Tallenna</button>
-          <a type="button" class="btn btn-default" href="#/oikeustulkki/{{tulkkiId}}" tt="generic_cancel">Peruuta</a>
+          <button class="btn btn-primary btn-save" ng-click="save()" tt="generic_tallenna">Tallenna</button>
+          <a type="button" class="btn btn-default btn-oph-default" href="#/oikeustulkki/{{tulkkiId}}" tt="generic_cancel">Peruuta</a>
         </div>
       </div>
 
