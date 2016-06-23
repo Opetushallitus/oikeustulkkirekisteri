@@ -7,7 +7,7 @@
 </head>
 <body>
     <div ng-controller="mainCtrl">
-        <div ng-include="'templates/navbar.html'"></div>
+        <div ng-include="'templates/navbar.html'" ng-if="showHeader"></div>
         <div ng-view></div>
     </div>
     
