@@ -48,6 +48,10 @@ input,
   border-radius: 0 !important;
 }
 
+.field-text{
+  font-weight: bold;
+}
+
 .btn-primary{
   @include oph-button(#f4f6f6, #1b1b1b, #a8a8a8);
 }
@@ -62,12 +66,21 @@ input,
 }
 
 .help-text{
-  position: relative;
-  width: 200px;
-  color: #999999;
   display: inline-block;
-  float: left;
-  font-size: 14px;
+  max-width: 200px;
+
+  span{
+    position: relative;
+    width: 200px;
+    color: #999999;
+    display: inline-block;
+    float: left;
+    font-size: 14px;
+  }
+
+  span:first-child{
+    padding-top: 10px;
+  }
 }
 
 #header{
@@ -176,4 +189,18 @@ input,
 .pagination > li > a, .pagination > li > span {
   border-radius: 0 !important;
   height: 34px !important;
+}
+
+.multiline{
+  white-space: pre-line;
+
+  span{
+    display: block;
+    line-height: 5px;
+    padding-bottom: 8px;
+  }
+}
+
+.tulkki-row{
+  cursor: pointer;
 }
