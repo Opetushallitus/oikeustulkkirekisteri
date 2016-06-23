@@ -16,8 +16,13 @@
     <br/>
     <div class="form-group">
       <label for="languagePairsSearch" class="col-sm-2 control-label">
-        <span tt="haku_kieliparit">Haku kielipareittain</span>
-        <span class="help-text" tt="haku_kieliparit_info">Molemman suuntainen pätevyys esim. suomi <-> englanti englanti <-> suomi</span>
+        <span class="required" tt="haku_kieliparit">Haku kielipareittain</span>
+        <br/>
+        <div class="help-text">
+          <span tt="kielipari_info">Molemman suuntainen pätevyys esim.</span>
+          <span tt="fi_eng">suomi <-> englanti</span>
+          <span tt="eng_fi">englanti <-> suomi</span>
+        </div>
       </label>
 
       <div class="col-sm-8 col-sm-offset-2">
@@ -105,15 +110,17 @@
           </a>
         </td>
         <td>{{tulkki.hetu}}</td>
-        <td>
+        <td class="multiline">
           <span ng-repeat="kielipari in tulkki.kieliParit">
              {{ getKieliNimi(kielipari.kielesta) }} - {{ getKieliNimi(kielipari.kieleen) }}
           </span>
         </td>
-        <td>{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} - {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}</td>
-        <td>
-            <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>
-            <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
+        <td>{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} -
+          {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}
+        </td>
+        <td class="multiline">
+          <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>
+          <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
         </td>
       </tr>
       </tbody>

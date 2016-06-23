@@ -10,8 +10,7 @@
       <div class="form-group">
           <label for="etunimet" class="col-sm-2 control-label required" tt="oikeustulkki_etunimet">Etunimet</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.etunimet" name="etunimet" type="text" class="form-control" id="etunimet"
-                     placeholder="Etunimet" required>
+              <input ng-model="tulkki.etunimet" name="etunimet" type="text" class="form-control" id="etunimet" required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.etunimet.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.etunimet.$customError}}</div>
@@ -22,8 +21,7 @@
       <div class="form-group">
           <label for="kutsumanimi" class="col-sm-2 control-label required"  tt="oikeustulkki_kutsumanimi">Kutsumanimi</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.kutsumanimi" name="kutsumanimi" type="text" class="form-control" id="kutsumanimi"
-                     placeholder="Kutsumanimi" required>
+              <input ng-model="tulkki.kutsumanimi" name="kutsumanimi" type="text" class="form-control" id="kutsumanimi" required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.kutsumanimi.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="kutsumainvalid" tt="kutsumanimi_virhe">Kutsumanimen pitää esiintyä Etunimissä</div>
@@ -35,8 +33,7 @@
       <div class="form-group">
           <label for="sukunimi" class="col-sm-2 control-label required" tt="oikeustulkki_sukunimi">Sukunimi</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.sukunimi" name="sukunimi" type="text" class="form-control" id="sukunimi"
-                     placeholder="Sukunimi" required>
+              <input ng-model="tulkki.sukunimi" name="sukunimi" type="text" class="form-control" id="sukunimi" required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.sukunimi.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.sukunimi.$customError}}</div>
@@ -47,7 +44,7 @@
       <div class="form-group">
           <label for="hetu" class="col-sm-2 control-label required" tt="oikeustulkki_hetu">Hetu</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu" placeholder="Hetu" required>
+              <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu"  required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.hetu.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.hetu.$customError}}</div>
@@ -59,7 +56,7 @@
           <label for="katuosoite" class="col-sm-2 control-label required" tt="oikeustulkki_katuosoite">Katuosoite</label>
           <div class="col-sm-8">
               <input ng-model="tulkki.osoite.katuosoite" type="text" class="form-control" id="katuosoite"
-                     name="katuosoite" placeholder="Katuosoite" required>
+                     name="katuosoite"  required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.katuosoite.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.katuosoite.$customError}}</div>
@@ -71,7 +68,7 @@
           <label for="postinumero" class="col-sm-2 control-label required" tt="oikeustulkki_postinumero">Postinumero</label>
           <div class="col-sm-8">
               <input ng-model="tulkki.osoite.postinumero" type="text" class="form-control" id="postinumero"
-                     name="postinumero" placeholder="Postinumero" required>
+                     name="postinumero"  required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.postinumero.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.postinumero.$customError}}</div>
@@ -83,7 +80,7 @@
           <label for="postitoimipaikka" class="col-sm-2 control-label required" tt="oikeustulkki_postitoimipaikka">Postitoimipaikka</label>
           <div class="col-sm-8">
               <input ng-model="tulkki.osoite.postitoimipaikka" type="text" class="form-control" id="postitoimipaikka"
-                     name="postitoimipaikka" placeholder="Postitoimipaikka" required>
+                     name="postitoimipaikka"  required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.postitoimipaikka.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.postitoimipaikka.$customError}}</div>
@@ -95,7 +92,7 @@
           <label for="email" class="col-sm-2 control-label required" tt="oikeustulkki_sahkopostiosoite">Sähköpostiosoite</label>
           <div class="col-sm-8">
               <input ng-model="tulkki.email" class="form-control" id="email" name="email"
-                     placeholder="Sähköpostiosoite" required>
+                      required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.email.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="email" tt="virhe_sahkoposti_virheellinen">Virheellinen sähköpostiosoite</div>
@@ -113,7 +110,7 @@
       <div class="form-group">
           <label for="phone" class="col-sm-2 control-label" tt="oikeustulkki_puhelinnumero">Puhelinnumero</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" placeholder="Puhelinnumero">
+              <input ng-model="tulkki.puhelinnumero" type="text" class="form-control" id="phone" >
               <div ng-if="showErrors" ng-messages="tulkkiForm.puhelinnumero.$error" role="alert" class="error-msg">
                   <div ng-message="custom">{{tulkkiForm.puhelinnumero.$customError}}</div>
               </div>
@@ -129,7 +126,7 @@
       <div class="form-group">
           <label for="contactInfo" class="col-sm-2 control-label" tt="oikeustulkki_muu_yhteystieto">Muu yhteystieto</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" placeholder="Muu yhteystieto">
+              <input ng-model="tulkki.muuYhteystieto" type="text" class="form-control" id="contactInfo" >
               <div ng-if="showErrors" ng-messages="tulkkiForm.muuYhteystieto.$error" role="alert" class="error-msg">
                   <div ng-message="custom">{{tulkkiForm.muuYhteystieto.$customError}}</div>
               </div>
@@ -199,7 +196,7 @@
 
               <div>
                   <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
-                      <ui-select-match placeholder="Kielestä">
+                      <ui-select-match >
                           <span ng-bind="$select.selected.nimi[currentLocale]"></span>
                       </ui-select-match>
                       <ui-select-choices position="up"
@@ -209,7 +206,7 @@
                   </ui-select>
 
                   <ui-select ng-model="kieleen.selected" class="col-sm-4">
-                      <ui-select-match placeholder="Kieleen">
+                      <ui-select-match >
                           <span ng-bind="$select.selected.nimi[currentLocale]"></span>
                       </ui-select-match>
                       <ui-select-choices position="up"
@@ -231,7 +228,7 @@
       <div class="form-group">
           <label for="lisatiedot" class="col-sm-2 control-label" tt="oikeustulkki_lisatietoa">Lisätietoa</label>
           <div class="col-sm-8">
-              <textarea class="form-control" rows="3" ng-model="tulkki.lisatiedot" id="lisatiedot" placeholder="Lisätietoa"></textarea>
+              <textarea class="form-control" rows="3" ng-model="tulkki.lisatiedot" id="lisatiedot" ></textarea>
           </div>
       </div>
 
@@ -248,7 +245,7 @@
           </div>
           <div class="col-sm-6" ng-if="!tulkki.kokoSuomi">
               <ui-select multiple tagging ng-model="tulkki.toimintaAlue" id="region" required name="toimintaAlue">
-                  <ui-select-match placeholder="Toiminta-alue">
+                  <ui-select-match >
                       <span ng-bind="$item.nimi[currentLocale]"></span>
                   </ui-select-match>
                   <ui-select-choices position="up"
@@ -280,7 +277,7 @@
           <label for="sukunimi" class="col-sm-2 control-label required" tt="muokkausviesti">Muokkausviesti</label>
           <div class="col-sm-8">
               <input ng-model="tulkki.muokkausviesti" name="muokkausviesti" type="text" class="form-control" id="muokkausviesti"
-                     placeholder="Kuvaus muokkauksesta" required>
+                      required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.muokkausviesti.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.muokkausviesti.$customError}}</div>

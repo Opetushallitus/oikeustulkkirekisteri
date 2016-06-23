@@ -305,3 +305,36 @@ input,
     border-radius: 0 !important;
     height: 34px !important;
 }
+
+.field-text{
+    font-weight: bold;
+}
+
+.help-text{
+    display: inline-block;
+    max-width: 200px;
+
+    span{
+        position: relative;
+        width: 200px;
+        color: #999999;
+        display: inline-block;
+        float: left;
+        font-size: 14px;
+    }
+
+    span:first-child{
+        padding-top: 10px;
+    }
+}
+
+.multiline{
+    white-space: pre-line;
+
+    span{
+        display: block;
+        line-height: 5px;
+        padding-bottom: 8px;
+    }
+}
+

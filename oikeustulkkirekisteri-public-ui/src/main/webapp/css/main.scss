@@ -48,10 +48,6 @@ input,
   border-radius: 0 !important;
 }
 
-.field-text{
-  font-weight: bold;
-}
-
 .btn-primary{
   @include oph-button(#f4f6f6, #1b1b1b, #a8a8a8);
 }
