@@ -15,15 +15,7 @@
     <br/>
 
     <div class="form-group">
-      <label for="languagePairsSearch" class="col-sm-3 control-label">
-        <span class="field-text" translate="haku_kielipareittain"></span>
-        <br/>
-        <div class="help-text">
-          <span translate="kielipari_info"></span>
-          <span translate="fi_eng"></span>
-          <span translate="eng_fi"></span>
-        </div>
-      </label>
+      <label for="languagePairsSearch" class="col-sm-3 control-label" translate="haku_kielipareittain"></label>
 
       <div class="col-sm-6 col-sm-offset-1">
         <div>
@@ -46,6 +38,11 @@
               <span ng-bind="kieli.nimi[currentLanguage]"></span>
             </ui-select-choices>
           </ui-select>
+        </div>
+        <div class="help-text">
+            <span translate="kielipari_info"></span><br/>
+            <span translate="fi_eng"></span>
+            <span translate="eng_fi"></span>
         </div>
       </div>
     </div>
@@ -104,7 +101,7 @@
             <span ng-repeat="mk in tulkki.maakunnat"> {{maakunta(mk)}} </span>
           </td>
         </tr>
-        <tr ng-show="tulkki.visible">
+        <tr ng-show="tulkki.visible" class="tulkki-details">
           <td colspan="3">
 
             <div class="form-group" ng-if="tulkki.email">

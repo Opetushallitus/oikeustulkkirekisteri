@@ -2,7 +2,7 @@ const translationFI = {
   toinen_kieli: 'På svenska',
   oikeustulkkirekisteri: 'Oikeustulkkirekisteri',
   etsi_oikeustulkkia: 'Etsi oikeustulkkia',
-  kuvaus_kaytosta: 'TODO: kuvaus käytöstä. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tempor orci in sapien pellentesque, nec pretium lorem pulvinar. Nulla eget imperdiet ante. Nullam ullamcorper tempus neque, id porta augue malesuada nec. Nulla facilisi. Phasellus dui orci, facilisis ut quam eget, viverra dictum mauris. Nunc eu vestibulum mauris, tincidunt venenatis purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In eget convallis orci.',
+  kuvaus_kaytosta: '',
   haku_nimen_mukaan: 'Haku nimen mukaan',
   haku_kielipareittain: 'Haku kielipareittain',
   kielipari_info: 'Molemman suuntainen pätevyys esim.',
@@ -27,7 +27,7 @@ const translationSV = {
 
   oikeustulkkirekisteri: 'Oikeustulkkirekisteri - sv',
   etsi_oikeustulkkia: 'Etsi oikeustulkkia',
-  kuvaus_kaytosta: 'TODO: kuvaus käytöstä. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam tempor orci in sapien pellentesque, nec pretium lorem pulvinar. Nulla eget imperdiet ante. Nullam ullamcorper tempus neque, id porta augue malesuada nec. Nulla facilisi. Phasellus dui orci, facilisis ut quam eget, viverra dictum mauris. Nunc eu vestibulum mauris, tincidunt venenatis purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. In eget convallis orci.',
+  kuvaus_kaytosta: 'Ruotsinkielen lokalisoinnit tulossa.',
   haku_nimen_mukaan: 'Haku nimen mukaan',
   haku_kielipareittain: 'Haku kielipareittain',
   kielipari_info: 'Molemman suuntainen pätevyys esim.',

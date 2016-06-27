@@ -63,14 +63,11 @@ input,
 
 .help-text{
   display: inline-block;
-  max-width: 200px;
 
   span{
     position: relative;
-    width: 200px;
     color: #999999;
     display: inline-block;
-    float: left;
     font-size: 14px;
   }
 
@@ -199,4 +196,8 @@ input,
 
 .tulkki-row{
   cursor: pointer;
+}
+
+.tulkki-details .form-group label {
+  padding-top: 0.4em;
 }
