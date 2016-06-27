@@ -17,13 +17,6 @@ import static fi.vm.sade.oikeustulkkirekisteri.external.api.Constants.JSON;
  */
 @Path("/resources/henkilo")
 public interface HenkiloApi {
-    @POST
-    @Consumes(JSON)
-    @Produces(JSON)
-    @Path("/henkilotByHenkiloOidList")
-    List<HenkiloRestDto> henkilotByHenkiloOidList(List<String> oids,
-              @HeaderParam("External-Permission-Service") ExternalPermissionService permissionService);
-    
     @GET
     @Produces(JSON)
     PaginationObject<HenkiloRestDto> listHenkilos(
@@ -57,8 +50,4 @@ public interface HenkiloApi {
     @Produces("application/json")
     @Consumes(JSON)
     String updateHenkilo(@PathParam("oid") String oid, HenkiloRestDto henkilo);
-
-    public enum ExternalPermissionService {
-        HAKU_APP, SURE, OIKEUSTULKKIREKISTERI
-    }
 }

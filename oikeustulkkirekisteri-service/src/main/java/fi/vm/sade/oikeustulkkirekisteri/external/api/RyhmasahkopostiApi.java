@@ -1,5 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.IdHolderDto;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 
 import javax.ws.rs.Consumes;
@@ -23,5 +24,5 @@ public interface RyhmasahkopostiApi {
     @POST
     @Consumes(JSON)
     @Produces({"application/json"})
-    String sendEmail(EmailData data);
+    IdHolderDto sendEmail(EmailData data);
 }

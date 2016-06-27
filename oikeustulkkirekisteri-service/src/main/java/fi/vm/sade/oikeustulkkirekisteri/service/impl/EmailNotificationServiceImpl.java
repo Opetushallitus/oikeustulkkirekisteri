@@ -3,8 +3,10 @@ package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 import fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
 import fi.vm.sade.oikeustulkkirekisteri.domain.SahkopostiMuistutus;
+import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.RyhmasahkopostiApi;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.IdHolderDto;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.EmailNotificationService;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiCacheService;
@@ -12,9 +14,12 @@ import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailMessage;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
+import fi.vm.sade.ryhmasahkoposti.api.dto.ReportedRecipientReplacementDTO;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +30,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.ProcessingException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -44,7 +53,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
 
     private static final String DEFAULT_LANGUAGE_CODE = "fi";
     private static final Locale DEFAULT_LOCALE = new Locale(DEFAULT_LANGUAGE_CODE);
-    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 60*1000; // check cache state (/retry if failed) every 1min
+    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 10*60*1000; // check cache state (/retry if failed) every 10min
 
     @Resource
     private RyhmasahkopostiApi ryhmasahkopostiClient;
@@ -86,7 +95,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
     }
     
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = {ProcessingException.class, ClientErrorException.class})
     public void sendNotificationToOikeustulkki(Long id) {
         Oikeustulkki oikeustulkki = oikeustulkkiRepository.findEiPoistettuById(id);
         logger.info("Sending notification to oikeustulkki id={}, henkiloOid={}", id, oikeustulkki.getTulkki().getHenkiloOid());
@@ -100,6 +109,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
         muistutus.setVastaanottaja(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI)
                 .orElseThrow(() -> new IllegalStateException("Oikeustulkki henkiloOid="+oikeustulkki.getTulkki().getHenkiloOid()
                         + " does not have work email.")));
+        muistutus.setKieli(new Kieli(DEFAULT_LANGUAGE_CODE));
 
         EmailData emailData = new EmailData();
         EmailMessage email = new EmailMessage();
@@ -115,17 +125,25 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
         recipient.setName(henkilo.getKutsumanimi() + " " + henkilo.getSukunimi());
         recipient.setOid(henkilo.getOidHenkilo());
         recipient.setOidType("henkilo");
+        List<ReportedRecipientReplacementDTO> replacements = new ArrayList<>();
+        replacements.add(new ReportedRecipientReplacementDTO("vanhenee", 
+                new SimpleDateFormat("dd.MM.yyyy").format(oikeustulkki.getPaattyy().toDate())));
+        recipient.setRecipientReplacements(replacements);
         recipient.setLanguageCode(DEFAULT_LANGUAGE_CODE);
         emailData.getRecipient().add(recipient);
         
-        String result = ryhmasahkopostiClient.sendEmail(emailData);
-        logger.info("Sent email {}", result);
-        muistutus.setSahkopostiId(Long.parseLong(result));
-        muistutus.setLahetetty(DateTime.now());
-        
-        auditLog.log(builder(OikeustulkkiOperation.OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL)
-                .oikeustulkkiId(id).henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
-                .build());
+        try {
+            IdHolderDto result = ryhmasahkopostiClient.sendEmail(emailData);
+            logger.info("Sent email {}", result);
+            muistutus.setLahetetty(DateTime.now());
+            auditLog.log(builder(OikeustulkkiOperation.OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL)
+                    .oikeustulkkiId(id).henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
+                    .build());
+            muistutus.setSahkopostiId(Long.parseLong(result.getId()));
+        } catch (ProcessingException|ClientErrorException e) {
+            muistutus.setVirhe(e.getMessage());
+            throw e;
+        }
     }
     
     @Override

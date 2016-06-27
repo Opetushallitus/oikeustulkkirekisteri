@@ -1,0 +1,48 @@
+{
+  "name": "oikeustulkki_vanhenemismuistutus",
+  "language": "FI",
+  "type": "email",
+  "storingOid": null,
+  "organizationOid": null,
+  "structure": {
+    "name": "oikeustulkki_vanhenemismuistutus_rakenne",
+    "language": "FI",
+    "description": "Oikeustulkkirekisterin muistutusviesti rekisterimerkinnän vanhenemisesta",
+    "contentStructures": [
+      {
+        "type": "email",
+        "style": "@page {size: 210mm 297mm;    margin: 16mm 10mm 30mm 12mm;@bottom-center {ttvertical-align: top;ttcontent: element(footer);t}    }@font-face {    font-family: Calibri;    font-size: 12px;    src: url(classpath:/fonts/Calibri.ttf);    -fs-pdf-font-embed: embed;    -fs-pdf-font-encoding: ISO-8859-15;}koekutsubody {    font-size: 14px;    font-family: Calibri;    margin: 0 0 0 11mm;}body {    font-size: 12px;    font-family: Calibri;    margin: 0;}.koekutsuheader {    font-size: 14px;    font-family: Calibri;tmargin: 4mm 0 0 11mm;    height: 50mm;    width: 100mm;    float: left;}.header {    margin: 4mm 0 0 11mm;    height: 80mm;    width: 100mm;    float: left;}.organisaatio {    width: 80mm;    height: 26mm;    margin: 0;    padding: 0;}.osoitetarra {    width: 70mm;    height: 37mm;    margin: 0;    padding: 0;}.koekutsuosoitetarra {    font-size: 14px;    font-family: Calibri;twidth: 70mm;    height: 37mm;    margin: 0;    padding: 0;}.lahetysMerkinta {    font-size: 90%;}.asiakirjanTyyppi {    float: left;    text-align: left;    width: 60mm;    margin: 4mm 0 0 0mm;}.koekutsukirjeenpaivays {tfont-size: 14px;    font-family: Calibri;tmargin-top: 50px;    margin-left: 500px;}.jalkiohjauskirjeTyyppi {    text-align: center;}p {    padding-bottom: 0;    margin-bottom: 0;}.koekutsuasiaotsikko {tfont-size: 14px;    font-family: Calibri;tmargin:  15mm 0 0 11mm;    clear: both;    font-weight: bold;}.asiaotsikko {    clear: both;}.sisalto {    clear: both;    line-height: 140%;}.koekutsusisalto {tfont-size: 14px;    font-family: Calibri;tmargin:  15mm 0 0 11mm;tclear: both;    line-height: 140%;}.liiteSisalto {    font-size: 11px;    line-height: 140%;}table {    border-collapse: collapse;}td, th {    border: 1px solid gray;    padding: 5px;}td {    text-align: center;}.hakutoive {    text-align: left;}.koekutsuhakukohde {tfont-size: 14px;    font-family: Calibri;    margin: 5mm 0 0 11mm;    text-align: left;    font-weight: bold;}th {    vertical-align: top;    text-align: center;}ol, ul {    padding-top: 0;    margin-top: 0;    font-weight: 100;    padding-left: 4mm;    margin-left: 2em;}ul.dash {    list-style: none;    margin-left: 0;    padding-left: 1em;}ul.dash li:before {    display: inline-block;    content: \"-\";    width: 1em;    margin-left: -1em;}.footer {    font-size: 90%;    position: running(footer);}.footer .heading {    width: 100%;}.footer div {    float: left;    width: 30mm;}",
+        "styleName": "oikeustulkki_vanhenemismuistutus_style",
+        "contents": [
+          {
+            "role": "header",
+            "name": "email_subject",
+            "contentType": "plain",
+            "content": "Oikeustulkkirekisterin merkintä vanhenee / samma på svenska."
+          },
+          {
+            "role": "body",
+            "name": "email_body",
+            "contentType": "html",
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><meta http-equiv=\"Content-Style-Type\" content=\"text/css\"/></head><body><div><div class=\"sisalto\"><p><i>Hei,</i></p><p>Oikeustulkkirekisterin merkint&auml;nne vanhenee ${vanhenee}.</p></div><br/><p>Osoitel&auml;hde: Oikeustulkkirekisteri. <a href=\"https://opintopolku.fi/wp/fi/rekisteriseloste/\">Katso rekisteriseloste</a></p></body></html>"
+          }
+        ]
+      }
+    ],
+    "replacements": [
+      {
+        "key": "vanhenee",
+        "name": "Vanhenemispäivämäärä",
+        "description": "Päivämäärä tekstimuodossa, jolloin oikeustulkkirekisterin merkintä vanhenee",
+        "contentType": "plain",
+        "numberOfRows": 1
+      }
+    ]
+  },
+  "replacements": [
+    {
+      "name": "vanhenee",
+      "mandatory": true
+    }
+  ]
+}

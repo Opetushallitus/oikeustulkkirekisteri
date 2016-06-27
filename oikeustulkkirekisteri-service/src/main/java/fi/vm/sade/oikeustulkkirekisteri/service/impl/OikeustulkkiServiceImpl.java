@@ -119,6 +119,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
                 .oikeustulkkiId(oikeustulkki.getId())
                 .build());
+        oikeustulkkiCacheService.notifyHenkiloUpdated(oikeustulkki.getTulkki().getHenkiloOid());
         return oikeustulkki.getId();
     }
     
@@ -141,6 +142,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
                 .oikeustulkkiId(oikeustulkki.getId())
                 .build());
+        oikeustulkkiCacheService.notifyHenkiloUpdated(oikeustulkki.getTulkki().getHenkiloOid());
     }
 
     @Override
