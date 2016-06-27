@@ -53,7 +53,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
 
     private static final String DEFAULT_LANGUAGE_CODE = "fi";
     private static final Locale DEFAULT_LOCALE = new Locale(DEFAULT_LANGUAGE_CODE);
-    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 10*60*1000; // check cache state (/retry if failed) every 10min
+    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 3600*1000; // check cache state (/retry if failed) every hour
 
     @Resource
     private RyhmasahkopostiApi ryhmasahkopostiClient;

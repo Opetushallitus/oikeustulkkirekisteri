@@ -5,9 +5,12 @@ import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
 
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import static java.util.Comparator.comparing;
 
 /**
  * User: tommiratamaa
@@ -23,7 +26,8 @@ public class HenkiloYhteystietoUtil {
     }
 
     public static Stream<YhteystiedotDto> findYhteystieto(HenkiloRestDto henkilo, Predicate<YhteystiedotRyhmaDto> predicate, YhteystietoTyyppi tyyppi) {
-        return henkilo.getYhteystiedotRyhma().stream().filter(predicate).flatMap(yt -> yt.getYhteystiedot().stream())
+        return henkilo.getYhteystiedotRyhma().stream().sorted(comparing(YhteystiedotRyhmaDto::getId).reversed())
+                .filter(predicate).flatMap(yt -> yt.getYhteystiedot().stream())
                 .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi);
     }
 
