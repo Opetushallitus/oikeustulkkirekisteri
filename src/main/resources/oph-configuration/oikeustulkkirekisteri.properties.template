@@ -15,11 +15,15 @@ rekisteri.db.name=oikeustulkkirekisteri
 
 rekisteri.external.apis.dev.mode=false
 
-authentication-service.url=https://{{host_virkailija}}/authentication-service
+authentication-service.baseUrl=https://{{host_virkailija}}/authentication-service
 authentication-service.rekisteri.username={{oikeustulkkirekisteri_authentication_service_username}}
 authentication-service.rekisteri.password={{oikeustulkkirekisteri_authentication_service_password}}
 
-koodisto-service.url = https://{{host_virkailija}}/koodisto-service/
+ryhmasahkoposti-service.baseUrl=https://{{host_virkailija}}/ryhmasahkoposti-service
+ryhmasahkoposti-service.rekisteri.username={{oikeustulkkirekisteri_ryhmasahkoposti_service_username}}
+ryhmasahkoposti-service.rekisteri.password={{oikeustulkkirekisteri_ryhmasahkoposti_service_password}}
+
+koodisto-service.baseUrl = https://{{host_virkailija}}/koodisto-service/
 
 #Spring security configurations
 server.name={{ansible_hostname}}

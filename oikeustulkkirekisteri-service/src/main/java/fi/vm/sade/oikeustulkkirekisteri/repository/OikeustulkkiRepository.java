@@ -1,6 +1,7 @@
 package fi.vm.sade.oikeustulkkirekisteri.repository;
 
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
+import org.joda.time.LocalDate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +32,9 @@ public interface OikeustulkkiRepository extends JpaRepository<Oikeustulkki, Long
     
     @Query("select t from Oikeustulkki t where t.id = ?1 and t.poistettu=false and t.tulkki.poistettu=false and t.julkaisulupa = true")
     Oikeustulkki findEiPoistettuJulkinenById(long id);
+    
+    @Query("select t.id from Oikeustulkki t where t.paattyy >= ?1 and t.paattyy <= ?2 and t.poistettu=false and t.tulkki.poistettu=false " +
+            "and not exists (select m.id from SahkopostiMuistutus m where m.oikeustulkki.id = t.id and m.lahetetty is not null) " +
+            "and not exists (select t2.id from Oikeustulkki t2 where t2.id > t.id and t2.poistettu=false and t2.tulkki.id = t.tulkki.id) ")
+    List<Long> findOikeustulkkisVoimassaBetweenWithoutNotificationsIds(LocalDate start, LocalDate end);
 }

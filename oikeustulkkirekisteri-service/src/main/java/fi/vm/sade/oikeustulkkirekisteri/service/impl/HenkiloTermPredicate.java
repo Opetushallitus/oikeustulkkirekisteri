@@ -38,9 +38,9 @@ public class HenkiloTermPredicate implements Predicate<HenkiloRestDto> {
             return true;
         }
         return normalize(h.getOidHenkilo()).equals(term)
-                || (h.getEtunimet() + " " + h.getSukunimi()).startsWith(term)
-                || (h.getKutsumanimi() + " " + h.getSukunimi()).startsWith(term)
-                || (h.getSukunimi() + " " + h.getEtunimet()).startsWith(term)
-                || (h.getSukunimi() + " " + h.getKutsumanimi()).startsWith(term);
+                || normalize(h.getEtunimet() + " " + h.getSukunimi()).startsWith(term)
+                || normalize(h.getKutsumanimi() + " " + h.getSukunimi()).startsWith(term)
+                || normalize(h.getSukunimi() + " " + h.getEtunimet()).startsWith(term)
+                || normalize(h.getSukunimi() + " " + h.getKutsumanimi()).startsWith(term);
     }
 }

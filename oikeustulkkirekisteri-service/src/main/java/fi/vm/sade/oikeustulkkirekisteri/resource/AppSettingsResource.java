@@ -19,7 +19,7 @@ package fi.vm.sade.oikeustulkkirekisteri.resource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordnik.swagger.annotations.Api;
 import fi.vm.sade.oikeustulkkirekisteri.service.AppSettingsService;
-import fi.vm.sade.oikeustulkkirekisteri.settings.dto.AppSettingsDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.AppSettingsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;

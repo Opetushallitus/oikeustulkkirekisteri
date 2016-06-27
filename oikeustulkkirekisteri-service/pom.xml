@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -41,6 +41,11 @@
             <version>${flyway.version}</version>
         </dependency>
         <dependency>
+            <groupId>fi.vm.sade.viestintapalvelu</groupId>
+            <artifactId>ryhmasahkoposti-api</artifactId>
+            <version>13.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>fi.vm.sade.authentication</groupId>
             <artifactId>authentication-domain</artifactId>
             <version>13.0-SNAPSHOT</version>
@@ -54,6 +59,11 @@
                     <artifactId>joda-time</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>fi.vm.sade.java-utils</groupId>
+            <artifactId>java-properties</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jadira.usertype</groupId>

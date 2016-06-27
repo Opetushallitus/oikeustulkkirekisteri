@@ -17,7 +17,7 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
 import fi.vm.sade.oikeustulkkirekisteri.service.AppSettingsService;
-import fi.vm.sade.oikeustulkkirekisteri.settings.dto.AppSettingsDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.AppSettingsDto;
 import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

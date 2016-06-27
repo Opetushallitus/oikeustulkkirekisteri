@@ -14,7 +14,7 @@
  * European Union Public Licence for more details.
  */
 
-package fi.vm.sade.oikeustulkkirekisteri.settings.dto;
+package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
 import java.io.Serializable;
 import java.util.HashMap;

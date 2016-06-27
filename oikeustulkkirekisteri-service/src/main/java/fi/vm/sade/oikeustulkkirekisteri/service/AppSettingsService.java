@@ -16,7 +16,7 @@
 
 package fi.vm.sade.oikeustulkkirekisteri.service;
 
-import fi.vm.sade.oikeustulkkirekisteri.settings.dto.AppSettingsDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.AppSettingsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import static fi.vm.sade.oikeustulkkirekisteri.service.Constants.PUBLIC;
