@@ -1,12 +1,17 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
+import fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
 import fi.vm.sade.oikeustulkkirekisteri.domain.SahkopostiMuistutus;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.RyhmasahkopostiApi;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.EmailNotificationService;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiCacheService;
 import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
+import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
+import fi.vm.sade.ryhmasahkoposti.api.dto.EmailMessage;
+import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
@@ -19,6 +24,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,15 +46,17 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
     private static final Locale DEFAULT_LOCALE = new Locale(DEFAULT_LANGUAGE_CODE);
     private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 60*1000; // check cache state (/retry if failed) every 1min
 
-//    @Autowired
-//    private RyhmasahkopostiClient ryhmasahkopostiClient;
+    @Resource
+    private RyhmasahkopostiApi ryhmasahkopostiClient;
     
     @Value("${oikeustulkki.expiration.notification.interval.period:P3W}")
-    private String notificationInterval;
+    private String notificationInterval;// default 3 weeks
     @Value("${oikeustulkki.expiration.notification.sender:no-reply@oikeustulkkirekisteri.oph.fi}")
     private String senderEmail;
     @Value("${oikeustulkki.expiration.notification.template.name:oikeustulkki_vanhenemismuistutus}")
     private String templateName;
+    @Value("${oikeustulkki.expiration.notification.calling.process:oikeustulkkirekisteri}")
+    private String callingProcess;
     
     @Autowired
     private OikeustulkkiRepository oikeustulkkiRepository;
@@ -82,6 +90,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
     public void sendNotificationToOikeustulkki(Long id) {
         Oikeustulkki oikeustulkki = oikeustulkkiRepository.findEiPoistettuById(id);
         logger.info("Sending notification to oikeustulkki id={}, henkiloOid={}", id, oikeustulkki.getTulkki().getHenkiloOid());
+        
         SahkopostiMuistutus muistutus = new SahkopostiMuistutus();
         muistutus.setOikeustulkki(oikeustulkki);
         muistutus.setLahettaja(senderEmail);
@@ -91,10 +100,32 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
         muistutus.setVastaanottaja(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI)
                 .orElseThrow(() -> new IllegalStateException("Oikeustulkki henkiloOid="+oikeustulkki.getTulkki().getHenkiloOid()
                         + " does not have work email.")));
+
+        EmailData emailData = new EmailData();
+        EmailMessage email = new EmailMessage();
+        email.setCallingProcess(callingProcess);
+        email.setFrom(senderEmail);
+        email.setTemplateName(templateName);
+        email.setLanguageCode(DEFAULT_LANGUAGE_CODE);
+        email.setCharset("UTF-8");
+        email.setHtml(true);
+        emailData.setEmail(email);
+        EmailRecipient recipient = new EmailRecipient();
+        recipient.setEmail(muistutus.getVastaanottaja());
+        recipient.setName(henkilo.getKutsumanimi() + " " + henkilo.getSukunimi());
+        recipient.setOid(henkilo.getOidHenkilo());
+        recipient.setOidType("henkilo");
+        recipient.setLanguageCode(DEFAULT_LANGUAGE_CODE);
+        emailData.getRecipient().add(recipient);
         
-        //TODO:lähetys
-        
+        String result = ryhmasahkopostiClient.sendEmail(emailData);
+        logger.info("Sent email {}", result);
+        muistutus.setSahkopostiId(Long.parseLong(result));
         muistutus.setLahetetty(DateTime.now());
+        
+        auditLog.log(builder(OikeustulkkiOperation.OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL)
+                .oikeustulkkiId(id).henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
+                .build());
     }
     
     @Override

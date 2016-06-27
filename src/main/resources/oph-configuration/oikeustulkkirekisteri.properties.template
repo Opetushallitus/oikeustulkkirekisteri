@@ -19,6 +19,11 @@ authentication-service.url=https://{{host_virkailija}}/authentication-service
 authentication-service.rekisteri.username={{oikeustulkkirekisteri_authentication_service_username}}
 authentication-service.rekisteri.password={{oikeustulkkirekisteri_authentication_service_password}}
 
+ryhmasahkoposti-service.url=https://{{host_virkailija}}/ryhmasahkoposti-service
+# TODO: separate?
+ryhmasahkoposti-service.rekisteri.username={{oikeustulkkirekisteri_authentication_service_username}}
+ryhmasahkoposti-service.rekisteri.password={{oikeustulkkirekisteri_authentication_service_password}}
+
 koodisto-service.url = https://{{host_virkailija}}/koodisto-service/
 
 #Spring security configurations

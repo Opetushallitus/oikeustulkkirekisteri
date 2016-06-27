@@ -18,6 +18,11 @@
         <property name="username" value="${authentication-service.rekisteri.username}" />
         <property name="password" value="${authentication-service.rekisteri.password}" />
     </bean>
+    <bean id="ryhmasahkopostiSystemAccountClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
+        <property name="serviceUrl" value="${ryhmasahkoposti-service.url}/j_spring_cas_security_check"/>
+        <property name="username" value="${ryhmasahkoposti-service.rekisteri.username}" />
+        <property name="password" value="${ryhmasahkoposti-service.rekisteri.password}" />
+    </bean>
     <bean id="ophRequestHeaders" class="fi.vm.sade.javautils.cxf.OphRequestHeadersCxfInterceptor">
         <property name="clientSubSystemCode" value="oikeustulkkireksiteri.oikeustulkkireksiteri-service.backend"/>
     </bean>
@@ -44,6 +49,19 @@
         </jaxrs-client:outInterceptors>
         <jaxrs-client:inInterceptors>
             <ref bean="henkiloSystemAccountClientCasInterceptor"/>
+        </jaxrs-client:inInterceptors>
+        <jaxrs-client:providers>
+            <ref bean="customJsonProvider"/>
+        </jaxrs-client:providers>
+    </jaxrs-client:client>
+    <jaxrs-client:client id="ryhmasahkopostiClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.RyhmasahkopostiApi"
+                         address="${ryhmasahkoposti-service.url}" inheritHeaders="true">
+        <jaxrs-client:outInterceptors>
+            <ref bean="ryhmasahkopostiSystemAccountClientCasInterceptor"/>
+            <ref bean="ophRequestHeaders"/>
+        </jaxrs-client:outInterceptors>
+        <jaxrs-client:inInterceptors>
+            <ref bean="ryhmasahkopostiSystemAccountClientCasInterceptor"/>
         </jaxrs-client:inInterceptors>
         <jaxrs-client:providers>
             <ref bean="customJsonProvider"/>
