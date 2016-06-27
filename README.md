@@ -51,7 +51,7 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
                          http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
                          http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">      
         </beans:beans>
-                    
+                   
 
 ## Testien ajaminen
 
