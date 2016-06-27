@@ -20,7 +20,6 @@ import java.util.Set;
 @Getter @Setter
 @Table(name = "oikeustulkki", schema = "public")
 public class Oikeustulkki extends Mutable {
-
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
     @GeneratedValue(generator = "oikeustulkki_id_seq")
@@ -59,7 +58,9 @@ public class Oikeustulkki extends Mutable {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,
             mappedBy = "oikeustulkki")
     private Set<OikeustulkkiMuokkaus> muokkaukset = new HashSet<>(0);
-    
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true,
+            mappedBy = "oikeustulkki")
+    private Set<SahkopostiMuistutus> sahkopostiMuistutukset = new HashSet<>(0);
     public enum TutkintoTyyppi {
         OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO,
         MUU_KORKEAKOULUTUTKINTO;
