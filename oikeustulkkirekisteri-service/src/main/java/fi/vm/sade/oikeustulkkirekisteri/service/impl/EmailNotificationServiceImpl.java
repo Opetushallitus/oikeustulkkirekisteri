@@ -62,10 +62,14 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
     private String notificationInterval;// default 3 weeks
     @Value("${oikeustulkki.expiration.notification.sender:no-reply@oikeustulkkirekisteri.oph.fi}")
     private String senderEmail;
+    @Value("${oikeustulkki.expiration.notification.calling.process:no-reply@oikeustulkkirekisteri.oph.fi}")
+    private String replyTo;
     @Value("${oikeustulkki.expiration.notification.template.name:oikeustulkki_vanhenemismuistutus}")
     private String templateName;
     @Value("${oikeustulkki.expiration.notification.calling.process:oikeustulkkirekisteri}")
     private String callingProcess;
+    @Value("${oikeustulkki.expiration.notification.subject}")
+    private String subject;
     
     @Autowired
     private OikeustulkkiRepository oikeustulkkiRepository;
@@ -115,10 +119,13 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
         EmailMessage email = new EmailMessage();
         email.setCallingProcess(callingProcess);
         email.setFrom(senderEmail);
+        email.setSender(senderEmail);
+        email.setReplyTo(replyTo);
         email.setTemplateName(templateName);
         email.setLanguageCode(DEFAULT_LANGUAGE_CODE);
         email.setCharset("UTF-8");
         email.setHtml(true);
+        email.setSubject(subject);
         emailData.setEmail(email);
         EmailRecipient recipient = new EmailRecipient();
         recipient.setEmail(muistutus.getVastaanottaja());
