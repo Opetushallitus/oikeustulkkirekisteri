@@ -2,6 +2,7 @@
 
 ### Idea related
 .idea
+!.idea/encodings.xml
 *.iml
 target
 
