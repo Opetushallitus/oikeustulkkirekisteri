@@ -44,7 +44,7 @@
       <div class="form-group">
           <label for="hetu" class="col-sm-2 control-label required" tt="oikeustulkki_hetu">Hetu</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu"  required>
+              <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu" ng-disabled="true" required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.hetu.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.hetu.$customError}}</div>

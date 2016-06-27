@@ -107,8 +107,10 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
             oikeustulkki.setTulkki(tullkiRepository.findByHenkiloOid(existingHenkilo.get().getOidHenkilo()));
-        }
-        if (oikeustulkki.getTulkki() == null) {
+            if (oikeustulkki.getTulkki() == null) {
+                oikeustulkki.setTulkki(new Tulkki(existingHenkilo.get().getOidHenkilo()));
+            }
+        } else if (oikeustulkki.getTulkki() == null) {
             oikeustulkki.setTulkki(createTulkki(dto));
         }
         convert(dto, oikeustulkki);
@@ -213,6 +215,9 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
         HenkiloRestDto henkilo = henkiloResourceClient.findByOid(henkiloOid);
+        henkilo.setEtunimet(dto.getEtunimet());
+        henkilo.setSukunimi(dto.getSukunimi());
+        henkilo.setKutsumanimi(dto.getKutsumanimi());
         updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
         updateYhteystieto(henkilo, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
