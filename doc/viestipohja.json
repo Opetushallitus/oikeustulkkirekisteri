@@ -24,7 +24,7 @@
             "role": "body",
             "name": "email_body",
             "contentType": "html",
-            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><meta http-equiv=\"Content-Style-Type\" content=\"text/css\"/></head><body><div><div class=\"sisalto\"><p><i>Hei,</i></p><p>Oikeustulkkirekisterin merkint&auml;nne vanhenee ${vanhenee}.</p></div><br/><p>Osoitel&auml;hde: Oikeustulkkirekisteri. <a href=\"https://opintopolku.fi/wp/fi/rekisteriseloste/\">Katso rekisteriseloste</a></p></body></html>"
+            "content": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\"><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/><meta http-equiv=\"Content-Style-Type\" content=\"text/css\"/></head><body><div><div class=\"sisalto\"><p><i>Hei,</i></p><p>Oikeustulkkirekisterin merkint&auml;nne vanhenee ${vanhenee}.</p><p>Hakemus rekisteriin merkitsemisen uusimiseksi tulee toimittaa oikeustulkkirekisterilautakunnalle.</p><p>Hakemus l&ouml;ytyy osoitteesta: <a href=\"http://www.oph.fi/koulutus_ja_tutkinnot/oikeustulkkirekisteri\">http://www.oph.fi/koulutus_ja_tutkinnot/oikeustulkkirekisteri</a></p></div><br/><p>Osoitel&auml;hde: Oikeustulkkirekisteri. <a href=\"http://oph.fi/download/177413_Rekisteriseloste_oikeustulkkirekisteri.pdf\">Katso rekisteriseloste</a></p></body></html>"
           }
         ]
       }

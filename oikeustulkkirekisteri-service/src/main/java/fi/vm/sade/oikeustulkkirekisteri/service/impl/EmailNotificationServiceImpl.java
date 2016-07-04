@@ -58,8 +58,8 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
     @Resource
     private RyhmasahkopostiApi ryhmasahkopostiClient;
     
-    @Value("${oikeustulkki.expiration.notification.interval.period:P3W}")
-    private String notificationInterval;// default 3 weeks
+    @Value("${oikeustulkki.expiration.notification.interval.period:P3M}")
+    private String notificationInterval;// default 3 months
     @Value("${oikeustulkki.expiration.notification.sender:no-reply@oikeustulkkirekisteri.oph.fi}")
     private String senderEmail;
     @Value("${oikeustulkki.expiration.notification.calling.process:no-reply@oikeustulkkirekisteri.oph.fi}")
