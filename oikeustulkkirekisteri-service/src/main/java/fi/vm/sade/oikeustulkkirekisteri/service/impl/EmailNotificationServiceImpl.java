@@ -60,9 +60,9 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
     
     @Value("${oikeustulkki.expiration.notification.interval.period:P3M}")
     private String notificationInterval;// default 3 months
-    @Value("${oikeustulkki.expiration.notification.sender:no-reply@oikeustulkkirekisteri.oph.fi}")
+    @Value("${oikeustulkki.expiration.notification.sender:oikeustulkkirekisteri@oph.fi}")
     private String senderEmail;
-    @Value("${oikeustulkki.expiration.notification.calling.process:no-reply@oikeustulkkirekisteri.oph.fi}")
+    @Value("${oikeustulkki.expiration.notification.calling.process:oikeustulkkirekisteri@oph.fi}")
     private String replyTo;
     @Value("${oikeustulkki.expiration.notification.template.name:oikeustulkki_vanhenemismuistutus}")
     private String templateName;
