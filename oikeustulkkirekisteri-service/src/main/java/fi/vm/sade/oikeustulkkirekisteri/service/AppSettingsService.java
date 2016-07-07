@@ -19,6 +19,7 @@ package fi.vm.sade.oikeustulkkirekisteri.service;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.AppSettingsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import static fi.vm.sade.oikeustulkkirekisteri.service.Constants.CRUD_PERMISSION;
 import static fi.vm.sade.oikeustulkkirekisteri.service.Constants.PUBLIC;
 
 /**
@@ -33,6 +34,6 @@ public interface AppSettingsService {
     @PreAuthorize(PUBLIC)
     AppSettingsDto getUiSettings();
     
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() && " + CRUD_PERMISSION)
     void requireAuthentication();
 }
