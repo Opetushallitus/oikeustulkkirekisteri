@@ -17,6 +17,8 @@ import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.joda.time.Period;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.domain.Specification;
@@ -56,6 +58,8 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 @Service
 public class OikeustulkkiServiceImpl extends AbstractService implements OikeustulkkiService {
+    private static final Logger logger = LoggerFactory.getLogger(OikeustulkkiServiceImpl.class);
+    
     private static final Integer DEFAULT_COUNT = 20;
 
     @Autowired
@@ -99,15 +103,19 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Override
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) {
+        logger.info("OikeustulkkiService.createOikeustulkki");
         Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceServiceUserClient,
                 dto.getHetu()).stream().findFirst();
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
+            logger.info("Found existing henkilo by hetu oid={}", existingHenkilo.get().getOidHenkilo());
             oikeustulkki.setTulkki(tullkiRepository.findByHenkiloOid(existingHenkilo.get().getOidHenkilo()));
             if (oikeustulkki.getTulkki() == null) {
+                logger.info("Created new Tulkki by existing henkilo.");
                 oikeustulkki.setTulkki(new Tulkki(existingHenkilo.get().getOidHenkilo()));
             }
         } else if (oikeustulkki.getTulkki() == null) {
+            logger.info("Creating new Tulkki into authentication-service");
             oikeustulkki.setTulkki(createTulkki(dto));
         }
         convert(dto, oikeustulkki);
@@ -119,12 +127,14 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 .oikeustulkkiId(oikeustulkki.getId())
                 .build());
         oikeustulkkiCacheService.notifyHenkiloUpdated(oikeustulkki.getTulkki().getHenkiloOid());
+        logger.info("OikeustulkkiService.createOikeustulkki DONE");
         return oikeustulkki.getId();
     }
     
     @Override
     @Transactional
     public void editOikeustulkki(OikeustulkkiEditDto dto) throws ValidationException {
+        logger.info("OikeustulkkiService.editOikeustulkki id={}", dto.getId());
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuById(dto.getId()));
         if (dto.getPaattyy().isBefore(dto.getAlkaa())) {
             throw new ValidationException("Validation period end before start", "oikeustulkki.paattyy.before.alkaa");
@@ -142,6 +152,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 .oikeustulkkiId(oikeustulkki.getId())
                 .build());
         oikeustulkkiCacheService.notifyHenkiloUpdated(oikeustulkki.getTulkki().getHenkiloOid());
+        logger.info("OikeustulkkiService.editOikeustulkki id={} DONE", dto.getId());
     }
 
     @Override
@@ -207,10 +218,14 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         henkilo.setKutsumanimi(dto.getKutsumanimi());
         henkilo.setHenkiloTyyppi(HenkiloTyyppi.OPPIJA); // although deprecated is required by henkilöpalvelu impl, 
         // virkalija so that can be serached and edited through henkilopalvelu
-        return new Tulkki(henkiloResourceServiceUserClient.createHenkilo(henkilo));
+        logger.info("Calling createHenkilo");
+        String oid = henkiloResourceServiceUserClient.createHenkilo(henkilo);
+        logger.info("Received oid={} resposnse from authenticationService's createHenkilo", oid);
+        return new Tulkki(oid);
     }
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
+        logger.info("Updating henkilo details, fetching current ones by oid={}", henkiloOid);
         HenkiloRestDto henkilo = henkiloResourceServiceUserClient.findByOid(henkiloOid);
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
@@ -222,7 +237,9 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         updateYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI, dto.getEmail());
         updateYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO, dto.getPuhelinnumero());
         updateYhteystieto(henkilo, YHTEYSTIETO_PUHELINNUMERO, dto.getPuhelinnumero());
+        logger.info("Updating henkilo details, oid={}", henkiloOid);
         henkiloResourceServiceUserClient.updateHenkilo(henkiloOid, henkilo);
+        logger.info("Updated henkilo details, oid={}", henkiloOid);
     }
 
     private void updateYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi, String arvo) {
