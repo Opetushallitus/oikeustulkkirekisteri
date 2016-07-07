@@ -56,7 +56,7 @@ public class OikeustulkkiCacheServiceImpl extends AbstractService implements Oik
     private OikeustulkkiRepository oikeustulkkiRepository;
 
     @Resource
-    private HenkiloApi henkiloResourceReadClient;
+    private HenkiloApi henkiloResourceServiceUserClient;
     
     @Override
     @PostConstruct
@@ -91,7 +91,7 @@ public class OikeustulkkiCacheServiceImpl extends AbstractService implements Oik
             logger.info("FETCHING all oikeustulkkihenkilös");
             allHenkilosOrdererd = new CopyOnWriteArrayList<>(oikeustulkkiRepository.findEiPoistettuOids().stream()
                     .peek(oid -> logger.debug(" > Fetching oid {}", oid))
-                    .map(retrying(henkiloResourceReadClient::findByOid, 2))
+                    .map(retrying(henkiloResourceServiceUserClient::findByOid, 2))
                     .peek(h -> logger.debug(" < Got result for oid {}", h.getOidHenkilo())).collect(toList()));
             byOid = allHenkilosOrdererd.stream().collect(toMap(HenkiloRestDto::getOidHenkilo, h->h));
             fullFetchDoneAt = now();
@@ -108,7 +108,7 @@ public class OikeustulkkiCacheServiceImpl extends AbstractService implements Oik
             logger.error("Failed to fetch henkilos." + e.getMessage(), e);
             return; // not fatal
         }
-        HenkiloRestDto henkilo = henkiloResourceReadClient.findByOid(oid);
+        HenkiloRestDto henkilo = henkiloResourceServiceUserClient.findByOid(oid);
         byOid.put(oid, henkilo);
         Optional<HenkiloRestDto> existing = allHenkilosOrdererd.stream()
                 .filter(h -> h.getOidHenkilo().equals(oid)).findFirst();

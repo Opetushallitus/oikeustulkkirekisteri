@@ -65,10 +65,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     private TullkiRepository tullkiRepository;
     
     @Resource
-    private HenkiloApi henkiloResourceClient;
-    
-    @Resource
-    private HenkiloApi henkiloResourceReadClient;
+    private HenkiloApi henkiloResourceServiceUserClient;
 
     @Autowired
     private OikeustulkkiCacheService oikeustulkkiCacheService;
@@ -102,7 +99,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Override
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) {
-        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceReadClient,
+        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceServiceUserClient,
                 dto.getHetu()).stream().findFirst();
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
@@ -181,7 +178,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         Map<String,HenkiloRestDto> fetched = new HashMap<>();
         Function<String,HenkiloRestDto> getHenkilos = or(fetched::get, oid -> {
             try {
-                HenkiloRestDto h = henkiloResourceReadClient.findByOid(oid);
+                HenkiloRestDto h = henkiloResourceServiceUserClient.findByOid(oid);
                 fetched.put(oid, h);
                 return h;
             } catch(Exception e) {
@@ -210,11 +207,11 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         henkilo.setKutsumanimi(dto.getKutsumanimi());
         henkilo.setHenkiloTyyppi(HenkiloTyyppi.OPPIJA); // although deprecated is required by henkilöpalvelu impl, 
         // virkalija so that can be serached and edited through henkilopalvelu
-        return new Tulkki(henkiloResourceClient.createHenkilo(henkilo));
+        return new Tulkki(henkiloResourceServiceUserClient.createHenkilo(henkilo));
     }
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
-        HenkiloRestDto henkilo = henkiloResourceClient.findByOid(henkiloOid);
+        HenkiloRestDto henkilo = henkiloResourceServiceUserClient.findByOid(henkiloOid);
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
         henkilo.setKutsumanimi(dto.getKutsumanimi());
@@ -225,7 +222,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         updateYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI, dto.getEmail());
         updateYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO, dto.getPuhelinnumero());
         updateYhteystieto(henkilo, YHTEYSTIETO_PUHELINNUMERO, dto.getPuhelinnumero());
-        henkiloResourceClient.updateHenkilo(henkiloOid, henkilo);
+        henkiloResourceServiceUserClient.updateHenkilo(henkiloOid, henkilo);
     }
 
     private void updateYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi, String arvo) {
@@ -341,7 +338,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Transactional(readOnly = true)
     public OikeustulkkiPublicViewDto getJulkinen(long id) {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuJulkinenById(id));
-        HenkiloRestDto henkilo = found(henkiloResourceReadClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
+        HenkiloRestDto henkilo = found(henkiloResourceServiceUserClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
         OikeustulkkiPublicViewDto viewDto = new OikeustulkkiPublicViewDto();
         viewDto.setId(oikeustulkki.getId());
         viewDto.setEtunimet(henkilo.getEtunimet());
