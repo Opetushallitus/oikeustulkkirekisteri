@@ -1,5 +1,5 @@
 angular.module('registryApp').service('KoodistoService', ['$http', ($http) => {
-    const root = '/oikeustulkkirekisteri-service/api/koodisto/';
+    const root = '/oikeustulkkirekisteri-service/api/public/';
 
     const getKielet = () => {
         return $http.get(root+'kielet');
