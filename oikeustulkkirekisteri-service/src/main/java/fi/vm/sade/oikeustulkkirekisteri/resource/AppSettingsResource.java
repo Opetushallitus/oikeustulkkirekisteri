@@ -60,4 +60,13 @@ public class AppSettingsResource {
         resultJson.put("loggedIn", true);
         return resultJson;
     }
+    
+    @ResponseBody
+    @RequestMapping(value  =  "/testLoggedInAndRole", method  =  RequestMethod.GET)
+    public Map<String,Object> testLoggedInAndRole() throws IOException {
+        appSettingsService.requireAuthenticationAndCrud();
+        Map<String,Object> resultJson = new HashMap<>();
+        resultJson.put("loggedIn", true);
+        return resultJson;
+    }
 }

@@ -92,6 +92,10 @@ window['appInit'] = () => {
       console.info('Login test failed.');
       window.location.href = authenticationUrl;
     };
+    const showRoleError = () => {
+      console.info('Required role missing.');
+      $("body").append($('<div><div><div id="header"><img src="img/opetushallitus.gif"><p>Oikeustulkkirekisteri</p></div></div><div><div class="container"><div class="error-holder">Ei käyttöoikeutta. Vaadittu käyttöoikeusrooli puuttuu.</div></div></div></div>'));
+    };
     jQuery.ajax(window['CONFIG'].env['test.logged.in.url'] || '/oikeustulkkirekisteri-service/api/app/testLoggedIn', {
       crossDomain:true,
       complete: logRequest,
@@ -102,7 +106,30 @@ window['appInit'] = () => {
           try {
             var json = data instanceof String ? JSON.parse(data) : data;
             if (json && json.loggedIn) {
-              initFunction("Login test", data, status);
+              console.info('User logged in. Testing required role...');
+              jQuery.ajax(window['CONFIG'].env['test.logged.in.and.role.url'] || '/oikeustulkkirekisteri-service/api/app/testLoggedInAndRole', {
+                crossDomain: true,
+                complete: logRequest,
+                success: function (data, status) {
+                  if (!data) {
+                    showRoleError();
+                  } else {
+                    try {
+                      var json = data instanceof String ? JSON.parse(data) : data;
+                      if (json && json.loggedIn) {
+                        console.info('User has required role');
+                        initFunction("Login test", data, status);
+                      } else {
+                        showRoleError();
+                      }
+                    } catch (e) {
+                      showRoleError();
+                    }
+                  }
+                },
+                statusCode: {302: showRoleError},
+                error: showRoleError
+              });
             } else {
               redirectToLogin();
             }

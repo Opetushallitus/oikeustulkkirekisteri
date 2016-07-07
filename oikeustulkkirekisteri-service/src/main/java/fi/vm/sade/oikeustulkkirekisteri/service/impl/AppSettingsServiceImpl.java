@@ -57,6 +57,10 @@ public class AppSettingsServiceImpl extends AbstractService implements AppSettin
     }
 
     @Override
+    public void requireAuthenticationAndCrud() {
+    }
+
+    @Override
     public void requireAuthentication() {
     }
 

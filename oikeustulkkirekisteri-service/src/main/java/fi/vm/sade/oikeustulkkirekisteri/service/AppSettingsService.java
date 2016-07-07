@@ -33,7 +33,10 @@ public interface AppSettingsService {
      */
     @PreAuthorize(PUBLIC)
     AppSettingsDto getUiSettings();
-    
+
     @PreAuthorize("isAuthenticated() && " + CRUD_PERMISSION)
+    void requireAuthenticationAndCrud();
+    
+    @PreAuthorize("isAuthenticated()")
     void requireAuthentication();
 }

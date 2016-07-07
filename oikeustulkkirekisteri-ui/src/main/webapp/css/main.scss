@@ -12,8 +12,16 @@ body {
     }
 }
 
-.error-msg{
+.error-msg {
     color:maroon;
+}
+
+.error-holder {
+    border:maroon 1px solid;
+    padding:20px;
+    margin-top: 10px;
+    background-color: #fbdddc;
+    color: maroon;
 }
 
 .history-panel{
