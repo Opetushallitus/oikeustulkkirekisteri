@@ -2,7 +2,8 @@ import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 import {Tulkki, newTulkki, getTulkkiPostData, isTulkkiKutsumanimiValid} from "../tulkki.ts";
 
 angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$routeParams", "Page", "KoodistoService",
-  "OikeustulkkiService", "$window", "$filter", ($scope, $routeParams, Page, KoodistoService, OikeustulkkiService, $window) => {
+  "OikeustulkkiService", "$window", "$filter", '$rootScope', 'LocalisationService',
+        ($scope, $routeParams, Page, KoodistoService, OikeustulkkiService, $window, $filter, $rootScope, LocalisationService) => {
     Page.setPage('editOikeustulkki');
     $scope.showErrors = false;
     $scope.tulkki = null;
@@ -83,21 +84,29 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
     };
 
     $scope.save = () => {
+      $rootScope.$broadcast('clearErrors');
       clearCustomErrors();
       $scope.showErrors = false;
 
       checkIfKutsumanimiValid();
       if (!_.isEmpty($scope.tulkkiForm.$error)) {
+        if ($scope.action == 'create') {
+          $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_save_failed_missing_fields']").text())
+        } else {
+          $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_update_failed_missing_fields']").text())
+        }
         $scope.showErrors = true;
         return;
       }
-
+      
       if ($scope.action == 'create') {
         OikeustulkkiService.createTulkki(getTulkkiPostData($scope.tulkki))
-            .then(id => $window.location.href = "#/oikeustulkki/" + id.data, error => {
-                if (error.data.violations) {
+            .then(id => {
+              $rootScope.$broadcast('addSuccess', $(".translations [tt='oikeustulkki_created_existing']").text());
+              $window.location.hash = "/oikeustulkki/" + id.data;
+            }, error => {
+                if (error.data.violations && error.data.violations.length) {
                   _.forEach(error.data.violations, (violation) => {
-
                     if (!$scope.tulkkiForm[violation.path]) {
                       console.log(violation);
                     } else {
@@ -106,23 +115,36 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
                       $scope.showErrors = true;
                     }
                   });
+                  $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_save_failed']").text());
+                } else if (error.data.messsage) {
+                  $rootScope.$broadcast('addError', error.data.messsage);
+                } else {
+                  $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_save_failed']").text());
                 }
-              });
+            });
       } else {
         OikeustulkkiService.updateTulkki(getTulkkiPostData($scope.tulkki))
-            .then(() => $window.location.href = "#/oikeustulkki/" + $routeParams.id, error => {
-              if (error.data.violations) {
-                _.forEach(error.data.violations, (violation) => {
-
-                  if (!$scope.tulkkiForm[violation.path]) {
-                    console.log(violation);
-                  } else {
-                    $scope.tulkkiForm[violation.path].$customError = violation.message;
-                    $scope.tulkkiForm[violation.path].$setValidity('custom', false);
-                  }
-                });
+            .then(() => {
+              $rootScope.$broadcast('addSuccess', $(".translations [tt='oikeustulkki_updated']").text());
+              $window.location.hash = "/oikeustulkki/" + $routeParams.id;
+            }, error => {
+                if (error.data.violations && error.data.violations.length) {
+                  _.forEach(error.data.violations, (violation) => {
+                    if (!$scope.tulkkiForm[violation.path]) {
+                      console.log(violation);
+                    } else {
+                      $scope.tulkkiForm[violation.path].$customError = violation.message;
+                      $scope.tulkkiForm[violation.path].$setValidity('custom', false);
+                    }
+                  });
+                  $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_update_failed']").text());
+                } else if (error.data.message) {
+                  $rootScope.$broadcast('addError', error.data.message);
+                } else {
+                  $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_update_failed']").text());
+                }
               }
-            });
+          );
       }
     };
   }]);

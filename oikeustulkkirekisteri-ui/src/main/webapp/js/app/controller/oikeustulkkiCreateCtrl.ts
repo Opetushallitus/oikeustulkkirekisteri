@@ -2,7 +2,8 @@ import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 import {Tulkki, newTulkki, getTulkkiPostData, isTulkkiKutsumanimiValid} from "../tulkki.ts";
 
 angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService",
-    "OikeustulkkiService", "$window", "$filter", ($scope, Page, KoodistoService, OikeustulkkiService, $window) => {
+    "OikeustulkkiService", "$window", "$filter", '$rootScope', 'LocalisationService',
+            ($scope, Page, KoodistoService, OikeustulkkiService, $window, $filter, $rootScope, LocalisationService) => {
         Page.setPage('addOikeustulkki');
         $scope.showErrors = false;
         
@@ -50,20 +51,24 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
         };
 
         $scope.save = () => {
+            $rootScope.$broadcast('clearErrors');
             clearCustomErrors();
             $scope.showErrors = false;
 
             checkIfKutsumanimiValid();
             if (!_.isEmpty($scope.tulkkiForm.$error)) {
+                $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_save_failed_missing_fields']").text());
                 $scope.showErrors = true;
                 return;
             }
 
             OikeustulkkiService.createTulkki(getTulkkiPostData($scope.tulkki))
-                .then(id =>$window.location.href = "#/oikeustulkki/" + id.data, error => {
-                    if (error.data.violations) {
+                .then(id => {
+                    $rootScope.$broadcast('addSuccess', $(".translations [tt='oikeustulkki_created']").text());
+                    $window.location.hash = "/oikeustulkki/" + id.data;
+                }, error => {
+                    if (error.data.violations && error.data.violations.length) {
                         _.forEach(error.data.violations, (violation) => {
-            
                             if (!$scope.tulkkiForm[violation.path]) {
                                 console.log(violation);
                             } else {
@@ -72,7 +77,13 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
                                 $scope.showErrors = true;
                             }
                         });
+                        $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_save_failed']").text());
+                    } else if (error.data.message) {
+                        $rootScope.$broadcast('addError', error.data.message);
+                    } else {
+                        $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_save_failed']").text());
                     }
-                });
+                }
+            );
         };
     }]);

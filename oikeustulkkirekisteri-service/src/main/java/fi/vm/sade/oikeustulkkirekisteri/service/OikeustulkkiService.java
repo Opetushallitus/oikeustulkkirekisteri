@@ -16,7 +16,7 @@ import static fi.vm.sade.oikeustulkkirekisteri.service.Constants.PUBLIC;
  */
 public interface OikeustulkkiService {
     @PreAuthorize(CRUD_PERMISSION)
-    long createOikeustulkki(OikeustulkkiCreateDto dto);
+    long createOikeustulkki(OikeustulkkiCreateDto dto) throws ValidationException;
 
     @PreAuthorize(CRUD_PERMISSION)
     void editOikeustulkki(OikeustulkkiEditDto dto) throws ValidationException;

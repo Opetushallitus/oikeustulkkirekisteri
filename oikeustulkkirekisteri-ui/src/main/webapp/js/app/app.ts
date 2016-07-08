@@ -7,20 +7,21 @@ if (!window['CONFIG']) {
   window['CONFIG'] = window['CONFIG'] || {env: {}};
 }
 
-const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ngCookies', 'localisation', 'ui.select', 'datePicker']).factory('Page', () => {
+const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ngCookies', 'localisation', 'ui.select', 'datePicker']).factory('Page', ['$rootScope',($rootScope) => {
   let page = 'main';
   return {
     page: () => {
       return page;
     },
     setPage: (newPage) => {
+      $rootScope.$broadcast('clearErrors', true);
       page = newPage;
     },
     activePage: (pageName) => {
       return page === pageName;
     }
   };
-}).config(['uiSelectConfig', (uiSelectConfig) => {
+}]).config(['uiSelectConfig', (uiSelectConfig) => {
   uiSelectConfig.theme = 'bootstrap';
   uiSelectConfig.matcher = (term:string, text:string) => term && text.toLowerCase().substr(0, term.length) == term.toLowerCase();
 }]).run(['$http', '$cookies', ($http, $cookies) => {
@@ -76,6 +77,7 @@ window['appInit'] = () => {
       angular.element(document).ready(function() {
         angular.module('registryAppInitialized', ['registryApp']);
         angular.bootstrap(document, ['registryAppInitialized']);
+        $("body").removeClass('loading');
       });
     }
   }
@@ -94,7 +96,7 @@ window['appInit'] = () => {
     };
     const showRoleError = () => {
       console.info('Required role missing.');
-      $("body").append($('<div><div><div id="header"><img src="img/opetushallitus.gif"><p>Oikeustulkkirekisteri</p></div></div><div><div class="container"><div class="error-holder">Ei käyttöoikeutta. Vaadittu käyttöoikeusrooli puuttuu.</div></div></div></div>'));
+      $("body").append($('<div><div><div id="header"><img src="img/opetushallitus.gif"><p>Oikeustulkkirekisteri</p></div></div><div><div class="container"><div class="message-holder error-message">Ei käyttöoikeutta. Vaadittu käyttöoikeusrooli puuttuu.</div></div></div></div>'));
     };
     jQuery.ajax(window['CONFIG'].env['test.logged.in.url'] || '/oikeustulkkirekisteri-service/api/app/testLoggedIn', {
       crossDomain:true,

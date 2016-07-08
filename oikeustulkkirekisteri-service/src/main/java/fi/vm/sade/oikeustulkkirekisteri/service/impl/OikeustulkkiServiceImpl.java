@@ -28,11 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation.*;
@@ -102,13 +100,18 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     
     @Override
     @Transactional
-    public long createOikeustulkki(OikeustulkkiCreateDto dto) {
+    public long createOikeustulkki(OikeustulkkiCreateDto dto) throws ValidationException {
         logger.info("OikeustulkkiService.createOikeustulkki");
         Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceServiceUserClient,
                 dto.getHetu()).stream().findFirst();
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
             logger.info("Found existing henkilo by hetu oid={}", existingHenkilo.get().getOidHenkilo());
+            if (!isSameHenkiloByName(existingHenkilo.get(), dto)) {
+                throw new ValidationException("Name of existing henkilo " + existingHenkilo.get().getEtunimet() + " " + existingHenkilo.get().getSukunimi()
+                            + " does not match inserted " + dto.getEtunimet() + " " + dto.getSukunimi(),
+                        "oikeustulkki.different.henkilo.found.by.hetu");
+            }
             oikeustulkki.setTulkki(tullkiRepository.findByHenkiloOid(existingHenkilo.get().getOidHenkilo()));
             if (oikeustulkki.getTulkki() == null) {
                 logger.info("Created new Tulkki by existing henkilo.");
@@ -129,6 +132,16 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         oikeustulkkiCacheService.notifyHenkiloUpdated(oikeustulkki.getTulkki().getHenkiloOid());
         logger.info("OikeustulkkiService.createOikeustulkki DONE");
         return oikeustulkki.getId();
+    }
+
+    private boolean isSameHenkiloByName(HenkiloRestDto henkilo, OikeustulkkiCreateDto tulkki) {
+        Set<String> henkiloEtunimet = etunimetLower(henkilo.getEtunimet()).collect(toSet());
+        return tulkki.getSukunimi().trim().equalsIgnoreCase(henkilo.getSukunimi().trim())
+                && etunimetLower(tulkki.getEtunimet()).anyMatch(henkiloEtunimet::contains);
+    }
+    
+    private Stream<String> etunimetLower(String etunimet) {
+        return etunimet == null || etunimet.trim().isEmpty() ? Stream.empty() : Stream.of(etunimet.trim().split("\\s+")).map(String::toLowerCase);
     }
     
     @Override
@@ -185,6 +198,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         OikeustulkkiVirkailijaViewDto viewDto = convert(oikeustulkki, henkilo, new OikeustulkkiVirkailijaViewDto());
         viewDto.setPaattyy(oikeustulkki.getPaattyy());
         viewDto.setId(oikeustulkki.getId());
+        viewDto.setYksiloityVTJ(henkilo.isYksiloityVTJ());
         viewDto.setAidinkieli(ofNullable(henkilo.getAidinkieli()).map(KielisyysDto::getKieliKoodi).orElse(null));
         Map<String,HenkiloRestDto> fetched = new HashMap<>();
         Function<String,HenkiloRestDto> getHenkilos = or(fetched::get, oid -> {
@@ -227,8 +241,11 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
         logger.info("Updating henkilo details, fetching current ones by oid={}", henkiloOid);
         HenkiloRestDto henkilo = henkiloResourceServiceUserClient.findByOid(henkiloOid);
-        henkilo.setEtunimet(dto.getEtunimet());
-        henkilo.setSukunimi(dto.getSukunimi());
+        if (!henkilo.isYksiloityVTJ()) {
+            henkilo.setHetu(dto.getHetu());
+            henkilo.setEtunimet(dto.getEtunimet());
+            henkilo.setSukunimi(dto.getSukunimi());
+        }
         henkilo.setKutsumanimi(dto.getKutsumanimi());
         updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
@@ -318,7 +335,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Override
     @Transactional(readOnly = true)
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
-        List<OikeustulkkiVirkailijaListDto> results = doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
+        List<OikeustulkkiVirkailijaListDto> results = doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto), true),
                 this::combineHenkiloVirkailija);
         auditLog.log(builder(OIKEUSTULKKI_READ)
             .henkiloOidList(results.stream().map(OikeustulkkiVirkailijaListDto::getHenkiloOid).collect(toList()))
@@ -347,7 +364,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Override
     @Transactional(readOnly = true)
     public List<OikeustulkkiPublicListDto> haeJulkinen(OikeustulkkiPublicHakuDto hakuDto) {
-        return doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto)),
+        return doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto), false),
                 this::combineHenkilo);
     }
 
@@ -417,7 +434,11 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         Integer count = ofNullable(hakuDto.getCount()).orElse(DEFAULT_COUNT),
                 page = ofNullable(hakuDto.getPage()).orElse(1),
                 index = (page-1)*count;
-        List<HenkiloRestDto> henkiloResults = listHenkilosByTermi(haku.getTerm()).stream().collect(toList());
+        HenkiloTermPredicate predicate = new HenkiloTermPredicate(haku.getTerm());
+        if (haku.isAllowHetu()) {
+            predicate = predicate.matchingHetu();
+        }
+        List<HenkiloRestDto> henkiloResults = oikeustulkkiCacheService.findHenkilos(predicate).stream().collect(toList());
         Map<String,HenkiloRestDto> henkilosByOid = henkiloResults.stream().collect(toMap(HenkiloRestDto::getOidHenkilo, h -> h));
         Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getSpecification())
                     .and(henkiloOidIn(henkilosByOid.keySet()))).stream()
@@ -427,10 +448,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 .map(List::stream).orElseGet(Stream::empty)).map(combiner.apply(henkilosByOid::get))
                 //.skip(index).limit(count) //TODO:support in UI?
                 .collect(toList());
-    }
-
-    private List<HenkiloRestDto> listHenkilosByTermi(String term) {
-        return oikeustulkkiCacheService.findHenkilos(new HenkiloTermPredicate(term));
     }
 
     private List<HenkiloRestDto> listHenkilosByTermi(HenkiloApi api, String term) {
@@ -443,5 +460,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         private final HakuType haku;
         private final String term;
         private final Specification<Oikeustulkki> specification;
+        private final boolean allowHetu;
     }
 }

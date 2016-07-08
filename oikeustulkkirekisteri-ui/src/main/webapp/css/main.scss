@@ -11,17 +11,38 @@ body {
         content: "*";
     }
 }
+body.loading .hide-while-loading {
+    display: none;
+}
 
+.hidden {
+    display: none;
+}
 .error-msg {
     color:maroon;
 }
 
-.error-holder {
-    border:maroon 1px solid;
+.message-holder {
     padding:20px;
     margin-top: 10px;
-    background-color: #fbdddc;
-    color: maroon;
+    
+    &.error-message {
+        border:maroon 1px solid;
+        background-color: #fbdddc;
+        color: maroon;
+    }
+    &.success-message {
+        border:darkgreen 1px solid;
+        background-color: #e7fbdd;
+        color: darkgreen;
+    }
+    
+    .glyphicon {
+        float: right;
+    }
+}
+.clickable {
+    cursor: pointer;
 }
 
 .history-panel{

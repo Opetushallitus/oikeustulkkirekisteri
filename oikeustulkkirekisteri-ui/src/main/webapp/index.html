@@ -5,12 +5,25 @@
     <title tt="hallinta">Oikeustulkkirekisteri - Hallinta</title>
     <link rel="stylesheet" type="text/css" href="dist/styles.min.css"/>
 </head>
-<body>
+<body class="loading">
     <div ng-controller="mainCtrl">
         <div ng-include="'templates/navbar.html'" ng-if="showHeader"></div>
+        <div class="container">
+            <div class="message-holder {{e.type}}-message hide-while-loading" ng-repeat="(i,e) in errors"><span ng-bind="e.message"></span><span class="glyphicon glyphicon-remove clickable" ng-click="errorRead(i)"></span></div>
+        </div>
         <div ng-view></div>
+        <div class="hidden translations">
+            <span tt="oikeustulkki_search_failed">Haku epäonnistui</span>
+            <span tt="oikeustulkki_save_failed">Tallentaminen epäonnistui</span>
+            <span tt="oikeustulkki_update_failed">Tallentaminen epäonnistui</span>
+            <span tt="oikeustulkki_created">Oikeustulkin tallennettu onnistuneesti</span>
+            <span tt="oikeustulkki_deleted">Oikeustulkki poistettu onnistuneesti</span>
+            <span tt="oikeustulkki_updated">Oikeustulkin tiedot päivitetty onnistuneesti</span>
+            <span tt="oikeustulkki_created_existing">Oikeustulkille kirjattu uusi hakemus onnistuneesti</span>
+            <span tt="oikeustulkki_save_failed_missing_fields">Tallentaminen epäonnistui. Tarkista virheelliset kentät.</span>
+            <span tt="oikeustulkki_update_failed_missing_fields">Tallentaminen epäonnistui. Tarkista virheelliset kentät.</span>
+        </div>
     </div>
-    
     <script src="/oikeustulkkirekisteri-service/api/app/settings.js" charset="utf-8"></script>
     <script type="text/javascript" src="dist/lib.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="dist/select.min.js" charset="utf-8"></script>

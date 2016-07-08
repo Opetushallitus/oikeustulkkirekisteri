@@ -10,7 +10,7 @@
       <div class="form-group">
           <label for="etunimet" class="col-sm-2 control-label required" tt="oikeustulkki_etunimet">Etunimet</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.etunimet" name="etunimet" type="text" class="form-control" id="etunimet" required>
+              <input ng-model="tulkki.etunimet" name="etunimet" type="text" class="form-control" id="etunimet" ng-disabled="tulkki.yksiloityVTJ" required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.etunimet.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.etunimet.$customError}}</div>
@@ -33,7 +33,7 @@
       <div class="form-group">
           <label for="sukunimi" class="col-sm-2 control-label required" tt="oikeustulkki_sukunimi">Sukunimi</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.sukunimi" name="sukunimi" type="text" class="form-control" id="sukunimi" required>
+              <input ng-model="tulkki.sukunimi" name="sukunimi" type="text" class="form-control" id="sukunimi" ng-disabled="tulkki.yksiloityVTJ" required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.sukunimi.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.sukunimi.$customError}}</div>
@@ -44,7 +44,7 @@
       <div class="form-group">
           <label for="hetu" class="col-sm-2 control-label required" tt="oikeustulkki_hetu">Hetu</label>
           <div class="col-sm-8">
-              <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu" ng-disabled="true" required>
+              <input ng-model="tulkki.hetu" name="hetu" type="text" class="form-control" id="hetu" ng-disabled="tulkki.yksiloityVTJ" required>
               <div ng-if="showErrors" ng-messages="tulkkiForm.hetu.$error" role="alert" class="error-msg">
                   <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
                   <div ng-message="custom">{{tulkkiForm.hetu.$customError}}</div>

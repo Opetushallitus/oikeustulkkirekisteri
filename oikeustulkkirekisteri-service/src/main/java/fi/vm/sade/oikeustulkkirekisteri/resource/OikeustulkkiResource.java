@@ -39,7 +39,7 @@ public class OikeustulkkiResource {
 
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public long createOikeustulkki(@Valid @RequestBody OikeustulkkiCreateDto dto) {
+    public long createOikeustulkki(@Valid @RequestBody OikeustulkkiCreateDto dto) throws ValidationException {
         return oikeustulkkiService.createOikeustulkki(dto);
     }
 

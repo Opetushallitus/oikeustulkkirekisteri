@@ -21,4 +21,5 @@ public class OikeustulkkiVirkailijaViewDto extends OikeustulkkiBaseDto implement
     private List<OikeustulkkiMuokkausHistoriaDto> muokkaushistoria = new ArrayList<>();
     private List<OikeustulkkiVirkailijaViewDto> aiemmat = new ArrayList<>();
     private Long uusinId;
+    private boolean yksiloityVTJ;
 }

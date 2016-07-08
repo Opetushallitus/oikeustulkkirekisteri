@@ -1,5 +1,5 @@
 angular.module('registryApp').controller('oikeustulkkiViewCtrl', ["$scope", "Page", "$location",
-  "OikeustulkkiService", "$window", "$routeParams", "KoodistoService", ($scope, Page, $location, OikeustulkkiService, $window, $routeParams, KoodistoService) => {
+  "OikeustulkkiService", "$window", "$routeParams", "KoodistoService", "$rootScope", ($scope, Page, $location, OikeustulkkiService, $window, $routeParams, KoodistoService, $rootScope) => {
     Page.setPage('viewOikeustulkki');
 
     $scope.showRemoveDialog = false;
@@ -45,6 +45,7 @@ angular.module('registryApp').controller('oikeustulkkiViewCtrl', ["$scope", "Pag
 
     $scope.remove = () => {
       OikeustulkkiService.removeTulkki($routeParams.id).then(()=> {
+        $rootScope.$broadcast('addSuccess', $(".translations [tt='oikeustulkki_deleted']").text());
         $window.location.href = "#";
       }, ()=> {
         $scope.showErrorDialog = true;

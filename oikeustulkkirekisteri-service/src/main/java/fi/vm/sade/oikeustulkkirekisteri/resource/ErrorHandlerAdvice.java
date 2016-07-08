@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +31,32 @@ import java.util.*;
 public class ErrorHandlerAdvice {
     public static final Locale FI = new Locale("fi", "FI");
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandlerAdvice.class);
-
+    private static final Function<? super ConstraintViolation<?>,String> MESSAGES_TRANSFORMER = violation -> {
+        if (violation == null) {
+            return null;
+        }
+        return violation.getMessage() + ": " + violation.getInvalidValue();
+    };
+    private static final Function<? super ConstraintViolation<?>,ViolationDto> VIOLATIONS_TRANSFORMER = violation -> {
+        if (violation == null) {
+            return null;
+        }
+        return new ViolationDto(violation.getPropertyPath().toString(),
+                Iterators.getLast(violation.getPropertyPath().iterator()).toString(),
+                violation.getMessage(),
+                violation.getInvalidValue());
+    };
+    @Autowired
+    protected Validator validator;
     @Autowired
     private MessageSource messageSource;
 
-    @Autowired
-    protected Validator validator;
+//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized
+//    @ExceptionHandler(AccessDeniedException.class) @ResponseBody
+//    public Map<String,Object> notAuthorized(HttpServletRequest req, AccessDeniedException exception) {
+//        return handleException(req, exception, "error_NotAuthorizedException",
+//                messageSource.getMessage("error_NotAuthorizedException", new Object[0], getLocale(req)));
+//    }
 
     @InitBinder
     public void dataBinding(WebDataBinder binder) {
@@ -66,14 +85,7 @@ public class ErrorHandlerAdvice {
                         exception.getMessage() :
                         messageSource.getMessage("error_NotFoundException", new Object[0], getLocale(req)));
     }
-
-//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized
-//    @ExceptionHandler(AccessDeniedException.class) @ResponseBody
-//    public Map<String,Object> notAuthorized(HttpServletRequest req, AccessDeniedException exception) {
-//        return handleException(req, exception, "error_NotAuthorizedException",
-//                messageSource.getMessage("error_NotAuthorizedException", new Object[0], getLocale(req)));
-//    }
-
+    
     private Locale getLocale(HttpServletRequest req) {
         Locale locale;
         if (req.getParameter("lang") != null) {
@@ -91,37 +103,38 @@ public class ErrorHandlerAdvice {
     public Map<String,Object> badConstraintViolatingRequest(HttpServletRequest req, ConstraintViolationException exception) {
         return handleConstraintViolations(req, exception, exception.getConstraintViolations());
     }
-    
+
     @ResponseStatus(value = HttpStatus.BAD_REQUEST) // 400 Bad request.
     @ExceptionHandler(ConstraintViolationException.class) @ResponseBody
     public Map<String,Object> badRequest(HttpServletRequest req, ConstraintViolationException exception) {
         return handleConstraintViolations(req, exception, exception.getConstraintViolations());
     }
-
+    
     @ResponseStatus(value = HttpStatus.BAD_REQUEST) // 400 Bad request.
     @ExceptionHandler(ValidationException.class) @ResponseBody
     public Map<String,Object> badRequest(HttpServletRequest req, ValidationException exception) {
-        Collection<ViolationDto> violations = Collections2.transform(exception.getViolations(), VIOLATIONS_TRANSFORMER);
+        Collection<ViolationDto> violations = exception.getViolations() != null ? Collections2.transform(exception.getViolations(), VIOLATIONS_TRANSFORMER) : new ArrayList<>();
         Collection<String> violationsMsgs = exception.getValidationMessages();
-        Map<String,Object> result = handleException(req, exception, exception.getKey(),
-                StringHelper.join(", ", violationsMsgs.iterator()));
+        Map<String,Object> result = handleException(req, exception, exception.getKey(), 
+                exception.getKey() != null ? messageSource.getMessage(exception.getKey(), new Object[0], getLocale(req)) + (violations.isEmpty() ? "" : ": ") : ""
+                + StringHelper.join(", ", violationsMsgs.iterator()));
         result.put("errors", violationsMsgs);
         result.put("violations", violations);
         return result;
     }
-
+    
     @ResponseStatus(value = HttpStatus.BAD_REQUEST) // 400 Bad Request
     @ExceptionHandler(java.lang.IllegalArgumentException.class) @ResponseBody
     public Map<String,Object> badRequest(HttpServletRequest req, java.lang.IllegalArgumentException exception) {
         return handleException(req, exception, "bad_request_illegal_argument", exception.getMessage());
     }
-    
+
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR) // 500 Internal
     @ExceptionHandler(java.lang.Exception.class) @ResponseBody // any other type
     public Map<String,Object> internalError(HttpServletRequest req, java.lang.Exception exception) {
         return handleException(req, exception, "internal_server_error", exception.getMessage());
     }
-    
+
     private Map<String,Object> handleConstraintViolations(HttpServletRequest req, Exception exception,
                                                           Set<? extends ConstraintViolation<?>> exViolations) {
         Collection<ViolationDto> violations = Collections2.transform(exViolations, VIOLATIONS_TRANSFORMER);
@@ -146,23 +159,6 @@ public class ErrorHandlerAdvice {
         result.put("parameters", req.getParameterMap());
         return result;
     }
-
-    private static final Function<? super ConstraintViolation<?>,String> MESSAGES_TRANSFORMER = violation -> {
-        if (violation == null) {
-            return null;
-        }
-        return violation.getMessage() + ": " + violation.getInvalidValue();
-    };
-    private static final Function<? super ConstraintViolation<?>,ViolationDto> VIOLATIONS_TRANSFORMER
-            = violation -> {
-        if (violation == null) {
-            return null;
-        }
-        return new ViolationDto(violation.getPropertyPath().toString(),
-                Iterators.getLast(violation.getPropertyPath().iterator()).toString(),
-                violation.getMessage(),
-                violation.getInvalidValue());
-    };
     
     public static class ViolationDto implements Serializable {
         private String field;

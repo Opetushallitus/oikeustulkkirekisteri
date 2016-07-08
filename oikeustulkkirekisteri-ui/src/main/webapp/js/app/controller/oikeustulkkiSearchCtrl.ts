@@ -1,7 +1,7 @@
 import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 
 angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "Page", "KoodistoService",
-  "OikeustulkkiService", ($scope, Page, KoodistoService, OikeustulkkiService) => {
+  "OikeustulkkiService", '$rootScope', ($scope, Page, KoodistoService, OikeustulkkiService, $rootScope) => {
 
     Page.setPage('searchOikeustulkki');
 
@@ -13,6 +13,8 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
     $scope.termi = '';
     $scope.maakunnat = [];
     $scope.maakunnatByArvo = {};
+    $scope.searching = false;
+    $scope.hakuDone = false;
 
     $scope.removeKielipari = (kielipari:Kielipari) => _.remove($scope.kieliparit, kielipari);
 
@@ -56,12 +58,17 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
     $scope.search = () => {
       let tutkintoTyyppi = $scope.tutkinto.erikois && !$scope.tutkinto.korkeakoulu ? 'OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO' : null;
       tutkintoTyyppi = !$scope.tutkinto.erikois && $scope.tutkinto.korkeakoulu ? 'MUU_KORKEAKOULUTUTKINTO' : tutkintoTyyppi;
-
+      $scope.searching = true;
       OikeustulkkiService.getTulkit($scope.termi, $scope.kieliparit, tutkintoTyyppi).then((results)=> {
+        $scope.searching = false;
+        $scope.hakuDone = true;
         $scope.pagination = {
           pages: _.chunk(results.data, 10),
           current: 1
         };
+      }, (e) => {
+        $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_search_failed']").text());
+        $scope.searching = false;
       });
     };
 
