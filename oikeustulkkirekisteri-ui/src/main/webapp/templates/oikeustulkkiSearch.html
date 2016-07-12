@@ -117,7 +117,7 @@
              {{ getKieliNimi(kielipari.kielesta) }} - {{ getKieliNimi(kielipari.kieleen) }}
           </span>
         </td>
-        <td>{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} -
+        <td ng-class="{'expired': hasExpired(tulkki.paattyy)}">{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} -
           {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}
         </td>
         <td class="multiline">

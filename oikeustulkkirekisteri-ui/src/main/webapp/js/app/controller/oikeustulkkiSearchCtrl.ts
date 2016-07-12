@@ -98,4 +98,5 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
       $scope.kieliparit.push(kielipari);
     };
 
+    $scope.hasExpired = (date) => new Date(date[0], date[1]-1, date[2]) < new Date();
   }]);

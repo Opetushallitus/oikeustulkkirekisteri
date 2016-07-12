@@ -15,7 +15,6 @@ angular.module('registryApp').controller('mainCtrl', ["$scope", "Page", "Localis
           filtered.push(msg);
         }
       });
-      console.info('filtered', filtered);
       $scope.errors = filtered;
     });
     $scope.errorRead = (i:number) => $scope.errors.splice(i, 1);
