@@ -96,7 +96,8 @@ window['appInit'] = () => {
     };
     const showRoleError = () => {
       console.info('Required role missing.');
-      $("body").append($('<div><div><div id="header"><img src="img/opetushallitus.gif"><p>Oikeustulkkirekisteri</p></div></div><div><div class="container"><div class="message-holder error-message">Ei käyttöoikeutta. Vaadittu käyttöoikeusrooli puuttuu.</div></div></div></div>'));
+      const requestRoleLink = window['CONFIG'].env['host.base-uri'] + "authentication-henkiloui/html/#/omattiedot";
+      $("body").append($('<div><div><div id="header"><img src="img/opetushallitus.gif"><p>Oikeustulkkirekisteri</p></div></div><div><div class="container"><div class="message-holder error-message">Ei käyttöoikeutta. Vaadittu käyttöoikeusrooli puuttuu. <a href="'+requestRoleLink+'">Oikeuksia voit anoa täältä.</a></div></div></div></div>'));
     };
     jQuery.ajax(window['CONFIG'].env['test.logged.in.url'] || '/oikeustulkkirekisteri-service/api/app/testLoggedIn', {
       crossDomain:true,
