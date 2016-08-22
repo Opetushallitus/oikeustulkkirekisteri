@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 /**
  * User: tommiratamaa
@@ -60,12 +60,13 @@ public class FunctionalUtil {
         public static<T, Ex extends RuntimeException> FailureResult<T, Ex> success(T result) {
             return new FailureResult<>(result, null);
         }
+        
         public static<T, Ex extends RuntimeException> FailureResult<T, Ex> fail(Ex failure) {
             return new FailureResult<>(null, failure);
         }
 
         public Optional<T> optional() {
-            return of(result);
+            return ofNullable(result);
         }
         
         public T orFail() throws Ex {
