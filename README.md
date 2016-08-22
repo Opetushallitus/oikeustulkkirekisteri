@@ -7,6 +7,8 @@ joka on riittävän pätevä toimimaan tulkkina oikeudellisissa asioissa.
 
 Lisätietoja [Opetushallituksen sivuilta](http://oph.fi/koulutus_ja_tutkinnot/oikeustulkkirekisteri).
 
+Määrittely ja muu tekninen löytyvät osoitteesta [CSC:n Confluencesta](https://confluence.csc.fi/display/OPHPALV/Oikeustulkkirekisteri)
+
 ## Teknologiat
 
 ### Palvelin
@@ -41,7 +43,7 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
 ### Luo kotihakemistoon security-configurtaatio
 
 - Luo kotihakemistoosi hakemisto oph-configuration, jonka sisälle tiedosto security-context-backend.xml.
-- Lisää sisällöksi esimerkiksi tyhjä Springin security-konfiguraatio:
+- Lisää sisällöksi esimerkiksi Springin security-konfiguraatio:
 
         <beans:beans xmlns="http://www.springframework.org/schema/security"
                   xmlns:beans="http://www.springframework.org/schema/beans"
@@ -51,7 +53,8 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
                          http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
                          http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">      
         </beans:beans>
-                   
+
+- Tarvitset lisäksi käyttäjän, jolla on rooli ROLE_APP_OIKEUSTULKKIREKISTERI_OIKEUSTULKKI_CRUD
 
 ## Testien ajaminen
 
