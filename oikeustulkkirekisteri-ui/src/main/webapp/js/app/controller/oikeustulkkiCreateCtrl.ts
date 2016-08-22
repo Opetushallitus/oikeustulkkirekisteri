@@ -56,7 +56,7 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
             $scope.showErrors = false;
 
             checkIfKutsumanimiValid();
-            if (!_.isEmpty($scope.tulkkiForm.$error)) {
+            if (!_.isEmpty($scope.tulkkiForm.$error) || !$scope.tulkki.kieliparit.length) {
                 $rootScope.$broadcast('addError', $(".translations [tt='oikeustulkki_save_failed_missing_fields']").text());
                 $scope.showErrors = true;
                 return;

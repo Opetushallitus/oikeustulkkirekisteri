@@ -1,6 +1,10 @@
 package fi.vm.sade.oikeustulkkirekisteri.util;
 
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
+
+import static java.util.Optional.of;
 
 /**
  * User: tommiratamaa
@@ -29,5 +33,53 @@ public class FunctionalUtil {
             } while (i++ < times);
             throw failure;
         };
+    }
+    
+    public static <T> Supplier<FailureResult<T, RuntimeException>> retrying(Supplier<T> target, int times) {
+        return () -> {
+            RuntimeException failure;
+            int i = 0;
+            do try {
+                return FailureResult.success(target.get());
+            } catch (RuntimeException e) {
+                failure = e;
+            } while (i++ < times);
+            return FailureResult.fail(failure);
+        };
+    }
+
+    public static class FailureResult<T, Ex extends RuntimeException> {
+        private final Ex failure;
+        private final T result;
+
+        protected FailureResult(T result, Ex failure) {
+            this.result = result;
+            this.failure = failure;
+        }
+
+        public static<T, Ex extends RuntimeException> FailureResult<T, Ex> success(T result) {
+            return new FailureResult<>(result, null);
+        }
+        public static<T, Ex extends RuntimeException> FailureResult<T, Ex> fail(Ex failure) {
+            return new FailureResult<>(null, failure);
+        }
+
+        public Optional<T> optional() {
+            return of(result);
+        }
+        
+        public T orFail() throws Ex {
+            if (this.failure != null) {
+                throw failure;
+            }
+            return result;
+        }
+        
+        public<Ex2 extends Throwable> T orFail(Function<Ex, Ex2> translateException) throws Ex2 {
+            if (this.failure != null) {
+                throw translateException.apply(this.failure);
+            }
+            return result;
+        }
     }
 }

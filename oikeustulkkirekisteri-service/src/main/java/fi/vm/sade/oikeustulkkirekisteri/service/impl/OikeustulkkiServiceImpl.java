@@ -41,6 +41,7 @@ import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUt
 import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.*;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.or;
+import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.retrying;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.of;
@@ -102,13 +103,16 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Transactional
     public long createOikeustulkki(OikeustulkkiCreateDto dto) throws ValidationException {
         logger.info("OikeustulkkiService.createOikeustulkki");
-        Optional<HenkiloRestDto> existingHenkilo = listHenkilosByTermi(henkiloResourceServiceUserClient,
-                dto.getHetu()).stream().findFirst();
+        Optional<HenkiloRestDto> existingHenkilo = retrying(() 
+                -> listHenkilosByTermi(henkiloResourceServiceUserClient, dto.getHetu()).stream().findFirst(), 2)
+                    .get().orFail(ex -> new ValidationException("Searching existing henkilo by HETU failed.",
+                        "henkilpalvelu.search.by.hetu.failed"));
         Oikeustulkki oikeustulkki = new Oikeustulkki();
         if (existingHenkilo.isPresent()) {
             logger.info("Found existing henkilo by hetu oid={}", existingHenkilo.get().getOidHenkilo());
             if (!isSameHenkiloByName(existingHenkilo.get(), dto)) {
-                throw new ValidationException("Name of existing henkilo " + existingHenkilo.get().getEtunimet() + " " + existingHenkilo.get().getSukunimi()
+                throw new ValidationException("Name of existing henkilo " + existingHenkilo.get().getEtunimet() 
+                                + " " + existingHenkilo.get().getSukunimi()
                             + " does not match inserted " + dto.getEtunimet() + " " + dto.getSukunimi(),
                         "oikeustulkki.different.henkilo.found.by.hetu");
             }
@@ -238,9 +242,11 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         return new Tulkki(oid);
     }
 
-    private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) {
+    private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) throws ValidationException {
         logger.info("Updating henkilo details, fetching current ones by oid={}", henkiloOid);
-        HenkiloRestDto henkilo = henkiloResourceServiceUserClient.findByOid(henkiloOid);
+        HenkiloRestDto henkilo = retrying(() -> henkiloResourceServiceUserClient.findByOid(henkiloOid), 2).get()
+                .orFail(ex -> new ValidationException("Finding existing henkilo by OID failed.",
+                        "henkilpalvelu.search.by.oid.failed"));
         if (!henkilo.isYksiloityVTJ()) {
             henkilo.setHetu(dto.getHetu());
             henkilo.setEtunimet(dto.getEtunimet());
@@ -255,7 +261,9 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         updateYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO, dto.getPuhelinnumero());
         updateYhteystieto(henkilo, YHTEYSTIETO_PUHELINNUMERO, dto.getPuhelinnumero());
         logger.info("Updating henkilo details, oid={}", henkiloOid);
-        henkiloResourceServiceUserClient.updateHenkilo(henkiloOid, henkilo);
+        retrying(() -> henkiloResourceServiceUserClient.updateHenkilo(henkiloOid, henkilo), 2).get()
+                .orFail(ex -> new ValidationException("Updating henkilö failed.",
+                        "henkilpalvelu.updating.henkilo.failed"));
         logger.info("Updated henkilo details, oid={}", henkiloOid);
     }
 

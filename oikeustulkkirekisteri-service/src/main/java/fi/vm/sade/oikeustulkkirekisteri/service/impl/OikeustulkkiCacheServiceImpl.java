@@ -100,7 +100,7 @@ public class OikeustulkkiCacheServiceImpl extends AbstractService implements Oik
     }
 
     @Override
-    @SuppressWarnings("TransactionalAnnotations")
+    @Transactional(readOnly = true, noRollbackFor = RuntimeException.class)
     public synchronized void notifyHenkiloUpdated(String oid) {
         try {
             checkCache();
