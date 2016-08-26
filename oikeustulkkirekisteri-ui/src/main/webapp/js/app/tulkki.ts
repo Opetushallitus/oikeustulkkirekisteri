@@ -1,4 +1,5 @@
 import {Kieli, Kielipari} from "./kielet.ts";
+import moment = require("moment");
 
 interface Maakunta{
   arvo: string;
@@ -44,8 +45,10 @@ const getTulkkiPostData = (tulkki:Tulkki) => {
   postData.kieliParit = _.map(tulkki.kieliparit, (kielipari) => {
     return {'kielesta': kielipari.kielesta.arvo, 'kieleen': kielipari.kieleen.arvo};
   });
+  tulkki.alkaa = moment($('#alkaa').val(), 'DD.MM.YYYY').toDate();
   postData.alkaa = tulkki.alkaa.getTime();
   if (tulkki.paattyy) {
+    tulkki.paattyy = moment($('#paattyy').val(), 'DD.MM.YYYY').toDate();
     postData.paattyy = tulkki.paattyy.getTime();
   }
   postData.maakunnat = _.map(tulkki.toimintaAlue, 'arvo');
