@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.retrying;
 import static java.util.Comparator.*;
 import static java.util.stream.Collectors.toList;
 
@@ -37,9 +38,10 @@ public class KoodistoServiceImpl extends AbstractService implements KoodistoServ
     @Override
     @Cacheable("kielet")
     public List<KoodiDto> getKielet() {
-        return convertedAndSorted(koodistoResourceClient.listKoodis("kieli").stream()).collect(toList());
+        return convertedAndSorted(retrying(() -> koodistoResourceClient.listKoodis("kieletepavirallinen"),
+                () -> koodistoResourceClient.listKoodis("kieli")).get().stream()).collect(toList());
     }
-
+    
     @Override
     @Cacheable("maakunnat")
     public List<KoodiDto> getMaakunnat() {

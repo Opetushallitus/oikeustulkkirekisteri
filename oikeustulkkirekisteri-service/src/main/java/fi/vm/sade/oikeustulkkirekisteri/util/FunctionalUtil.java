@@ -35,6 +35,20 @@ public class FunctionalUtil {
         };
     }
     
+    public static <F,T> Function<F,T> retrying(Function<F,T> target, Function<F,T> with) {
+        return f -> {
+            try {
+                return target.apply(f);
+            } catch (RuntimeException e) {
+                try {
+                    return with.apply(f);
+                } catch (RuntimeException e2) {
+                    throw e;
+                }
+            }
+        };
+    }
+    
     public static <T> Supplier<FailureResult<T, RuntimeException>> retrying(Supplier<T> target, int times) {
         return () -> {
             RuntimeException failure;
@@ -45,6 +59,20 @@ public class FunctionalUtil {
                 failure = e;
             } while (i++ < times);
             return FailureResult.fail(failure);
+        };
+    }
+
+    public static <T> Supplier<T> retrying(Supplier<T> target, Supplier<T> with) {
+        return () -> {
+            try {
+                return target.get();
+            } catch (RuntimeException e) {
+                try {
+                    return with.get();
+                } catch (RuntimeException e2) {
+                    throw e;
+                }
+            }
         };
     }
 

@@ -3,6 +3,7 @@ const translationFI = {
   oikeustulkkirekisteri: 'Oikeustulkkirekisteri',
   etsi_oikeustulkkia: 'Etsi oikeustulkkia',
   kuvaus_kaytosta: 'Opetushallitus ylläpitää oikeustulkkirekisteriä, johon oikeustulkkirekisterilautakunnan hyväksymät oikeustulkit merkitään. Hakukoneella voit hakea tulkkia joko nimen, kieliparin tai toiminta-alueen mukaan. Julkinen oikeustulkkirekisteri sisältää tiedot vain niistä tulkeista, jotka ovat antaneet luvan tietojensa julkaisemiseen verkossa.',
+  kuvaus_kaytosta_2: 'Jos haet puhevammaisten tulkkia tai kirjoitustulkkia, valitse kielivalikosta ”suomi, puhevammaiset” tai ”suomi, kirjoitustulkkaus”.',
   haku_nimen_mukaan: 'Haku nimen mukaan',
   haku_kielipareittain: 'Haku kielipareittain',
   kielipari_info: 'Molemman suuntainen pätevyys esim.',
@@ -27,6 +28,7 @@ const translationSV = {
   oikeustulkkirekisteri: 'Registret över rättstolkar',
   etsi_oikeustulkkia: 'Sök en rättstolk',
   kuvaus_kaytosta: 'Utbildningsstyrelsen upprätthåller ett register över rättstolkar, där rättstolkar som har godkänts av nämnden för registret över rättstolkar registreras. Med sökmotorn kan du söka en tolk på namn eller enligt språkpar eller verksamhetsområde. I det offentliga registret över rättstolkar finns endast uppgifter om de tolkar som har gett sitt samtycke till att deras uppgifter publiceras på webben.',
+  kuvaus_kaytosta_2: 'Om du söker en tolk för talhandikappade eller en skrivtolk, välj från språklistan ”svenska, talhandikappade” eller ”svenska, skrivtolkning”.',
   haku_nimen_mukaan: 'Sökning på namn',
   haku_kielipareittain: 'Sökning enligt språkpar',
   kielipari_info: 'Tolken har alltid kompetens att tolka i båda riktningarna, till exempel finska-engelska och engelska-finska.',
@@ -46,7 +48,7 @@ const translationSV = {
   muu_yhteystieto: 'Annan kontaktinformation'
 };
 
-angular.module('publicRegistryApp').config(["$translateProvider", ($translateProvider) => {
+angular.module('publicRegistryApp').config(['$translateProvider', ($translateProvider) => {
   $translateProvider.translations('fi', translationFI);
   $translateProvider.translations('sv', translationSV);
   $translateProvider.preferredLanguage('fi');
