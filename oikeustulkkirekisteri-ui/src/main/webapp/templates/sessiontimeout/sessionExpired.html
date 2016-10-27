@@ -1,0 +1,16 @@
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 tt="session_expired_header">Istunto vanhentunut</h3>
+            </div>
+            <div class="modal-body">
+                <p>{{timeoutMessage()}}</p>
+                <p tt="session_expired_text2">Istuntoaikoja on rajoitettu turvallisuuden vuoksi. Ole hyvä ja päivitä sivu jatkaaksesi.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="redirectToLogin()" tt="session_expired_button">Päivitä sivu</button>
+            </div>
+        </div>
+    </div>
+</div>

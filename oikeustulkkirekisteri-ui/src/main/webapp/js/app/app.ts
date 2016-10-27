@@ -7,7 +7,8 @@ if (!window['CONFIG']) {
   window['CONFIG'] = window['CONFIG'] || {env: {}};
 }
 
-const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ngCookies', 'localisation', 'ui.select', 'datePicker']).factory('Page', ['$rootScope',($rootScope) => {
+const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstrap', 'ngIdle', 'angularModalService',
+                        'ngCookies', 'localisation', 'ui.select', 'datePicker']).factory('Page', ['$rootScope',($rootScope) => {
   let page = 'main';
   return {
     page: () => {
@@ -29,7 +30,68 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ngCookies',
   if($cookies['CSRF']) {
     $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
   }
+}]).directive('idle', ['Idle', 'ModalService', function(Idle, ModalService) {
+  return {
+    restrict: 'A',
+    link: function(scope, elem, attrs) {
+      var openModal = function(template) {
+        return ModalService.showModal({
+          templateUrl: template,
+          controller: 'SessionExpiresCtrl'
+        }).then(function(modal) {
+          modal.element.modal();
+          modal.close.then(function(result) {
+            $(".modal-backdrop").remove();
+            Idle.watch();
+          });
+        });
+      };
+
+      scope.$on('IdleStart', function () {
+        console.info('IdleStart');
+        scope.sessionWarning = openModal('templates/sessiontimeout/sessionWarning.html');
+      });
+      scope.$on('IdleTimeout', function() {
+        console.info('IdleTimeout');
+        if (scope.sessionWarning && scope.sessionWarning.close) {
+          scope.sessionWarning.close();
+        }
+        scope.sessionWarning = openModal('templates/sessiontimeout/sessionExpired.html');
+        Idle.unwatch();
+      });
+    }
+  };
+}]).constant('SessionTimeoutConfig', {
+  SESSION_KEEPALIVE_INTERVAL_IN_SECONDS: 30,
+  MAX_SESSION_IDLE_TIME_IN_SECONDS: 1800,
+  WARNING_DURATION_IN_SECONDS: 300
+}).config(['IdleProvider', 'KeepaliveProvider', 'SessionTimeoutConfig', function(IdleProvider, KeepaliveProvider, SessionTimeoutConfig) {
+  IdleProvider.idle(SessionTimeoutConfig.MAX_SESSION_IDLE_TIME_IN_SECONDS - SessionTimeoutConfig.WARNING_DURATION_IN_SECONDS);
+  IdleProvider.timeout(SessionTimeoutConfig.WARNING_DURATION_IN_SECONDS);
+  IdleProvider.windowInterrupt('focus');
+  
+  KeepaliveProvider.interval(SessionTimeoutConfig.SESSION_KEEPALIVE_INTERVAL_IN_SECONDS);
+  KeepaliveProvider.http(window['CONFIG'].env['session.max.inactive.interval'] || '/oikeustulkkirekisteri-service/api/app/sessionMaxInactiveInterval');
+}]).run(['Idle', function(Idle) {
+  console.info('Start Idle watch');
+  Idle.watch();
+}]).controller('SessionExpiresCtrl', ['Idle', '$scope', 'close', '$window',
+          'LocalisationService', 'SessionTimeoutConfig', function(Idle, $scope, close, $window, 
+                                                                  LocalisationService, SessionTimeoutConfig) {
+  $scope.timeoutMessage = function() {
+    var duration = Math.floor(SessionTimeoutConfig.MAX_SESSION_IDLE_TIME_IN_SECONDS / 60);
+    return LocalisationService.getTranslation("session_expired_text1_part1") + " " + duration +  " " 
+        + LocalisationService.getTranslation("session_expired._ext1_part2");
+  };
+  $scope.okConfirm = function() {
+    close(null, 200);
+  };
+  $scope.redirectToLogin = function() {
+    $window.location.reload();
+    close(null, 200);
+  };
 }]);
+
 
 angular.module('registryApp').filter('selectFilter', () => {
   return (items, input) => {
@@ -41,15 +103,13 @@ angular.module('registryApp').filter('selectFilter', () => {
       return item.nimi.FI.toLowerCase().indexOf(input.toLowerCase()) === 0;
     });
   };
-});
-
-angular.module('registryApp').factory('RequestsErrorHandler', ['$q', '$location',
+}).factory('RequestsErrorHandler', ['$q', '$location',
   ($q, $location) => {
     console.info('config', window['CONFIG']);
     const authenticationUrl = (window['CONFIG'].env['cas.login'] || '/cas/login') + '?service=' + $location.$$absUrl;
     return {
       responseError: (rejection) => {
-        if (rejection.data.errorType === 'AccessDeniedException') {
+        if (rejection.data && rejection.data.errorType && rejection.data.errorType === 'AccessDeniedException') {
           window.location.href = authenticationUrl;
         }
         return $q.reject(rejection);

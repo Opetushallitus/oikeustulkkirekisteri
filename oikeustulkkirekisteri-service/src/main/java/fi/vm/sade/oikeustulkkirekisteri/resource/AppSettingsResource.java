@@ -18,6 +18,7 @@ package fi.vm.sade.oikeustulkkirekisteri.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import fi.vm.sade.oikeustulkkirekisteri.service.AppSettingsService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.AppSettingsDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.core.Context;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,5 +71,14 @@ public class AppSettingsResource {
         Map<String,Object> resultJson = new HashMap<>();
         resultJson.put("loggedIn", true);
         return resultJson;
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/sessionMaxInactiveInterval", method = RequestMethod.GET)
+    @ApiOperation(value = "Palauttaa session erääntymisen aikarajan sekunteina",
+            notes = "Tarvitsee HTTP kutsun, jossa on session id",
+            response = String.class)
+    public String maxInactiveInterval(@Context HttpServletRequest req) {
+        return Integer.toString(req.getSession().getMaxInactiveInterval());
     }
 }

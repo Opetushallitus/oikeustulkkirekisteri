@@ -94,7 +94,10 @@ angular.module("I18n", [], ["$provide", function($provider) {
         
         kieli_fi: 'suomi',
         kieli_sv: 'ruotsi',
-        kieli_en: 'englanti'
+        kieli_en: 'englanti',
+
+        session_expired_text1_part1: 'Istuntosi on vanhentunut ',
+        session_expired_text1_part2: ' minuutin käyttämättömyyden johdosta.'
     };
     defaultValues['en'] = defaultValues['fi'];
     defaultValues['sv'] = defaultValues['fi'];

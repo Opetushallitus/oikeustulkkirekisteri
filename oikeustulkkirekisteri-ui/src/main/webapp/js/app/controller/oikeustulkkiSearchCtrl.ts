@@ -1,8 +1,7 @@
 import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 
 angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "Page", "KoodistoService",
-  "OikeustulkkiService", '$rootScope', ($scope, Page, KoodistoService, OikeustulkkiService, $rootScope) => {
-
+    "OikeustulkkiService", '$rootScope', ($scope, Page, KoodistoService, OikeustulkkiService, $rootScope) => {
     Page.setPage('searchOikeustulkki');
 
     $scope.kieliparit = [];
