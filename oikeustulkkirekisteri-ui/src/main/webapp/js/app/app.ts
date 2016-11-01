@@ -30,10 +30,12 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstra
   if($cookies['CSRF']) {
     $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
   }
-}]).directive('idle', ['Idle', 'ModalService', function(Idle, ModalService) {
+}]).directive('idle', ['Idle', 'ModalService', '$rootScope', function(Idle, ModalService, $rootScope) {
   return {
     restrict: 'A',
     link: function(scope, elem, attrs) {
+      console.info('Linking idle-directive');
+
       var openModal = function(template) {
         return ModalService.showModal({
           templateUrl: template,
@@ -47,11 +49,14 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstra
         });
       };
 
-      scope.$on('IdleStart', function () {
+      console.info('Start Idle watch');
+      Idle.watch();
+
+      $rootScope.$on('IdleStart', function () {
         console.info('IdleStart');
         scope.sessionWarning = openModal('templates/sessiontimeout/sessionWarning.html');
       });
-      scope.$on('IdleTimeout', function() {
+      $rootScope.$on('IdleTimeout', function() {
         console.info('IdleTimeout');
         if (scope.sessionWarning && scope.sessionWarning.close) {
           scope.sessionWarning.close();
@@ -72,16 +77,12 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstra
   
   KeepaliveProvider.interval(SessionTimeoutConfig.SESSION_KEEPALIVE_INTERVAL_IN_SECONDS);
   KeepaliveProvider.http(window['CONFIG'].env['session.max.inactive.interval'] || '/oikeustulkkirekisteri-service/api/app/sessionMaxInactiveInterval');
-}]).run(['Idle', function(Idle) {
-  console.info('Start Idle watch');
-  Idle.watch();
 }]).controller('SessionExpiresCtrl', ['Idle', '$scope', 'close', '$window',
           'LocalisationService', 'SessionTimeoutConfig', function(Idle, $scope, close, $window, 
                                                                   LocalisationService, SessionTimeoutConfig) {
-  $scope.timeoutMessage = function() {
+  $scope.timeoutDuration = function() {
     var duration = Math.floor(SessionTimeoutConfig.MAX_SESSION_IDLE_TIME_IN_SECONDS / 60);
-    return LocalisationService.getTranslation("session_expired_text1_part1") + " " + duration +  " " 
-        + LocalisationService.getTranslation("session_expired._ext1_part2");
+    return ""+duration;
   };
   $scope.okConfirm = function() {
     close(null, 200);

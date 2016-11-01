@@ -5,7 +5,11 @@
                 <h3 tt="session_expired_header">Istunto vanhentunut</h3>
             </div>
             <div class="modal-body">
-                <p>{{timeoutMessage()}}</p>
+                <p>
+                    <span tt="session_expired_text1_part1">Istuntosi on vanhentunut </span>
+                    {{timeoutDuration()}} 
+                    <span tt="session_expired_text1_part2"> minuutin käyttämättömyyden johdosta.</span>
+                </p>
                 <p tt="session_expired_text2">Istuntoaikoja on rajoitettu turvallisuuden vuoksi. Ole hyvä ja päivitä sivu jatkaaksesi.</p>
             </div>
             <div class="modal-footer">
