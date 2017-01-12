@@ -16,4 +16,11 @@ public class YhteystiedotDto implements Serializable {
     private Long id;
     private YhteystietoTyyppi yhteystietoTyyppi;
     private String yhteystietoArvo;
+
+    public YhteystiedotDto() {
+    }
+
+    public YhteystiedotDto(YhteystietoTyyppi yhteystietoTyyppi) {
+        this.yhteystietoTyyppi = yhteystietoTyyppi;
+    }
 }

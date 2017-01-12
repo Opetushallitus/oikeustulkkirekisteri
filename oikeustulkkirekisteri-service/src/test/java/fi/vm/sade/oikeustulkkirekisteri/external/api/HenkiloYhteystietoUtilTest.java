@@ -3,7 +3,7 @@ package fi.vm.sade.oikeustulkkirekisteri.external.api;
 import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.YHTEYSTIETO_KATUOSOITE;
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.YHTEYSTIETO_MAA;
-import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.TYOOSOITE_TYYPPI;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.OIKEUSTULKKIREKISTERI_TYYPPI;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findReadableTyoYhteystietoArvo;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
@@ -30,7 +30,7 @@ public class HenkiloYhteystietoUtilTest {
     @Test
     public void findReadableTyoYhteystietoArvoShouldSkipNullArvo() {
         HenkiloRestDto henkilo = new HenkiloRestDto();
-        YhteystiedotRyhmaDto yhteystiedotRyhma1 = createYhteystiedotRyhma(TYOOSOITE_TYYPPI, "alkupera-oikeustulkkirekisteri");
+        YhteystiedotRyhmaDto yhteystiedotRyhma1 = createYhteystiedotRyhma(OIKEUSTULKKIREKISTERI_TYYPPI, "alkupera-oikeustulkkirekisteri");
         yhteystiedotRyhma1.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, "oikeustulkkirekisteri-katuosoite"));
         YhteystiedotRyhmaDto yhteystiedotRyhma2 = createYhteystiedotRyhma("yhteystietotyyppi-vtj1", "alkupera-vtj");
         yhteystiedotRyhma2.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, "vtj-katuosoite1"));
@@ -46,7 +46,7 @@ public class HenkiloYhteystietoUtilTest {
     @Test
     public void findReadableTyoYhteystietoArvoShouldSkipEmptyArvo() {
         HenkiloRestDto henkilo = new HenkiloRestDto();
-        YhteystiedotRyhmaDto yhteystiedotRyhma1 = createYhteystiedotRyhma(TYOOSOITE_TYYPPI, "alkupera-oikeustulkkirekisteri");
+        YhteystiedotRyhmaDto yhteystiedotRyhma1 = createYhteystiedotRyhma(OIKEUSTULKKIREKISTERI_TYYPPI, "alkupera-oikeustulkkirekisteri");
         yhteystiedotRyhma1.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_MAA, "oikeustulkkirekisteri-maa"));
         YhteystiedotRyhmaDto yhteystiedotRyhma2 = createYhteystiedotRyhma("yhteystietotyyppi-vtj1", "alkupera1");
         yhteystiedotRyhma2.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_MAA, "vtj-maa1"));
