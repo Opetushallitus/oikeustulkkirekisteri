@@ -4,13 +4,15 @@ import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
+import fi.vm.sade.oikeustulkkirekisteri.util.CustomOrderComparator;
 
-import java.util.Comparator;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsLast;
 
 /**
  * User: tommiratamaa
@@ -26,9 +28,10 @@ public class HenkiloYhteystietoUtil {
     }
 
     public static Stream<YhteystiedotDto> findYhteystieto(HenkiloRestDto henkilo, Predicate<YhteystiedotRyhmaDto> predicate, YhteystietoTyyppi tyyppi) {
-        return henkilo.getYhteystiedotRyhma().stream().sorted(comparing(YhteystiedotRyhmaDto::getId).reversed())
+        return henkilo.getYhteystiedotRyhma().stream().sorted(comparing(YhteystiedotRyhmaDto::getRyhmaKuvaus, nullsLast(new CustomOrderComparator<>(TYOOSOITE_TYYPPI).thenComparing(naturalOrder()))))
                 .filter(predicate).flatMap(yt -> yt.getYhteystiedot().stream())
-                .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi);
+                .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
+                .filter(yt -> yt.getYhteystietoArvo() != null && !yt.getYhteystietoArvo().isEmpty());
     }
 
     public static Optional<YhteystiedotDto> findWritableTyoYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
