@@ -4,7 +4,7 @@ import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.YHTEYSTIETO_KATUOSOITE;
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.YHTEYSTIETO_MAA;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.OIKEUSTULKKIREKISTERI_TYYPPI;
-import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findReadableTyoYhteystietoArvo;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findOikeustulkkiYhteystietoArvo;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
@@ -22,7 +22,7 @@ public class HenkiloYhteystietoUtilTest {
     public void findReadableTyoYhteystietoArvoShouldReturnEmptyWithEmpty() {
         HenkiloRestDto henkilo = new HenkiloRestDto();
 
-        Optional<String> katuosoite = findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_KATUOSOITE);
+        Optional<String> katuosoite = findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_KATUOSOITE);
 
         assertThat(katuosoite).isEmpty();
     }
@@ -38,7 +38,7 @@ public class HenkiloYhteystietoUtilTest {
         yhteystiedotRyhma3.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, null));
         henkilo.getYhteystiedotRyhma().addAll(Arrays.asList(yhteystiedotRyhma1, yhteystiedotRyhma2, yhteystiedotRyhma3));
 
-        Optional<String> katuosoite = findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_KATUOSOITE);
+        Optional<String> katuosoite = findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_KATUOSOITE);
 
         assertThat(katuosoite).hasValue("oikeustulkkirekisteri-katuosoite");
     }
@@ -54,7 +54,7 @@ public class HenkiloYhteystietoUtilTest {
         yhteystiedotRyhma3.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_MAA, ""));
         henkilo.getYhteystiedotRyhma().addAll(Arrays.asList(yhteystiedotRyhma1, yhteystiedotRyhma2, yhteystiedotRyhma3));
 
-        Optional<String> katuosoite = findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_MAA);
+        Optional<String> katuosoite = findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_MAA);
 
         assertThat(katuosoite).hasValue("oikeustulkkirekisteri-maa");
     }

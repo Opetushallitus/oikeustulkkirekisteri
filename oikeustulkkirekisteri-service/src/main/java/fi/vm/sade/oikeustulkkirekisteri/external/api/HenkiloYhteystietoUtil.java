@@ -29,15 +29,24 @@ public class HenkiloYhteystietoUtil {
     private HenkiloYhteystietoUtil() {
     }
 
-    public static Stream<YhteystiedotDto> findYhteystieto(HenkiloRestDto henkilo, Predicate<YhteystiedotRyhmaDto> predicate, YhteystietoTyyppi tyyppi) {
-        Comparator<String> comparator = new CustomOrderComparator<>(VAKINAINEN_KOTIMAAN_OSOITE_TYYPPI, VAKINAINEN_ULKOMAAN_OSOITE_TYYPPI, OIKEUSTULKKIREKISTERI_TYYPPI);
-        return henkilo.getYhteystiedotRyhma().stream().sorted(comparing(YhteystiedotRyhmaDto::getRyhmaKuvaus, nullsLast(comparator.thenComparing(naturalOrder()))))
-                .filter(predicate).flatMap(yt -> yt.getYhteystiedot().stream())
+    public static Stream<YhteystiedotDto> findYhteystieto(HenkiloRestDto henkilo, Predicate<YhteystiedotRyhmaDto> predicate, YhteystietoTyyppi tyyppi, Comparator<String> comparator) {
+        return henkilo.getYhteystiedotRyhma().stream()
+                .sorted(comparing(YhteystiedotRyhmaDto::getRyhmaKuvaus, nullsLast(comparator.thenComparing(naturalOrder()))))
+                .filter(predicate)
+                .flatMap(yt -> yt.getYhteystiedot().stream())
                 .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
                 .filter(yt -> yt.getYhteystietoArvo() != null && !yt.getYhteystietoArvo().isEmpty());
     }
-    
-    public static Optional<String> findReadableTyoYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
-        return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi).map(YhteystiedotDto::getYhteystietoArvo).findFirst();
+
+    public static Optional<String> findVtjYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
+        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(VAKINAINEN_KOTIMAAN_OSOITE_TYYPPI, VAKINAINEN_ULKOMAAN_OSOITE_TYYPPI, OIKEUSTULKKIREKISTERI_TYYPPI);
+        return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi, comparator)
+                .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
+    }
+
+    public static Optional<String> findOikeustulkkiYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
+        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(OIKEUSTULKKIREKISTERI_TYYPPI, VAKINAINEN_KOTIMAAN_OSOITE_TYYPPI, VAKINAINEN_ULKOMAAN_OSOITE_TYYPPI);
+        return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi, comparator)
+                .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
     }
 }
