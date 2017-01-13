@@ -251,7 +251,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
             henkilo.setSukunimi(dto.getSukunimi());
         }
         henkilo.setKutsumanimi(dto.getKutsumanimi());
-        YhteystiedotRyhmaDto ryhma = findOrAddYhteystiedot(henkilo.getYhteystiedotRyhma(), OIKEUSTULKKIREKISTERI_TYYPPI);
+        YhteystiedotRyhmaDto ryhma = findOrAddYhteystiedot(henkilo.getYhteystiedotRyhma(), OIKEUSTULKKIREKISTERI_TYYPPI, OIKEUSTULKKIREKISTERI_ALKUPERA);
         updateYhteystieto(ryhma, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
         updateYhteystieto(ryhma, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
         updateYhteystieto(ryhma, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
@@ -266,12 +266,13 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         logger.info("Updated henkilo details, oid={}", henkiloOid);
     }
 
-    private YhteystiedotRyhmaDto findOrAddYhteystiedot(List<YhteystiedotRyhmaDto> ryhmat, String kuvaus) {
+    private YhteystiedotRyhmaDto findOrAddYhteystiedot(List<YhteystiedotRyhmaDto> ryhmat, String kuvaus, String alkupera) {
         return ryhmat.stream()
                 .filter(t -> kuvaus.equals(t.getRyhmaKuvaus()))
+                .filter(t -> alkupera.equals(t.getRyhmaAlkuperaTieto()))
                 .findFirst()
                 .orElseGet(() -> {
-                    YhteystiedotRyhmaDto ryhma = new YhteystiedotRyhmaDto(kuvaus);
+                    YhteystiedotRyhmaDto ryhma = new YhteystiedotRyhmaDto(kuvaus, alkupera);
                     ryhmat.add(ryhma);
                     return ryhma;
                 });

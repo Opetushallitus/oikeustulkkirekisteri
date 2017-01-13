@@ -24,8 +24,9 @@ public class YhteystiedotRyhmaDto implements Serializable {
     public YhteystiedotRyhmaDto() {
     }
 
-    public YhteystiedotRyhmaDto(String ryhmaKuvaus) {
+    public YhteystiedotRyhmaDto(String ryhmaKuvaus, String ryhmaAlkuperaTieto) {
         this.ryhmaKuvaus = ryhmaKuvaus;
+        this.ryhmaAlkuperaTieto = ryhmaAlkuperaTieto;
     }
 
 }

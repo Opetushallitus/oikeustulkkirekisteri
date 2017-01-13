@@ -25,6 +25,7 @@ public class HenkiloYhteystietoUtil {
     public static final String VAKINAINEN_KOTIMAAN_OSOITE_TYYPPI = "yhteystietotyyppi4";
     public static final String VAKINAINEN_ULKOMAAN_OSOITE_TYYPPI = "yhteystietotyyppi5";
     public static final String OIKEUSTULKKIREKISTERI_TYYPPI = "yhteystietotyyppi11";
+    public static final String OIKEUSTULKKIREKISTERI_ALKUPERA = "alkupera7";
     public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
     private HenkiloYhteystietoUtil() {
     }
