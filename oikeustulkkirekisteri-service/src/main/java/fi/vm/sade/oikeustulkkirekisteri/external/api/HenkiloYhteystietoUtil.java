@@ -1,10 +1,15 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
 import fi.vm.sade.authentication.model.YhteystietoTyyppi;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.KOTIOSOITE_TYYPPI;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.OIKEUSTULKKIREKISTERI_TYYPPI;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.VTJ_JARJESTYS;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
 import fi.vm.sade.oikeustulkkirekisteri.util.CustomOrderComparator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 import java.util.Optional;
@@ -14,6 +19,7 @@ import java.util.stream.Stream;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Comparator.nullsLast;
+import java.util.List;
 
 /**
  * User: tommiratamaa
@@ -21,11 +27,7 @@ import static java.util.Comparator.nullsLast;
  * Time: 14.54
  */
 public class HenkiloYhteystietoUtil {
-    public static final String KOTIOSOITE_TYYPPI = "yhteystietotyyppi1";
-    public static final String VAKINAINEN_KOTIMAAN_OSOITE_TYYPPI = "yhteystietotyyppi4";
-    public static final String VAKINAINEN_ULKOMAAN_OSOITE_TYYPPI = "yhteystietotyyppi5";
-    public static final String OIKEUSTULKKIREKISTERI_TYYPPI = "yhteystietotyyppi13";
-    public static final String OIKEUSTULKKIREKISTERI_ALKUPERA = "alkupera7";
+
     public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
     private HenkiloYhteystietoUtil() {
     }
@@ -40,13 +42,19 @@ public class HenkiloYhteystietoUtil {
     }
 
     public static Optional<String> findVtjYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
-        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(VAKINAINEN_KOTIMAAN_OSOITE_TYYPPI, VAKINAINEN_ULKOMAAN_OSOITE_TYYPPI, OIKEUSTULKKIREKISTERI_TYYPPI);
+        List<String> order = new ArrayList<>();
+        order.addAll(Arrays.asList(VTJ_JARJESTYS));
+        order.add(OIKEUSTULKKIREKISTERI_TYYPPI);
+        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(order);
         return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi, comparator)
                 .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
     }
 
     public static Optional<String> findOikeustulkkiYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
-        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(OIKEUSTULKKIREKISTERI_TYYPPI, VAKINAINEN_KOTIMAAN_OSOITE_TYYPPI, VAKINAINEN_ULKOMAAN_OSOITE_TYYPPI);
+        List<String> order = new ArrayList<>();
+        order.add(OIKEUSTULKKIREKISTERI_TYYPPI);
+        order.addAll(Arrays.asList(VTJ_JARJESTYS));
+        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(order);
         return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi, comparator)
                 .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
     }
