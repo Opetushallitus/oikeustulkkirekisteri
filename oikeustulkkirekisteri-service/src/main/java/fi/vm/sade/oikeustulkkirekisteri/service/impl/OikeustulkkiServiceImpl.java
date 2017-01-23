@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation.*;
@@ -38,13 +37,14 @@ import static fi.vm.sade.authentication.model.YhteystietoTyyppi.*;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.KOKO_SUOMI;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.MAAKUNTA;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.*;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.YhteystietojenAlkuperat.OIKEUSTULKKIREKISTERI_ALKUPERA;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.OIKEUSTULKKIREKISTERI_TYYPPI;
 import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.*;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.or;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.retrying;
 import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
-import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
 import static org.joda.time.LocalDate.now;
@@ -253,13 +253,14 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
             henkilo.setSukunimi(dto.getSukunimi());
         }
         henkilo.setKutsumanimi(dto.getKutsumanimi());
-        updateYhteystieto(henkilo, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
-        updateYhteystieto(henkilo, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
-        updateYhteystieto(henkilo, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
-        updateYhteystieto(henkilo, YHTEYSTIETO_POSTINUMERO, dto.getOsoite().getPostinumero());
-        updateYhteystieto(henkilo, YHTEYSTIETO_SAHKOPOSTI, dto.getEmail());
-        updateYhteystieto(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO, dto.getPuhelinnumero());
-        updateYhteystieto(henkilo, YHTEYSTIETO_PUHELINNUMERO, dto.getPuhelinnumero());
+        YhteystiedotRyhmaDto ryhma = findOrAddYhteystiedot(henkilo.getYhteystiedotRyhma(), OIKEUSTULKKIREKISTERI_TYYPPI, OIKEUSTULKKIREKISTERI_ALKUPERA);
+        updateYhteystieto(ryhma, YHTEYSTIETO_KATUOSOITE, dto.getOsoite().getKatuosoite());
+        updateYhteystieto(ryhma, YHTEYSTIETO_KUNTA, dto.getOsoite().getPostitoimipaikka());
+        updateYhteystieto(ryhma, YHTEYSTIETO_KAUPUNKI, dto.getOsoite().getPostitoimipaikka());
+        updateYhteystieto(ryhma, YHTEYSTIETO_POSTINUMERO, dto.getOsoite().getPostinumero());
+        updateYhteystieto(ryhma, YHTEYSTIETO_SAHKOPOSTI, dto.getEmail());
+        updateYhteystieto(ryhma, YHTEYSTIETO_MATKAPUHELINNUMERO, dto.getPuhelinnumero());
+        updateYhteystieto(ryhma, YHTEYSTIETO_PUHELINNUMERO, dto.getPuhelinnumero());
         logger.info("Updating henkilo details, oid={}", henkiloOid);
         retrying(() -> henkiloResourceServiceUserClient.updateHenkilo(henkiloOid, henkilo), 2).get()
                 .orFail(ex -> new ValidationException("Updating henkilö failed.",
@@ -267,27 +268,31 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         logger.info("Updated henkilo details, oid={}", henkiloOid);
     }
 
-    private void updateYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi, String arvo) {
-        Optional<YhteystiedotDto> yhteystiedot = findWritableTyoYhteystieto(henkilo, tyyppi);
-        if (yhteystiedot.isPresent()) {
-            yhteystiedot.get().setYhteystietoArvo(arvo);
-        } else {
-            if (findReadableTyoYhteystietoArvo(henkilo, tyyppi).isPresent()) {
-                // not writable, skip
-                return;
-            }
-            Optional<YhteystiedotRyhmaDto> ryhma = henkilo.getYhteystiedotRyhma().stream().filter(YT_RYHMA_FILTER_SET).findFirst();
-            if (!ryhma.isPresent()) {
-                YhteystiedotRyhmaDto r = new YhteystiedotRyhmaDto();
-                r.setRyhmaKuvaus(TYOOSOITE_TYYPPI);
-                ryhma = of(r);
-                henkilo.getYhteystiedotRyhma().add(r);
-            }
-            YhteystiedotDto yt = new YhteystiedotDto();
-            yt.setYhteystietoTyyppi(tyyppi);
-            yt.setYhteystietoArvo(arvo);
-            ryhma.get().getYhteystiedot().add(yt);
-        }
+    private YhteystiedotRyhmaDto findOrAddYhteystiedot(List<YhteystiedotRyhmaDto> ryhmat, String kuvaus, String alkupera) {
+        return ryhmat.stream()
+                .filter(t -> kuvaus.equals(t.getRyhmaKuvaus()))
+                .filter(t -> alkupera.equals(t.getRyhmaAlkuperaTieto()))
+                .findFirst()
+                .orElseGet(() -> {
+                    YhteystiedotRyhmaDto ryhma = new YhteystiedotRyhmaDto(kuvaus, alkupera);
+                    ryhmat.add(ryhma);
+                    return ryhma;
+                });
+    }
+
+    private void updateYhteystieto(YhteystiedotRyhmaDto ryhma, YhteystietoTyyppi tyyppi, String arvo) {
+        findOrAddYhteystieto(ryhma.getYhteystiedot(), tyyppi).setYhteystietoArvo(arvo);
+    }
+
+    private YhteystiedotDto findOrAddYhteystieto(Set<YhteystiedotDto> yhteystiedot, YhteystietoTyyppi tyyppi) {
+        return yhteystiedot.stream()
+                .filter(t -> tyyppi.equals(t.getYhteystietoTyyppi()))
+                .findFirst()
+                .orElseGet(() -> {
+                    YhteystiedotDto yhteystieto = new YhteystiedotDto(tyyppi);
+                    yhteystiedot.add(yhteystieto);
+                    return yhteystieto;
+                });
     }
 
     private Oikeustulkki convert(OikeustulkkiBaseDto dto, Oikeustulkki oikeustulkki)  {
@@ -325,16 +330,18 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         to.setKutsumanimi(henkilo.getKutsumanimi());
         to.setJulkaisulupaEmail(from.isJulkaisulupaEmail());
         to.setJulkaisulupaMuuYhteystieto(from.isJulkaisulupaMuuYhteystieto());
-        to.setEmail(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
-        to.setPuhelinnumero(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
-                .orElseGet(() -> findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_PUHELINNUMERO).orElse(null)));
+        // sähköposti ja puhelinnumero halutaan näyttää ensisijaisesti oikeustulkkirekisterin yhteystiedoista
+        to.setEmail(findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
+        to.setPuhelinnumero(findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
+                .orElseGet(() -> findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_PUHELINNUMERO).orElse(null)));
         to.setMuuYhteystieto(from.getMuuYhteystieto());
         to.setKokoSuomi(isKokoSuomi(from.getSijainnit().stream()));
         to.setMaakunnat(maakuntaKoodis(from.getSijainnit().stream()));
         OsoiteEditDto osoite = new OsoiteEditDto();
-        osoite.setKatuosoite(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_KATUOSOITE).orElse(null));
-        osoite.setPostinumero(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_POSTINUMERO).orElse(null));
-        osoite.setPostitoimipaikka(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_KUNTA).orElse(null));
+        // osoitetiedot halutaan näyttää ensisijaisesti vtj:n yhteystiedoista
+        osoite.setKatuosoite(findVtjYhteystietoArvo(henkilo, YHTEYSTIETO_KATUOSOITE).orElse(null));
+        osoite.setPostinumero(findVtjYhteystietoArvo(henkilo, YHTEYSTIETO_POSTINUMERO).orElse(null));
+        osoite.setPostitoimipaikka(findVtjYhteystietoArvo(henkilo, YHTEYSTIETO_KUNTA).orElse(null));
         to.setOsoite(osoite);
         to.setKieliParit(convert(from.getKielet().stream()));
         return to;
@@ -395,11 +402,11 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
 
     private void setJulkisetYhteystiedot(Oikeustulkki oikeustulkki, HenkiloRestDto henkilo, JulkisetYhteystiedot viewDto) {
         if (oikeustulkki.isJulkaisulupaEmail()) {
-            viewDto.setEmail(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
+            viewDto.setEmail(findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI).orElse(null));
         }
         if (oikeustulkki.isJulkaisulupaPuhelinnumero()) {
-            viewDto.setPuhelinnumero(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
-                    .orElseGet(() -> findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_PUHELINNUMERO).orElse(null)));
+            viewDto.setPuhelinnumero(findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_MATKAPUHELINNUMERO)
+                    .orElseGet(() -> findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_PUHELINNUMERO).orElse(null)));
         }
         if (oikeustulkki.isJulkaisulupaMuuYhteystieto()) {
             viewDto.setMuuYhteystieto(oikeustulkki.getMuuYhteystieto());

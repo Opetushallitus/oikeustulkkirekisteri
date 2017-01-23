@@ -1,6 +1,5 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api.dto;
 
-import fi.vm.sade.authentication.model.Yhteystiedot;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,4 +20,13 @@ public class YhteystiedotRyhmaDto implements Serializable {
     private boolean readOnly;
     private boolean removed = false;
     private Set<YhteystiedotDto> yhteystiedot = new HashSet();
+
+    public YhteystiedotRyhmaDto() {
+    }
+
+    public YhteystiedotRyhmaDto(String ryhmaKuvaus, String ryhmaAlkuperaTieto) {
+        this.ryhmaKuvaus = ryhmaKuvaus;
+        this.ryhmaAlkuperaTieto = ryhmaAlkuperaTieto;
+    }
+
 }

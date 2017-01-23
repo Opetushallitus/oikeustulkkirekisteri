@@ -1,16 +1,25 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
 import fi.vm.sade.authentication.model.YhteystietoTyyppi;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.KOTIOSOITE_TYYPPI;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.OIKEUSTULKKIREKISTERI_TYYPPI;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.VTJ_JARJESTYS;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
-
+import fi.vm.sade.oikeustulkkirekisteri.util.CustomOrderComparator;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
+import static java.util.Comparator.naturalOrder;
+import static java.util.Comparator.nullsLast;
+import java.util.List;
 
 /**
  * User: tommiratamaa
@@ -18,24 +27,35 @@ import static java.util.Comparator.comparing;
  * Time: 14.54
  */
 public class HenkiloYhteystietoUtil {
-    public static final String KOTIOSOITE_TYYPPI = "yhteystietotyyppi1";
-    public static final String TYOOSOITE_TYYPPI = "yhteystietotyyppi2";
+
     public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
-    public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_SET = YT_RYHMA_FILTER_READ.and(r -> !r.isReadOnly());
     private HenkiloYhteystietoUtil() {
     }
 
-    public static Stream<YhteystiedotDto> findYhteystieto(HenkiloRestDto henkilo, Predicate<YhteystiedotRyhmaDto> predicate, YhteystietoTyyppi tyyppi) {
-        return henkilo.getYhteystiedotRyhma().stream().sorted(comparing(YhteystiedotRyhmaDto::getId).reversed())
-                .filter(predicate).flatMap(yt -> yt.getYhteystiedot().stream())
-                .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi);
+    public static Stream<YhteystiedotDto> findYhteystieto(HenkiloRestDto henkilo, Predicate<YhteystiedotRyhmaDto> predicate, YhteystietoTyyppi tyyppi, Comparator<String> comparator) {
+        return henkilo.getYhteystiedotRyhma().stream()
+                .sorted(comparing(YhteystiedotRyhmaDto::getRyhmaKuvaus, nullsLast(comparator.thenComparing(naturalOrder()))))
+                .filter(predicate)
+                .flatMap(yt -> yt.getYhteystiedot().stream())
+                .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
+                .filter(yt -> yt.getYhteystietoArvo() != null && !yt.getYhteystietoArvo().isEmpty());
     }
 
-    public static Optional<YhteystiedotDto> findWritableTyoYhteystieto(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
-        return findYhteystieto(henkilo, YT_RYHMA_FILTER_SET, tyyppi).findFirst();
+    public static Optional<String> findVtjYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
+        List<String> order = new ArrayList<>();
+        order.addAll(Arrays.asList(VTJ_JARJESTYS));
+        order.add(OIKEUSTULKKIREKISTERI_TYYPPI);
+        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(order);
+        return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi, comparator)
+                .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
     }
-    
-    public static Optional<String> findReadableTyoYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
-        return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi).map(YhteystiedotDto::getYhteystietoArvo).findFirst();
+
+    public static Optional<String> findOikeustulkkiYhteystietoArvo(HenkiloRestDto henkilo, YhteystietoTyyppi tyyppi) {
+        List<String> order = new ArrayList<>();
+        order.add(OIKEUSTULKKIREKISTERI_TYYPPI);
+        order.addAll(Arrays.asList(VTJ_JARJESTYS));
+        CustomOrderComparator<String> comparator = new CustomOrderComparator<>(order);
+        return findYhteystieto(henkilo, YT_RYHMA_FILTER_READ, tyyppi, comparator)
+                .map(YhteystiedotDto::getYhteystietoArvo).findFirst();
     }
 }

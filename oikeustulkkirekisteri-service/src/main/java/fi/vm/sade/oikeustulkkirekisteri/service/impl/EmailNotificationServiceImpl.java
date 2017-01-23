@@ -18,8 +18,6 @@ import fi.vm.sade.ryhmasahkoposti.api.dto.ReportedRecipientReplacementDTO;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.Period;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +36,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static fi.vm.sade.authentication.model.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
-import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findReadableTyoYhteystietoArvo;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findOikeustulkkiYhteystietoArvo;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
 import static org.joda.time.LocalDate.now;
 
@@ -108,7 +106,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
         muistutus.setTemplateName(templateName);
         oikeustulkki.getSahkopostiMuistutukset().add(muistutus);
         HenkiloRestDto henkilo = found(oikeustulkkiCacheService.findHenkiloByOid(oikeustulkki.getTulkki().getHenkiloOid()));
-        muistutus.setVastaanottaja(findReadableTyoYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI)
+        muistutus.setVastaanottaja(findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_SAHKOPOSTI)
                 .orElseThrow(() -> new IllegalStateException("Oikeustulkki henkiloOid="+oikeustulkki.getTulkki().getHenkiloOid()
                         + " does not have work email.")));
         muistutus.setKieli(new Kieli(DEFAULT_LANGUAGE_CODE));
