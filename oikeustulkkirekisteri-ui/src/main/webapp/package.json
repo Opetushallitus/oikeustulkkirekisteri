@@ -41,5 +41,9 @@
     "jquery": "2.2.4",
     "moment": "2.13.0",
     "angular-datepicker": "1.0.5"
+  },
+
+  "scripts": {
+    "build": "webpack -p"
   }
 }

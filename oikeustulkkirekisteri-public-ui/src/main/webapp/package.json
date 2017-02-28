@@ -34,5 +34,9 @@
     "bootstrap-loader": "1.0.10",
     "jquery": "2.2.4",
     "lodash": "4.13.1"
+  },
+
+  "scripts": {
+    "build": "webpack -p"
   }
 }
