@@ -15,6 +15,11 @@
         <property name="username" value="${authentication-service.rekisteri.username}" />
         <property name="password" value="${authentication-service.rekisteri.password}" />
     </bean>
+    <bean id="oppijanumerorekisteriSystemAccountClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
+        <property name="serviceUrl" value="${oppijanumerorekisteri-service.baseUrl}/j_spring_cas_security_check"/>
+        <property name="username" value="${oppijanumerorekisteri-service.rekisteri.username}" />
+        <property name="password" value="${oppijanumerorekisteri-service.rekisteri.password}" />
+    </bean>
     <bean id="ryhmasahkopostiSystemAccountClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
         <property name="serviceUrl" value="${ryhmasahkoposti-service.baseUrl}/j_spring_cas_security_check"/>
         <property name="username" value="${ryhmasahkoposti-service.rekisteri.username}" />
@@ -33,6 +38,19 @@
         </jaxrs-client:outInterceptors>
         <jaxrs-client:inInterceptors>
             <ref bean="henkiloSystemAccountClientCasInterceptor"/>
+        </jaxrs-client:inInterceptors>
+        <jaxrs-client:providers>
+            <ref bean="customJsonProvider"/>
+        </jaxrs-client:providers>
+    </jaxrs-client:client>
+    <jaxrs-client:client id="oppijanumerorekisteriServiceUserClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi"
+                         address="${oppijanumerorekisteri-service.baseUrl}" inheritHeaders="true">
+        <jaxrs-client:outInterceptors>
+            <ref bean="oppijanumerorekisteriSystemAccountClientCasInterceptor"/>
+            <ref bean="ophRequestHeaders"/>
+        </jaxrs-client:outInterceptors>
+        <jaxrs-client:inInterceptors>
+            <ref bean="oppijanumerorekisteriSystemAccountClientCasInterceptor"/>
         </jaxrs-client:inInterceptors>
         <jaxrs-client:providers>
             <ref bean="customJsonProvider"/>
