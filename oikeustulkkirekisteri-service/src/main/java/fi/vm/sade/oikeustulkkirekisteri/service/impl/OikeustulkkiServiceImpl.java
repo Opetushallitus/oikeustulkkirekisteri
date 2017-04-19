@@ -49,6 +49,7 @@ import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
 import static org.joda.time.LocalDate.now;
 import static org.springframework.data.jpa.domain.Specifications.where;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi;
 
 /**
  * User: tommiratamaa
@@ -69,6 +70,9 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     
     @Resource
     private HenkiloApi henkiloResourceServiceUserClient;
+
+    @Resource
+    private OppijanumerorekisteriApi oppijanumerorekisteriServiceUserClient;
 
     @Autowired
     private OikeustulkkiCacheService oikeustulkkiCacheService;
@@ -104,7 +108,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     public long createOikeustulkki(OikeustulkkiCreateDto dto) throws ValidationException {
         logger.info("OikeustulkkiService.createOikeustulkki");
         Optional<HenkiloRestDto> existingHenkilo = retrying(() 
-                -> listHenkilosByTermi(henkiloResourceServiceUserClient, dto.getHetu()).stream().findFirst(), 2)
+                -> listHenkilosByHetu(oppijanumerorekisteriServiceUserClient, dto.getHetu()).stream().findFirst(), 2)
                     .get().orFail(ex -> new ValidationException("Searching existing henkilo by HETU failed.",
                         "henkilpalvelu.search.by.hetu.failed"));
         Oikeustulkki oikeustulkki = new Oikeustulkki();
@@ -465,9 +469,8 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 .collect(toList());
     }
 
-    private List<HenkiloRestDto> listHenkilosByTermi(HenkiloApi api, String term) {
-        return api.listHenkilos(term, null, 0, 0, null, null, null, null,
-                false, true, false, false, null, false).getResults();
+    private List<HenkiloRestDto> listHenkilosByHetu(OppijanumerorekisteriApi api, String hetu) {
+        return api.list(hetu, false, false).getResults();
     }
     
     @Getter @AllArgsConstructor

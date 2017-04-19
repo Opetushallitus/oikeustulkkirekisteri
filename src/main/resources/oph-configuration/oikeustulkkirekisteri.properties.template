@@ -19,6 +19,10 @@ authentication-service.baseUrl=https://{{host_virkailija}}/authentication-servic
 authentication-service.rekisteri.username={{oikeustulkkirekisteri_authentication_service_username}}
 authentication-service.rekisteri.password={{oikeustulkkirekisteri_authentication_service_password}}
 
+oppijanumerorekisteri-service.baseUrl=https://{{host_virkailija}}/oppijanumerorekisteri-service
+oppijanumerorekisteri-service.rekisteri.username={{oikeustulkkirekisteri_oppijanumerorekisteri_service_username}}
+oppijanumerorekisteri-service.rekisteri.password={{oikeustulkkirekisteri_oppijanumerorekisteri_service_password}}
+
 ryhmasahkoposti-service.baseUrl=https://{{host_virkailija}}/ryhmasahkoposti-service
 ryhmasahkoposti-service.rekisteri.username={{oikeustulkkirekisteri_ryhmasahkoposti_service_username}}
 ryhmasahkoposti-service.rekisteri.password={{oikeustulkkirekisteri_ryhmasahkoposti_service_password}}
