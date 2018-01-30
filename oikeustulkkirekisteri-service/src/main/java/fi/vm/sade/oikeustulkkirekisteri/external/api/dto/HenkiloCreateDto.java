@@ -5,9 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 /**
  * User: tommiratamaa
@@ -21,11 +20,9 @@ public class HenkiloCreateDto implements Serializable {
     private String sukunimi;
     private String hetu;
     private Date syntymaaika;
-    private String oidHenkilo;
     private HenkiloTyyppi henkiloTyyppi;
     private String sukupuoli;
     private KielisyysDto asiointiKieli;
-    private KansalaisuusDto kansalaisuus;
+    private Set<KansalaisuusDto> kansalaisuus;
     private KielisyysDto aidinkieli;
-    private List<OrganisaatioHenkiloDto> organisaatioHenkilo = new ArrayList<>();
 }

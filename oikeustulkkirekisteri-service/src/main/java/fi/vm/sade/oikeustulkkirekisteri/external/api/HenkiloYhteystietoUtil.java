@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class HenkiloYhteystietoUtil {
 
-    public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
+    public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
     private HenkiloYhteystietoUtil() {
     }
 
@@ -36,7 +36,7 @@ public class HenkiloYhteystietoUtil {
         return henkilo.getYhteystiedotRyhma().stream()
                 .sorted(comparing(YhteystiedotRyhmaDto::getRyhmaKuvaus, nullsLast(comparator.thenComparing(naturalOrder()))))
                 .filter(predicate)
-                .flatMap(yt -> yt.getYhteystiedot().stream())
+                .flatMap(yt -> yt.getYhteystieto().stream())
                 .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
                 .filter(yt -> yt.getYhteystietoArvo() != null && !yt.getYhteystietoArvo().isEmpty());
     }

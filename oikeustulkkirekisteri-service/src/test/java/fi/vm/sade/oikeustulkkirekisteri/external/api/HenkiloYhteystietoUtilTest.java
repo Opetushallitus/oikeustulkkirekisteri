@@ -31,11 +31,11 @@ public class HenkiloYhteystietoUtilTest {
     public void findReadableTyoYhteystietoArvoShouldSkipNullArvo() {
         HenkiloRestDto henkilo = new HenkiloRestDto();
         YhteystiedotRyhmaDto yhteystiedotRyhma1 = createYhteystiedotRyhma(OIKEUSTULKKIREKISTERI_TYYPPI, "alkupera-oikeustulkkirekisteri");
-        yhteystiedotRyhma1.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, "oikeustulkkirekisteri-katuosoite"));
+        yhteystiedotRyhma1.getYhteystieto().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, "oikeustulkkirekisteri-katuosoite"));
         YhteystiedotRyhmaDto yhteystiedotRyhma2 = createYhteystiedotRyhma("yhteystietotyyppi-vtj1", "alkupera-vtj");
-        yhteystiedotRyhma2.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, "vtj-katuosoite1"));
+        yhteystiedotRyhma2.getYhteystieto().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, "vtj-katuosoite1"));
         YhteystiedotRyhmaDto yhteystiedotRyhma3 = createYhteystiedotRyhma("yhteystietotyyppi-vtj2", "alkupera-vtj");
-        yhteystiedotRyhma3.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, null));
+        yhteystiedotRyhma3.getYhteystieto().add(createYhteystiedot(YHTEYSTIETO_KATUOSOITE, null));
         henkilo.getYhteystiedotRyhma().addAll(Arrays.asList(yhteystiedotRyhma1, yhteystiedotRyhma2, yhteystiedotRyhma3));
 
         Optional<String> katuosoite = findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_KATUOSOITE);
@@ -47,11 +47,11 @@ public class HenkiloYhteystietoUtilTest {
     public void findReadableTyoYhteystietoArvoShouldSkipEmptyArvo() {
         HenkiloRestDto henkilo = new HenkiloRestDto();
         YhteystiedotRyhmaDto yhteystiedotRyhma1 = createYhteystiedotRyhma(OIKEUSTULKKIREKISTERI_TYYPPI, "alkupera-oikeustulkkirekisteri");
-        yhteystiedotRyhma1.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_MAA, "oikeustulkkirekisteri-maa"));
+        yhteystiedotRyhma1.getYhteystieto().add(createYhteystiedot(YHTEYSTIETO_MAA, "oikeustulkkirekisteri-maa"));
         YhteystiedotRyhmaDto yhteystiedotRyhma2 = createYhteystiedotRyhma("yhteystietotyyppi-vtj1", "alkupera1");
-        yhteystiedotRyhma2.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_MAA, "vtj-maa1"));
+        yhteystiedotRyhma2.getYhteystieto().add(createYhteystiedot(YHTEYSTIETO_MAA, "vtj-maa1"));
         YhteystiedotRyhmaDto yhteystiedotRyhma3 = createYhteystiedotRyhma("yhteystietotyyppi-vtj2", "alkupera1");
-        yhteystiedotRyhma3.getYhteystiedot().add(createYhteystiedot(YHTEYSTIETO_MAA, ""));
+        yhteystiedotRyhma3.getYhteystieto().add(createYhteystiedot(YHTEYSTIETO_MAA, ""));
         henkilo.getYhteystiedotRyhma().addAll(Arrays.asList(yhteystiedotRyhma1, yhteystiedotRyhma2, yhteystiedotRyhma3));
 
         Optional<String> katuosoite = findOikeustulkkiYhteystietoArvo(henkilo, YHTEYSTIETO_MAA);
@@ -69,7 +69,6 @@ public class HenkiloYhteystietoUtilTest {
 
     private YhteystiedotDto createYhteystiedot(YhteystietoTyyppi tyyppi, String arvo) {
         YhteystiedotDto yhteystiedot = new YhteystiedotDto();
-        yhteystiedot.setId(SEQ.incrementAndGet());
         yhteystiedot.setYhteystietoTyyppi(tyyppi);
         yhteystiedot.setYhteystietoArvo(arvo);
         return yhteystiedot;

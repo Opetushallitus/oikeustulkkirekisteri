@@ -15,7 +15,6 @@ import java.util.List;
  */
 @Getter @Setter
 public class HenkiloRestDto {
-    private Long id;
     private String oidHenkilo;
     private String etunimet;
     private String sukunimi;
@@ -32,6 +31,5 @@ public class HenkiloRestDto {
     private boolean yksilointiYritetty;
     private boolean duplicate;
     private KielisyysDto aidinkieli;
-    private List<OrganisaatioHenkiloDto> organisaatioHenkilos = new ArrayList<>();
     private List<YhteystiedotRyhmaDto> yhteystiedotRyhma = new ArrayList<>();
 }

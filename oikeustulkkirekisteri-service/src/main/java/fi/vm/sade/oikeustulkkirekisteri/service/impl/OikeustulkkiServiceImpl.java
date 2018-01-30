@@ -5,7 +5,6 @@ import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.oikeustulkkirekisteri.domain.*;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
-import fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.*;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.repository.TullkiRepository;
@@ -67,9 +66,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     
     @Autowired
     private TullkiRepository tullkiRepository;
-    
-    @Resource
-    private HenkiloApi henkiloResourceServiceUserClient;
 
     @Resource
     private OppijanumerorekisteriApi oppijanumerorekisteriServiceUserClient;
@@ -126,7 +122,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
                 oikeustulkki.setTulkki(new Tulkki(existingHenkilo.get().getOidHenkilo()));
             }
         } else if (oikeustulkki.getTulkki() == null) {
-            logger.info("Creating new Tulkki into authentication-service");
+            logger.info("Creating new Tulkki into oppijanumerorekisteri");
             oikeustulkki.setTulkki(createTulkki(dto));
         }
         convert(dto, oikeustulkki);
@@ -211,7 +207,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         Map<String,HenkiloRestDto> fetched = new HashMap<>();
         Function<String,HenkiloRestDto> getHenkilos = or(fetched::get, oid -> {
             try {
-                HenkiloRestDto h = henkiloResourceServiceUserClient.findByOid(oid);
+                HenkiloRestDto h = oppijanumerorekisteriServiceUserClient.findByOid(oid);
                 fetched.put(oid, h);
                 return h;
             } catch(Exception e) {
@@ -241,14 +237,14 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         henkilo.setHenkiloTyyppi(HenkiloTyyppi.OPPIJA); // although deprecated is required by henkilöpalvelu impl, 
         // virkalija so that can be serached and edited through henkilopalvelu
         logger.info("Calling createHenkilo");
-        String oid = henkiloResourceServiceUserClient.createHenkilo(henkilo);
+        String oid = oppijanumerorekisteriServiceUserClient.createHenkilo(henkilo);
         logger.info("Received oid={} resposnse from authenticationService's createHenkilo", oid);
         return new Tulkki(oid);
     }
 
     private void updateHenkilo(String henkiloOid, OikeustulkkiBaseDto dto) throws ValidationException {
         logger.info("Updating henkilo details, fetching current ones by oid={}", henkiloOid);
-        HenkiloRestDto henkilo = retrying(() -> henkiloResourceServiceUserClient.findByOid(henkiloOid), 2).get()
+        HenkiloRestDto henkilo = retrying(() -> oppijanumerorekisteriServiceUserClient.findByOid(henkiloOid), 2).get()
                 .orFail(ex -> new ValidationException("Finding existing henkilo by OID failed.",
                         "henkilpalvelu.search.by.oid.failed"));
         if (!henkilo.isYksiloityVTJ()) {
@@ -266,7 +262,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         updateYhteystieto(ryhma, YHTEYSTIETO_MATKAPUHELINNUMERO, dto.getPuhelinnumero());
         updateYhteystieto(ryhma, YHTEYSTIETO_PUHELINNUMERO, dto.getPuhelinnumero());
         logger.info("Updating henkilo details, oid={}", henkiloOid);
-        retrying(() -> henkiloResourceServiceUserClient.updateHenkilo(henkiloOid, henkilo), 2).get()
+        retrying(() -> oppijanumerorekisteriServiceUserClient.updateHenkilo(henkilo), 2).get()
                 .orFail(ex -> new ValidationException("Updating henkilö failed.",
                         "henkilpalvelu.updating.henkilo.failed"));
         logger.info("Updated henkilo details, oid={}", henkiloOid);
@@ -285,7 +281,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     }
 
     private void updateYhteystieto(YhteystiedotRyhmaDto ryhma, YhteystietoTyyppi tyyppi, String arvo) {
-        findOrAddYhteystieto(ryhma.getYhteystiedot(), tyyppi).setYhteystietoArvo(arvo);
+        findOrAddYhteystieto(ryhma.getYhteystieto(), tyyppi).setYhteystietoArvo(arvo);
     }
 
     private YhteystiedotDto findOrAddYhteystieto(Set<YhteystiedotDto> yhteystiedot, YhteystietoTyyppi tyyppi) {
@@ -391,7 +387,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Transactional(readOnly = true)
     public OikeustulkkiPublicViewDto getJulkinen(long id) {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuJulkinenById(id));
-        HenkiloRestDto henkilo = found(henkiloResourceServiceUserClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
+        HenkiloRestDto henkilo = found(oppijanumerorekisteriServiceUserClient.findByOid(oikeustulkki.getTulkki().getHenkiloOid()));
         OikeustulkkiPublicViewDto viewDto = new OikeustulkkiPublicViewDto();
         viewDto.setId(oikeustulkki.getId());
         viewDto.setEtunimet(henkilo.getEtunimet());

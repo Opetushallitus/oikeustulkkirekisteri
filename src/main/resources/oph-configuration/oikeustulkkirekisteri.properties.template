@@ -15,10 +15,6 @@ rekisteri.db.name=oikeustulkkirekisteri
 
 rekisteri.external.apis.dev.mode=false
 
-authentication-service.baseUrl=https://{{host_virkailija}}/authentication-service
-authentication-service.rekisteri.username={{oikeustulkkirekisteri_authentication_service_username}}
-authentication-service.rekisteri.password={{oikeustulkkirekisteri_authentication_service_password}}
-
 oppijanumerorekisteri-service.baseUrl=https://{{host_virkailija}}/oppijanumerorekisteri-service
 oppijanumerorekisteri-service.rekisteri.username={{oikeustulkkirekisteri_oppijanumerorekisteri_service_username}}
 oppijanumerorekisteri-service.rekisteri.password={{oikeustulkkirekisteri_oppijanumerorekisteri_service_password}}
