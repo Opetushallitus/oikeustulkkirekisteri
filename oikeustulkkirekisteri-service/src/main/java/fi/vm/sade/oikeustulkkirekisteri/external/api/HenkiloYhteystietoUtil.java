@@ -1,12 +1,12 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
-import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.KOTIOSOITE_TYYPPI;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.OIKEUSTULKKIREKISTERI_TYYPPI;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.VTJ_JARJESTYS;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.util.CustomOrderComparator;
 import java.util.ArrayList;
 import java.util.Arrays;

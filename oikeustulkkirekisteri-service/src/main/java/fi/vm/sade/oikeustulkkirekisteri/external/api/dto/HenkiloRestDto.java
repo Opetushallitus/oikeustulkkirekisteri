@@ -1,6 +1,5 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api.dto;
 
-import fi.vm.sade.authentication.model.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +22,8 @@ public class HenkiloRestDto {
     private Date syntymaaika;
     private String hetu;
     private Boolean turvakielto;
-    private HenkiloTyyppi henkiloTyyppi;
+    @Deprecated // voidaan poistaa kun KJHH-1225 on maalissa
+    private String henkiloTyyppi;
     private boolean eiSuomalaistaHetua;
     private boolean passivoitu;
     private boolean yksiloity;

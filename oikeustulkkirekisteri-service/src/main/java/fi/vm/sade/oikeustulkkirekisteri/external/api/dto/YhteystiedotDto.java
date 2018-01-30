@@ -1,6 +1,5 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api.dto;
 
-import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import lombok.Getter;
 import lombok.Setter;
 

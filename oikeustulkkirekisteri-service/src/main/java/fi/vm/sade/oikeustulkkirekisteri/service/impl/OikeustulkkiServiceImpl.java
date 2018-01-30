@@ -1,7 +1,5 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
-import fi.vm.sade.authentication.model.HenkiloTyyppi;
-import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.oikeustulkkirekisteri.domain.*;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
@@ -32,7 +30,6 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation.*;
-import static fi.vm.sade.authentication.model.YhteystietoTyyppi.*;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.KOKO_SUOMI;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.MAAKUNTA;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.*;
@@ -49,6 +46,13 @@ import static java.util.stream.Collectors.*;
 import static org.joda.time.LocalDate.now;
 import static org.springframework.data.jpa.domain.Specifications.where;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_KATUOSOITE;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_KAUPUNKI;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_KUNTA;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_MATKAPUHELINNUMERO;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_POSTINUMERO;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_PUHELINNUMERO;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
 
 /**
  * User: tommiratamaa
@@ -234,8 +238,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
         henkilo.setKutsumanimi(dto.getKutsumanimi());
-        henkilo.setHenkiloTyyppi(HenkiloTyyppi.OPPIJA); // although deprecated is required by henkilöpalvelu impl, 
-        // virkalija so that can be serached and edited through henkilopalvelu
+        henkilo.setHenkiloTyyppi("OPPIJA");
         logger.info("Calling createHenkilo");
         String oid = oppijanumerorekisteriServiceUserClient.createHenkilo(henkilo);
         logger.info("Received oid={} resposnse from authenticationService's createHenkilo", oid);

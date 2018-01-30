@@ -46,21 +46,6 @@
             <version>13.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>fi.vm.sade.authentication</groupId>
-            <artifactId>authentication-domain</artifactId>
-            <version>13.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.codehaus.jackson</groupId>
-                    <artifactId>jackson-jaxrs</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>joda-time</groupId>
-                    <artifactId>joda-time</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>fi.vm.sade.java-utils</groupId>
             <artifactId>java-properties</artifactId>
             <version>0.0.1-SNAPSHOT</version>
