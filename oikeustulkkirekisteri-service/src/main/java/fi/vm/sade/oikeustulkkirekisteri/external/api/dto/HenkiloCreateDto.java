@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Set;
 
 /**
  * User: tommiratamaa
@@ -18,11 +16,6 @@ public class HenkiloCreateDto implements Serializable {
     private String kutsumanimi;
     private String sukunimi;
     private String hetu;
-    private Date syntymaaika;
     @Deprecated // voidaan poistaa kun KJHH-1225 on maalissa
     private String henkiloTyyppi;
-    private String sukupuoli;
-    private KielisyysDto asiointiKieli;
-    private Set<KansalaisuusDto> kansalaisuus;
-    private KielisyysDto aidinkieli;
 }
