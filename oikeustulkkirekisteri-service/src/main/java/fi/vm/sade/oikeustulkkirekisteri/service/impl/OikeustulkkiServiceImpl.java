@@ -238,7 +238,6 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         henkilo.setEtunimet(dto.getEtunimet());
         henkilo.setSukunimi(dto.getSukunimi());
         henkilo.setKutsumanimi(dto.getKutsumanimi());
-        henkilo.setHenkiloTyyppi("OPPIJA");
         logger.info("Calling createHenkilo");
         String oid = oppijanumerorekisteriServiceUserClient.createHenkilo(henkilo);
         logger.info("Received oid={} resposnse from authenticationService's createHenkilo", oid);

@@ -17,5 +17,5 @@ public class HenkiloCreateDto implements Serializable {
     private String sukunimi;
     private String hetu;
     @Deprecated // voidaan poistaa kun KJHH-1225 on maalissa
-    private String henkiloTyyppi;
+    private final String henkiloTyyppi = "OPPIJA";
 }
