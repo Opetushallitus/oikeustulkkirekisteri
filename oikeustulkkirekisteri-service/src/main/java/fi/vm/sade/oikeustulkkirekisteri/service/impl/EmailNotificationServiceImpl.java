@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static fi.vm.sade.authentication.model.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findOikeustulkkiYhteystietoArvo;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
 import static org.joda.time.LocalDate.now;
 

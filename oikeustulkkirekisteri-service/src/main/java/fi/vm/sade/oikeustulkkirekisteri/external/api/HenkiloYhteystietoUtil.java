@@ -1,12 +1,12 @@
 package fi.vm.sade.oikeustulkkirekisteri.external.api;
 
-import fi.vm.sade.authentication.model.YhteystietoTyyppi;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.KOTIOSOITE_TYYPPI;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.OIKEUSTULKKIREKISTERI_TYYPPI;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.VTJ_JARJESTYS;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.util.CustomOrderComparator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class HenkiloYhteystietoUtil {
 
-    public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.isRemoved() && !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
+    public static final Predicate<YhteystiedotRyhmaDto> YT_RYHMA_FILTER_READ = r -> !r.getRyhmaKuvaus().equals(KOTIOSOITE_TYYPPI);
     private HenkiloYhteystietoUtil() {
     }
 
@@ -36,7 +36,7 @@ public class HenkiloYhteystietoUtil {
         return henkilo.getYhteystiedotRyhma().stream()
                 .sorted(comparing(YhteystiedotRyhmaDto::getRyhmaKuvaus, nullsLast(comparator.thenComparing(naturalOrder()))))
                 .filter(predicate)
-                .flatMap(yt -> yt.getYhteystiedot().stream())
+                .flatMap(yt -> yt.getYhteystieto().stream())
                 .filter(yt -> yt.getYhteystietoTyyppi() == tyyppi)
                 .filter(yt -> yt.getYhteystietoArvo() != null && !yt.getYhteystietoArvo().isEmpty());
     }

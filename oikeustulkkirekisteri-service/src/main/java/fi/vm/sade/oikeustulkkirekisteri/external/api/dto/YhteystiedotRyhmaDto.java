@@ -18,8 +18,7 @@ public class YhteystiedotRyhmaDto implements Serializable {
     private String ryhmaKuvaus;
     private String ryhmaAlkuperaTieto;
     private boolean readOnly;
-    private boolean removed = false;
-    private Set<YhteystiedotDto> yhteystiedot = new HashSet();
+    private Set<YhteystiedotDto> yhteystieto = new HashSet();
 
     public YhteystiedotRyhmaDto() {
     }

@@ -10,11 +10,6 @@
     <import resource="properties.xml"/>
     
     <bean id="casFriendlyCache" class="fi.vm.sade.authentication.cas.CasFriendlyCache"/>
-    <bean id="henkiloSystemAccountClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
-        <property name="serviceUrl" value="${authentication-service.baseUrl}/j_spring_cas_security_check"/>
-        <property name="username" value="${authentication-service.rekisteri.username}" />
-        <property name="password" value="${authentication-service.rekisteri.password}" />
-    </bean>
     <bean id="oppijanumerorekisteriSystemAccountClientCasInterceptor" class="fi.vm.sade.oikeustulkkirekisteri.external.interceptor.ProxyInterceptor">
         <property name="serviceUrl" value="${oppijanumerorekisteri-service.baseUrl}/j_spring_cas_security_check"/>
         <property name="username" value="${oppijanumerorekisteri-service.rekisteri.username}" />
@@ -29,20 +24,7 @@
         <property name="clientSubSystemCode" value="oikeustulkkireksiteri.oikeustulkkireksiteri-service.backend"/>
     </bean>
     <bean class="fi.vm.sade.oikeustulkkirekisteri.util.JacksonFeature" id="customJsonProvider"/>
-    
-    <jaxrs-client:client id="henkiloResourceServiceUserClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloApi"
-                         address="${authentication-service.baseUrl}" inheritHeaders="true">
-        <jaxrs-client:outInterceptors>
-            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
-            <ref bean="ophRequestHeaders"/>
-        </jaxrs-client:outInterceptors>
-        <jaxrs-client:inInterceptors>
-            <ref bean="henkiloSystemAccountClientCasInterceptor"/>
-        </jaxrs-client:inInterceptors>
-        <jaxrs-client:providers>
-            <ref bean="customJsonProvider"/>
-        </jaxrs-client:providers>
-    </jaxrs-client:client>
+
     <jaxrs-client:client id="oppijanumerorekisteriServiceUserClient" serviceClass="fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi"
                          address="${oppijanumerorekisteri-service.baseUrl}" inheritHeaders="true">
         <jaxrs-client:outInterceptors>

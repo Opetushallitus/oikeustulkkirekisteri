@@ -66,6 +66,7 @@ public class ProxyInterceptor extends AbstractPhaseInterceptor<Message> {
             auth.setTargetService(this.serviceUrl);
             auth.setAppClientUsername(this.username);
             auth.setAppClientPassword(this.password);
+            auth.setTicketCachePolicy(new NoOpTicketCachePolicy()); // oppijanumerorekisteri ei säilö tikettejä
             this.target = auth;
         } else if (this.devMode) {
             CasFriendlyCxfInterceptor f = new CasFriendlyCxfInterceptor();
