@@ -4,7 +4,6 @@ import fi.vm.sade.oikeustulkkirekisteri.external.api.KoodistoApi;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.KoodistoKoodiDto;
 import fi.vm.sade.oikeustulkkirekisteri.service.KoodistoService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.KoodiDto;
-import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +25,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Service
 @SuppressWarnings("TransactionalAnnotations")
-public class KoodistoServiceImpl extends AbstractService implements KoodistoService {
+public class KoodistoServiceImpl implements KoodistoService {
     private static final String EI_TIEDOSSA_MAAKUNTA = "99";
     private static final Function<KoodistoKoodiDto, KoodiDto> CONVERT_DTO = k -> new KoodiDto(k.getKoodiArvo(), k.getKoodiUri(), k.getNimi());
     private static final Comparator<Map<String,String>> NIMI_COMPARATOR = comparing((Map<String,String> m) -> m.get("FI"), nullsLast(naturalOrder()))

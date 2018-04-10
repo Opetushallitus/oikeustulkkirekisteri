@@ -4,7 +4,6 @@ import fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiCacheService;
-import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.slf4j.Logger;
@@ -40,7 +39,7 @@ import static org.joda.time.DateTime.now;
  */
 @Service
 @Profile("default")
-public class OikeustulkkiCacheServiceImpl extends AbstractService implements OikeustulkkiCacheService {
+public class OikeustulkkiCacheServiceImpl implements OikeustulkkiCacheService {
     public static final Comparator<? super HenkiloRestDto> BY_NAME = comparing(HenkiloRestDto::getSukunimi)
             .thenComparing(HenkiloRestDto::getSukunimi);
     private static final Logger logger = LoggerFactory.getLogger(OikeustulkkiCacheServiceImpl.class);

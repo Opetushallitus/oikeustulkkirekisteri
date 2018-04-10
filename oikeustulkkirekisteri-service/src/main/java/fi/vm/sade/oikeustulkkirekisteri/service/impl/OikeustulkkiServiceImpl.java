@@ -36,7 +36,7 @@ import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiVirkailijaHakuDt
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiVirkailijaListDto;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiVirkailijaViewDto;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.OsoiteEditDto;
-import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
+import fi.vm.sade.oikeustulkkirekisteri.util.AuditUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.joda.time.Period;
@@ -107,7 +107,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * Time: 14.11
  */
 @Service
-public class OikeustulkkiServiceImpl extends AbstractService implements OikeustulkkiService {
+public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     private static final Logger logger = LoggerFactory.getLogger(OikeustulkkiServiceImpl.class);
     
     private static final Integer DEFAULT_COUNT = 20;
@@ -183,7 +183,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         oikeustulkki.setPaattyy(oikeustulkki.getAlkaa().plus(Period.parse(oikeustulkkiVoimassaolo)));
         updateHenkilo(oikeustulkki.getTulkki().getHenkiloOid(), dto);
         oikeustulkkiRepository.save(oikeustulkki);
-        audit.log(getUser(), OIKEUSTULKKI_CREATE, new Target.Builder()
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_CREATE, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -218,7 +218,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         muokkaus.setOikeustulkki(oikeustulkki);
         muokkaus.setMuokkausviesti(dto.getMuokkausviesti());
         oikeustulkki.getMuokkaukset().add(muokkaus);
-        audit.log(getUser(), OIKEUSTULKKI_UPDATE, new Target.Builder()
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_UPDATE, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -231,7 +231,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     public void deleteOikeustulkki(long id) {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuById(id));
         oikeustulkki.markPoistettu(SecurityContextHolder.getContext().getAuthentication().getName());
-        audit.log(getUser(), OIKEUSTULKKI_DELETE, new Target.Builder()
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_DELETE, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -244,7 +244,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         OikeustulkkiVirkailijaViewDto dto = produceViewDto(oikeustulkki);
         dto.setAiemmat(oikeustulkkiRepository.listAiemmatEiPoistetutById(id).stream().map(this::produceViewDto).collect(toList()));
         dto.setUusinId(oikeustulkkiRepository.getUusinUuudempiEiPoistettuById(oikeustulkki.getId()));
-        audit.log(getUser(), OIKEUSTULKKI_READ, new Target.Builder()
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_READ, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -404,7 +404,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
         List<OikeustulkkiVirkailijaListDto> results = doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto), true),
                 this::combineHenkiloVirkailija);
-        audit.log(getUser(), OIKEUSTULKKI_READ, new Target.Builder()
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_READ, new Target.Builder()
                 .setField("henkiloOids", results.stream().map(OikeustulkkiVirkailijaListDto::getHenkiloOid).collect(joining(",")))
                 .build(), new Changes.Builder().build());
         return results;

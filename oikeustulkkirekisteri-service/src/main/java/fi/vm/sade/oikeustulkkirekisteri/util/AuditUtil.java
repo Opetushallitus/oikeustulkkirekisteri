@@ -1,7 +1,5 @@
 package fi.vm.sade.oikeustulkkirekisteri.util;
 
-import fi.vm.sade.auditlog.ApplicationType;
-import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.auditlog.User;
 import fi.vm.sade.javautils.http.HttpServletRequestUtils;
 import org.ietf.jgss.GSSException;
@@ -15,14 +13,12 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Optional;
 
-/**
- * User: tommiratamaa
- * Date: 13.6.2016
- * Time: 13.42
- */
-public abstract class AbstractService {
+public final class AuditUtil {
 
-    protected User getUser() {
+    private AuditUtil() {
+    }
+
+    public static User getUser() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         InetAddress inetAddress = getInetAddress(request);
         String session = request.getSession().getId();

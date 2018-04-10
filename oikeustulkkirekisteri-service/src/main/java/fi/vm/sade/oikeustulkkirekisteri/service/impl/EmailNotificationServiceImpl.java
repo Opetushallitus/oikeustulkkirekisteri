@@ -12,7 +12,7 @@ import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.IdHolderDto;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.EmailNotificationService;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiCacheService;
-import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
+import fi.vm.sade.oikeustulkkirekisteri.util.AuditUtil;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailMessage;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
@@ -50,7 +50,7 @@ import static org.joda.time.LocalDate.now;
  * Time: 14.06
  */
 @Service
-public class EmailNotificationServiceImpl extends AbstractService implements EmailNotificationService {
+public class EmailNotificationServiceImpl implements EmailNotificationService {
     private static final Logger logger = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
 
     private static final String DEFAULT_LANGUAGE_CODE = "fi";
@@ -145,7 +145,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
             IdHolderDto result = ryhmasahkopostiClient.sendEmail(emailData);
             logger.info("Sent email {}", result);
             muistutus.setLahetetty(DateTime.now());
-            audit.log(getUser(), OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL, new Target.Builder()
+            audit.log(AuditUtil.getUser(), OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL, new Target.Builder()
                     .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                     .setField("oikeustulkkiId", String.valueOf(id))
                     .build(), new Changes.Builder().build());
