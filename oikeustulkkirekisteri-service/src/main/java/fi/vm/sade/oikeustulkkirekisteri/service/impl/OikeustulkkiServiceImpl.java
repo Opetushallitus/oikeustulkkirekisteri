@@ -1,5 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
+import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.auditlog.Target;
 import fi.vm.sade.generic.common.ValidationException;
@@ -126,6 +127,9 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     @Autowired
     private CustomFlushRepository customFlushRepository;
 
+    @Autowired
+    private Audit audit;
+
     @Value("${oikeustulkki.tehtavanimike:Oikeustulkki}")
     private String oikeustulkkiTehtavanimike;
     
@@ -179,7 +183,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         oikeustulkki.setPaattyy(oikeustulkki.getAlkaa().plus(Period.parse(oikeustulkkiVoimassaolo)));
         updateHenkilo(oikeustulkki.getTulkki().getHenkiloOid(), dto);
         oikeustulkkiRepository.save(oikeustulkki);
-        auditLog.log(getUser(), OIKEUSTULKKI_CREATE, new Target.Builder()
+        audit.log(getUser(), OIKEUSTULKKI_CREATE, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -214,7 +218,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         muokkaus.setOikeustulkki(oikeustulkki);
         muokkaus.setMuokkausviesti(dto.getMuokkausviesti());
         oikeustulkki.getMuokkaukset().add(muokkaus);
-        auditLog.log(getUser(), OIKEUSTULKKI_UPDATE, new Target.Builder()
+        audit.log(getUser(), OIKEUSTULKKI_UPDATE, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -227,7 +231,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     public void deleteOikeustulkki(long id) {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuById(id));
         oikeustulkki.markPoistettu(SecurityContextHolder.getContext().getAuthentication().getName());
-        auditLog.log(getUser(), OIKEUSTULKKI_DELETE, new Target.Builder()
+        audit.log(getUser(), OIKEUSTULKKI_DELETE, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -240,7 +244,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         OikeustulkkiVirkailijaViewDto dto = produceViewDto(oikeustulkki);
         dto.setAiemmat(oikeustulkkiRepository.listAiemmatEiPoistetutById(id).stream().map(this::produceViewDto).collect(toList()));
         dto.setUusinId(oikeustulkkiRepository.getUusinUuudempiEiPoistettuById(oikeustulkki.getId()));
-        auditLog.log(getUser(), OIKEUSTULKKI_READ, new Target.Builder()
+        audit.log(getUser(), OIKEUSTULKKI_READ, new Target.Builder()
                 .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                 .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
                 .build(), new Changes.Builder().build());
@@ -400,7 +404,7 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
         List<OikeustulkkiVirkailijaListDto> results = doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto), true),
                 this::combineHenkiloVirkailija);
-        auditLog.log(getUser(), OIKEUSTULKKI_READ, new Target.Builder()
+        audit.log(getUser(), OIKEUSTULKKI_READ, new Target.Builder()
                 .setField("henkiloOids", results.stream().map(OikeustulkkiVirkailijaListDto::getHenkiloOid).collect(joining(",")))
                 .build(), new Changes.Builder().build());
         return results;

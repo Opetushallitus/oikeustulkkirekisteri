@@ -21,7 +21,6 @@ import java.util.Optional;
  * Time: 13.42
  */
 public abstract class AbstractService {
-    protected Audit auditLog = new Audit(new LoggerImpl(), "oikeustulkkirekisteri", ApplicationType.VIRKAILIJA);
 
     protected User getUser() {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

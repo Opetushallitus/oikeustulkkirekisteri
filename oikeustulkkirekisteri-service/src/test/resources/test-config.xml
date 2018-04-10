@@ -44,6 +44,7 @@
 
     <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.service"/>
     <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.repository.custom"/>
+    <context:component-scan base-package="fi.vm.sade.oikeustulkkirekisteri.config"/>
     <tx:annotation-driven order="100"/>
     <cache:annotation-driven />
     <aop:aspectj-autoproxy  />

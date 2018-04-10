@@ -1,5 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
+import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.auditlog.Target;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
@@ -78,7 +79,10 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
 
     @Autowired
     private ApplicationContext applicationContext;
-    
+
+    @Autowired
+    private Audit audit;
+
     @Override
     @SuppressWarnings("TransactionalAnnotations")
     @Scheduled(fixedRateString = "${email.notification.send.rate.ms:"+ DEFAULT_CHECK_INTERVAL_MILLIS +"}",
@@ -141,7 +145,7 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
             IdHolderDto result = ryhmasahkopostiClient.sendEmail(emailData);
             logger.info("Sent email {}", result);
             muistutus.setLahetetty(DateTime.now());
-            auditLog.log(getUser(), OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL, new Target.Builder()
+            audit.log(getUser(), OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL, new Target.Builder()
                     .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                     .setField("oikeustulkkiId", String.valueOf(id))
                     .build(), new Changes.Builder().build());
