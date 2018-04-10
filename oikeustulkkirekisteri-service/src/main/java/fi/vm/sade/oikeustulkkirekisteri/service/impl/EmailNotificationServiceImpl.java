@@ -1,6 +1,7 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
-import fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation;
+import fi.vm.sade.auditlog.Changes;
+import fi.vm.sade.auditlog.Target;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
 import fi.vm.sade.oikeustulkkirekisteri.domain.SahkopostiMuistutus;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
@@ -38,6 +39,8 @@ import java.util.Locale;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findOikeustulkkiYhteystietoArvo;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
+
+import static fi.vm.sade.oikeustulkkirekisteri.util.OikeustulkkiOperation.OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL;
 import static org.joda.time.LocalDate.now;
 
 /**
@@ -138,9 +141,10 @@ public class EmailNotificationServiceImpl extends AbstractService implements Ema
             IdHolderDto result = ryhmasahkopostiClient.sendEmail(emailData);
             logger.info("Sent email {}", result);
             muistutus.setLahetetty(DateTime.now());
-            auditLog.log(builder(OikeustulkkiOperation.OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL)
-                    .oikeustulkkiId(id).henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
-                    .build());
+            auditLog.log(getUser(), OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL, new Target.Builder()
+                    .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
+                    .setField("oikeustulkkiId", String.valueOf(id))
+                    .build(), new Changes.Builder().build());
             muistutus.setSahkopostiId(Long.parseLong(result.getId()));
         } catch (ProcessingException|ClientErrorException e) {
             muistutus.setVirhe(e.getMessage());

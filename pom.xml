@@ -36,7 +36,7 @@
         <generic.version>9.4-SNAPSHOT</generic.version>
         <koodisto.api.version>6.3-SNAPSHOT</koodisto.api.version>
         <organisaatio.api.version>6.2-SNAPSHOT</organisaatio.api.version>
-        <auditlog.api.version>5.0.0-SNAPSHOT</auditlog.api.version>
+        <auditlog.api.version>8.0.0-SNAPSHOT</auditlog.api.version>
         <jackson.version>2.5.2</jackson.version>
         <postgresql.version>9.3-1100-jdbc41</postgresql.version>
         <spring.version>4.1.6.RELEASE</spring.version>
@@ -102,6 +102,11 @@
                 <groupId>fi.vm.sade</groupId>
                 <artifactId>auditlogger</artifactId>
                 <version>${auditlog.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>fi.vm.sade.java-utils</groupId>
+                <artifactId>java-http</artifactId>
+                <version>${java.utils.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
