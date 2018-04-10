@@ -11,6 +11,7 @@
             ignore-resource-not-found="true"
             properties-ref="defaultProps"/>
     <bean class="fi.vm.sade.oikeustulkkirekisteri.config.UrlConfiguration" id="urlConfiguration" />
+    <bean class="fi.vm.sade.oikeustulkkirekisteri.config.AuditConfiguration" id="auditConfiguration" />
     
     <bean id="defaultProps" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="properties">
