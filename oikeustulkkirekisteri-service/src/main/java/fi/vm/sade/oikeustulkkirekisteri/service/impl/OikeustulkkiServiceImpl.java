@@ -1,16 +1,42 @@
 package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
+import fi.vm.sade.auditlog.Audit;
+import fi.vm.sade.auditlog.Changes;
+import fi.vm.sade.auditlog.Target;
 import fi.vm.sade.generic.common.ValidationException;
-import fi.vm.sade.oikeustulkkirekisteri.domain.*;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Kielipari;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
+import fi.vm.sade.oikeustulkkirekisteri.domain.OikeustulkkiMuokkaus;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Tulkki;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
-import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.*;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloCreateDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.KielisyysDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystiedotRyhmaDto;
+import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.repository.TullkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.repository.custom.CustomFlushRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiCacheService;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiService;
-import fi.vm.sade.oikeustulkkirekisteri.service.dto.*;
-import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.JulkisetYhteystiedot;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.KieliPariDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiBaseDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiCreateDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiEditDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiHakuehto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiMuokkausHistoriaDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiPublicHakuDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiPublicListDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiPublicViewDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiVirkailijaHakuDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiVirkailijaListDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OikeustulkkiVirkailijaViewDto;
+import fi.vm.sade.oikeustulkkirekisteri.service.dto.OsoiteEditDto;
+import fi.vm.sade.oikeustulkkirekisteri.util.AuditUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.joda.time.Period;
@@ -25,27 +51,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static fi.vm.sade.auditlog.oikeustulkkirekisteri.OikeustulkkiOperation.*;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.KOKO_SUOMI;
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi.MAAKUNTA;
-import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.*;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findOikeustulkkiYhteystietoArvo;
+import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findVtjYhteystietoArvo;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.YhteystietojenAlkuperat.OIKEUSTULKKIREKISTERI_ALKUPERA;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.Yhteystietotyypit.OIKEUSTULKKIREKISTERI_TYYPPI;
-import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.*;
-import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
-import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.or;
-import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.retrying;
-import static java.util.Collections.singletonList;
-import static java.util.Comparator.comparing;
-import static java.util.Optional.ofNullable;
-import static java.util.stream.Collectors.*;
-import static org.joda.time.LocalDate.now;
-import static org.springframework.data.jpa.domain.Specifications.where;
-import fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_KATUOSOITE;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_KAUPUNKI;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_KUNTA;
@@ -53,6 +72,34 @@ import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyypp
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_POSTINUMERO;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_PUHELINNUMERO;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.eiPoistettu;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.henkiloOidIn;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.julkaisulupa;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.kieliparit;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.latest;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.toimiiMaakunnissa;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.tutkintoTyyppi;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.voimassa;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.voimassaoloRajausAlku;
+import static fi.vm.sade.oikeustulkkirekisteri.service.impl.OikeustulkkiHakuSpecificationBuilder.voimassaoloRajausLoppu;
+import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
+import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.or;
+import static fi.vm.sade.oikeustulkkirekisteri.util.FunctionalUtil.retrying;
+import static fi.vm.sade.oikeustulkkirekisteri.util.OikeustulkkiOperation.OIKEUSTULKKI_CREATE;
+import static fi.vm.sade.oikeustulkkirekisteri.util.OikeustulkkiOperation.OIKEUSTULKKI_DELETE;
+import static fi.vm.sade.oikeustulkkirekisteri.util.OikeustulkkiOperation.OIKEUSTULKKI_READ;
+import static fi.vm.sade.oikeustulkkirekisteri.util.OikeustulkkiOperation.OIKEUSTULKKI_UPDATE;
+import static java.util.Collections.singletonList;
+import static java.util.Comparator.comparing;
+import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toSet;
+import static org.joda.time.LocalDate.now;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * User: tommiratamaa
@@ -60,7 +107,7 @@ import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyypp
  * Time: 14.11
  */
 @Service
-public class OikeustulkkiServiceImpl extends AbstractService implements OikeustulkkiService {
+public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     private static final Logger logger = LoggerFactory.getLogger(OikeustulkkiServiceImpl.class);
     
     private static final Integer DEFAULT_COUNT = 20;
@@ -79,6 +126,9 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
 
     @Autowired
     private CustomFlushRepository customFlushRepository;
+
+    @Autowired
+    private Audit audit;
 
     @Value("${oikeustulkki.tehtavanimike:Oikeustulkki}")
     private String oikeustulkkiTehtavanimike;
@@ -133,10 +183,10 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         oikeustulkki.setPaattyy(oikeustulkki.getAlkaa().plus(Period.parse(oikeustulkkiVoimassaolo)));
         updateHenkilo(oikeustulkki.getTulkki().getHenkiloOid(), dto);
         oikeustulkkiRepository.save(oikeustulkki);
-        auditLog.log(builder(OIKEUSTULKKI_CREATE)
-                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
-                .oikeustulkkiId(oikeustulkki.getId())
-                .build());
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_CREATE, new Target.Builder()
+                .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
+                .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
+                .build(), new Changes.Builder().build());
         oikeustulkkiCacheService.notifyHenkiloUpdated(oikeustulkki.getTulkki().getHenkiloOid());
         logger.info("OikeustulkkiService.createOikeustulkki DONE");
         return oikeustulkki.getId();
@@ -168,10 +218,10 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         muokkaus.setOikeustulkki(oikeustulkki);
         muokkaus.setMuokkausviesti(dto.getMuokkausviesti());
         oikeustulkki.getMuokkaukset().add(muokkaus);
-        auditLog.log(builder(OIKEUSTULKKI_UPDATE)
-                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
-                .oikeustulkkiId(oikeustulkki.getId())
-                .build());
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_UPDATE, new Target.Builder()
+                .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
+                .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
+                .build(), new Changes.Builder().build());
         oikeustulkkiCacheService.notifyHenkiloUpdated(oikeustulkki.getTulkki().getHenkiloOid());
         logger.info("OikeustulkkiService.editOikeustulkki id={} DONE", dto.getId());
     }
@@ -181,10 +231,10 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     public void deleteOikeustulkki(long id) {
         Oikeustulkki oikeustulkki = found(oikeustulkkiRepository.findEiPoistettuById(id));
         oikeustulkki.markPoistettu(SecurityContextHolder.getContext().getAuthentication().getName());
-        auditLog.log(builder(OIKEUSTULKKI_DELETE)
-                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
-                .oikeustulkkiId(oikeustulkki.getId())
-                .build());
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_DELETE, new Target.Builder()
+                .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
+                .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
+                .build(), new Changes.Builder().build());
     }
 
     @Override
@@ -194,10 +244,10 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
         OikeustulkkiVirkailijaViewDto dto = produceViewDto(oikeustulkki);
         dto.setAiemmat(oikeustulkkiRepository.listAiemmatEiPoistetutById(id).stream().map(this::produceViewDto).collect(toList()));
         dto.setUusinId(oikeustulkkiRepository.getUusinUuudempiEiPoistettuById(oikeustulkki.getId()));
-        auditLog.log(builder(OIKEUSTULKKI_READ)
-                .henkiloOid(oikeustulkki.getTulkki().getHenkiloOid())
-                .oikeustulkkiId(oikeustulkki.getId())
-                .build());
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_READ, new Target.Builder()
+                .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
+                .setField("oikeustulkkiId", String.valueOf(oikeustulkki.getId()))
+                .build(), new Changes.Builder().build());
         return dto;
     }
 
@@ -354,9 +404,9 @@ public class OikeustulkkiServiceImpl extends AbstractService implements Oikeustu
     public List<OikeustulkkiVirkailijaListDto> haeVirkailija(OikeustulkkiVirkailijaHakuDto hakuDto) {
         List<OikeustulkkiVirkailijaListDto> results = doHaku(new Haku<>(hakuDto, hakuDto.getTermi(), spec(hakuDto), true),
                 this::combineHenkiloVirkailija);
-        auditLog.log(builder(OIKEUSTULKKI_READ)
-            .henkiloOidList(results.stream().map(OikeustulkkiVirkailijaListDto::getHenkiloOid).collect(toList()))
-            .build());
+        audit.log(AuditUtil.getUser(), OIKEUSTULKKI_READ, new Target.Builder()
+                .setField("henkiloOids", results.stream().map(OikeustulkkiVirkailijaListDto::getHenkiloOid).collect(joining(",")))
+                .build(), new Changes.Builder().build());
         return results;
     }
 

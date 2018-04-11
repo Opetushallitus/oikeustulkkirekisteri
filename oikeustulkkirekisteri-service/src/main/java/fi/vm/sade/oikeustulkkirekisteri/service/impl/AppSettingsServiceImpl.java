@@ -18,7 +18,6 @@ package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 
 import fi.vm.sade.oikeustulkkirekisteri.service.AppSettingsService;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.AppSettingsDto;
-import fi.vm.sade.oikeustulkkirekisteri.util.AbstractService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.EmbeddedValueResolverAware;
@@ -38,7 +37,7 @@ import java.util.regex.Pattern;
  */
 @Service
 @SuppressWarnings("TransactionalAnnotations")
-public class AppSettingsServiceImpl extends AbstractService implements AppSettingsService,
+public class AppSettingsServiceImpl implements AppSettingsService,
         EmbeddedValueResolverAware {
     private static final Pattern EXPRESSION  =  Pattern.compile("\\$\\{(.*?)\\}");
     private final Logger logger  =  LoggerFactory.getLogger(getClass());

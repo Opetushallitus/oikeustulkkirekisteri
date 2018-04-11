@@ -19,8 +19,8 @@ log4j.appender.FILE.MaxBackupIndex=20
 {% endraw %}
 
 # Audit logger configuration
-log4j.additivity.fi.vm.sade.auditlog.Audit=false
-log4j.logger.fi.vm.sade.auditlog.Audit=INFO, AUDIT
+log4j.additivity.fi.vm.sade.oikeustulkkirekisteri.util.LoggerImpl=false
+log4j.logger.fi.vm.sade.oikeustulkkirekisteri.util.LoggerImpl=INFO, AUDIT
 log4j.appender.AUDIT=org.apache.log4j.RollingFileAppender
 log4j.appender.AUDIT.File=${user.home}/tomcat/logs/auditlog_oikeustulkkirekisteri.log
 log4j.appender.AUDIT.Append=true
