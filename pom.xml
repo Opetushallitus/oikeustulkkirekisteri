@@ -477,14 +477,14 @@
     <repositories>
         <repository>
             <id>oph-sade-artifactory-snapshots</id>
-            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-snapshot-local</url>
+            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-snapshot-local</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
         </repository>
         <repository>
             <id>oph-sade-artifactory-releases</id>
-            <url>https://artifactory.oph.ware.fi/artifactory/oph-sade-release-local</url>
+            <url>https://artifactory.opintopolku.fi/artifactory/oph-sade-release-local</url>
         </repository>
         <repository>
             <id>repository.jboss.org</id>
@@ -570,7 +570,7 @@
                                 <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
-buildNumber=${build}
+buildNumber=${buildNumber}
 branchName=${branch}
 vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}

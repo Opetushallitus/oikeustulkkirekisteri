@@ -1,0 +1,38 @@
+sudo: required
+language: java
+jdk:
+  - oraclejdk8
+services:
+  - docker
+cache:
+  directories:
+    - $HOME/.m2
+env:
+  global:
+    # AWS_ACCESS_KEY_ID
+    - secure: "lUTvhjC9NsMh4RQL2VR7UHcNxH8AUKezTfNXiX6KH0+iGKbT5xb4a3rl7yHmFidCfmOTJgFFR0clrFjUfsW1NKUXUtXzbov4nevBMCLWP7gSKRc9vQU0HIeRHC0Fs7BjCsgFxG/S3r4dCm9WLmQHj394g3zMMiJgHF8A8pH6XNor+xFITp81ZJpgFWGbRDWVlo2/TmsdBvzKnsloSFO9cIhlOO2Cx50XjDtxceLprgYg5jhuv/SqApIrcogCNUGrAl7Oosz5bSwzx76lpdxnIOmczjJDiU9aumcZgfoCknx4t8ySlCyCuANpqzDosx8Yv3jrA+OE3yitJRoOVMoX1koVyOP/HLTGcpI9tM6iYnESGhDU2wbpfkdNRCBMUkPUugxw2SIX1ThbAoLCLX2CWyJmLyyasrKX0CkZkCl3fkgJi9MZLCiFEZf/SfpJFSvLfYl82OPtCKW6HFkBI4+Hre6/KYroDg2TrHf+sokmG3u69lY6jPl1jKq4k6ainCmIAjPji0JQtxTGuy3zefm8f6qyKQrynyO5hq36lwgA6I7/ya8pOxlKB80vuDtRVWFiLR9kJUvQg9+gYqiTQb22KSjKO3DjD5xnYIBQouJPG1cps/Wy0glJm7kZ8DltEzdp6nXAUT0Lg/mnagTUZS9Qho5TxHbPNu00rvb+c0i6a8o="
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "gWul1exYtO8fRuWqiBihOaEezUUk/yM9oLF1uFNpIWwoDQ9SlrQkKEt8b4m5gi3trzOilFVoVCvwHXEsjtF7e7Q54RW2wZdmpHf18HNqfQPq/sZhOUSOFskdkw0sZ9VBpLVKJEt/AXv/hb8Nadb3hSGgLhD3dWav4XQu+4xD1FORMiK/YHxPflfaIP4t0EYrfNemj713vB7nQflU+3GyVRYPJ8VsjOgawVORYnXEvr/OUA74OKQuEtD7/GrIXw36LdhYzwM0ls57sgngC/F87qBu8OO2d3YgHkwSgEKNygHEXstZTp1/hjd7q+rw8LsE2p6IqTu09GnDF8xUVaOGZ5P1yyB/AxIZGwmCG7yXEqhP8/xUUlQk+H2QgE9IJvhUuSikVm40IIMZDGp07t4J+CVkZiRAoIgh1UCbqCS0cf8etBhzsN/Um9KHJvVlYxxM43zf0K2LkQFVDGYIgxIPg7jO4ciUv/B5+IO3Y/aX0wY/SE10TWvWSEcwUa7zxzyFCr343sAQ/VzSYfPNmRm9DOKB+spIe8LVfemVtylpLgCZ0KUwA4X+yTlSlMAvCkDix1EKHY8urom7AgZZ05g2WnDH+pI/rw6kB8K+mqbEiyBOkvR6IAH6vRrpQT2lAPRBbQ/iwEjEL0+iMQbqTpCt5Zb6gnecCsHaCUiXDOhJv5w="
+
+install:
+  - git clone https://github.com/Opetushallitus/ci-tools.git
+  - source ci-tools/common/setup-tools.sh
+  - export ARTIFACT_NAME="oikeustulkkirekisteri"
+
+script:
+  - mvn clean install -B -Dbranch=${TRAVIS_BRANCH} -Drevision=${TRAVIS_COMMIT} -DbuildNumber=${TRAVIS_BUILD_NUMBER}
+
+  - mv oikeustulkkirekisteri-service/target/oikeustulkkirekisteri-service.war $DOCKER_BUILD_DIR/artifact/oikeustulkkirekisteri-service.war
+  - mv oikeustulkkirekisteri-ui/target/oikeustulkkirekisteri-ui-*.war $DOCKER_BUILD_DIR/artifact/oikeustulkkirekisteri-ui.war
+  - mv oikeustulkkirekisteri-public-ui/target/oikeustulkkirekisteri-public-ui-*.war $DOCKER_BUILD_DIR/artifact/oikeustulkkirekisteri-public-ui.war
+  - cp -vr src/main/resources/oph-configuration $DOCKER_BUILD_DIR/config/
+
+  - export BASE_IMAGE="base-legacy:0.1"
+  - ./ci-tools/common/pull-image.sh
+  - ./ci-tools/build/build-war.sh $ARTIFACT_NAME
+
+deploy:
+  - provider: script
+    script: ./ci-tools/build/upload-image.sh $ARTIFACT_NAME
+    on:
+      all_branches: true
