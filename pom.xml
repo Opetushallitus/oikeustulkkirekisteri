@@ -38,7 +38,7 @@
         <organisaatio.api.version>6.2-SNAPSHOT</organisaatio.api.version>
         <auditlog.api.version>8.0.0-SNAPSHOT</auditlog.api.version>
         <jackson.version>2.5.2</jackson.version>
-        <postgresql.version>9.3-1100-jdbc41</postgresql.version>
+        <postgresql.version>42.2.5</postgresql.version>
         <spring.version>4.1.6.RELEASE</spring.version>
         <spring.security.version>3.2.7.RELEASE</spring.security.version>
         <spring.data.jpa.version>1.7.2.RELEASE</spring.data.jpa.version>
