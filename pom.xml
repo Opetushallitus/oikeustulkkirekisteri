@@ -72,7 +72,7 @@
         <joda.version>2.2</joda.version>
         <organisaatio.api.version>2015-13</organisaatio.api.version>
         <java.utils.cxf.version>0.1.0-SNAPSHOT</java.utils.cxf.version>
-        <java.utils.http.version>0.1.2-SNAPSHOT</java.utils.http.version>
+        <java.utils.http.version>0.1.4-SNAPSHOT</java.utils.http.version>
         <java.utils.userdetails.version>0.1.0-SNAPSHOT</java.utils.userdetails.version>
 
         <findbugs.version>1.3.2</findbugs.version>
