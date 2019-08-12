@@ -26,7 +26,7 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstra
   uiSelectConfig.theme = 'bootstrap';
   uiSelectConfig.matcher = (term:string, text:string) => term && text.toLowerCase().substr(0, term.length) == term.toLowerCase();
 }]).run(['$http', '$cookies', ($http, $cookies) => {
-  $http.defaults.headers.common['clientSubSystemCode'] = "oikeustulkkirekisteri.oikeustulkkirekisteri-ui.frontend";
+  $http.defaults.headers.common['Caller-Id'] = "1.2.246.562.10.00000000001.oikeustulkkirekisteri-ui";
   if($cookies['CSRF']) {
     $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
   }
