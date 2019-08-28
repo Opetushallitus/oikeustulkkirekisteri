@@ -366,7 +366,17 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
                     .map(mk -> new Sijainti(oikeustulkki, MAAKUNTA, mk)).collect(toList()));
         }
         oikeustulkki.getKielet().addAll(dto.getKieliParit().stream()
-            .map(kp -> new Kielipari(oikeustulkki, new Kieli(kp.getKielesta()), new Kieli(kp.getKieleen()))).collect(toList()));
+            .map(kp ->
+                new Kielipari(
+                    oikeustulkki,
+                    new Kieli(kp.getKielesta()),
+                    new Kieli(kp.getKieleen()),
+                    kp.getVoimassaoloAlkaa(),
+                    kp.getVoimassaoloPaattyy()
+                )
+            ).collect(toList())
+        );
+
         return oikeustulkki;
     }
 
@@ -396,6 +406,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         osoite.setPostitoimipaikka(findVtjYhteystietoArvo(henkilo, YHTEYSTIETO_KUNTA).orElse(null));
         to.setOsoite(osoite);
         to.setKieliParit(convert(from.getKielet().stream()));
+
         return to;
     }
     
@@ -490,7 +501,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     }
 
     private List<KieliPariDto> convert(Stream<Kielipari> from) {
-        return from.map(kp -> new KieliPariDto(kp.getKielesta().getKoodi(), kp.getKieleen().getKoodi()))
+        return from.map(kp -> new KieliPariDto(kp.getKielesta().getKoodi(), kp.getKieleen().getKoodi(), kp.getVoimassaoloAlkaa(), kp.getVoimassaoloPaattyy()))
                 .sorted(comparing(KieliPariDto::getKielesta).thenComparing(KieliPariDto::getKieleen))
                 .collect(toList());
     }
