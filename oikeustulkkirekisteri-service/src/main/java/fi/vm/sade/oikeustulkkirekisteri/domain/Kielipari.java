@@ -6,7 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+
+import org.joda.time.LocalDate;
 import java.io.Serializable;
+
+import org.hibernate.annotations.Type;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -30,16 +34,26 @@ public class Kielipari implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oikeustulkki", nullable = false)
     private Oikeustulkki oikeustulkki;
-    
+
+    @Type(type = "localDate")
+    @Column(name = "voimassaoloAlkaa",   nullable = false)
+    private LocalDate voimassaoloAlkaa;
+
+    @Type(type = "localDate")
+    @Column(name = "voimassaoloPaattyy", nullable = false)
+    private LocalDate voimassaoloPaattyy;
+
     @AttributeOverrides(@AttributeOverride(name = "koodi", column = @Column(name = "kielesta", nullable = false, updatable = false)))
     private Kieli kielesta;
-    
+
     @AttributeOverrides(@AttributeOverride(name = "koodi", column = @Column(name = "kieleen", nullable = false, updatable = false)))
     private Kieli kieleen;
 
-    public Kielipari(Oikeustulkki oikeustulkki, Kieli kielesta, Kieli kieleen) {
+    public Kielipari(Oikeustulkki oikeustulkki, Kieli kielesta, Kieli kieleen, LocalDate voimassaoloAlkaa, LocalDate voimassaoloPaattyy) {
         this.oikeustulkki = oikeustulkki;
         this.kielesta = kielesta;
         this.kieleen = kieleen;
+        this.voimassaoloAlkaa = voimassaoloAlkaa;
+        this.voimassaoloPaattyy = voimassaoloPaattyy;
     }
 }

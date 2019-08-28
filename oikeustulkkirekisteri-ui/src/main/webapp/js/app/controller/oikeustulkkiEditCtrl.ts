@@ -54,7 +54,8 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
     $scope.addKielipari = () => {
       const kielipari:Kielipari = {
         kielesta: $scope.kielesta.selected,
-        kieleen: $scope.kieleen.selected
+        kieleen: $scope.kieleen.selected,
+        voimassaoloAlkaa: new Date().toDateString()
       };
       if (kielipari.kielesta != kielipari.kieleen) {
         var kielipariAlreadyExists = _.some($scope.tulkki.kieliparit, (kpari) => {

@@ -40,7 +40,7 @@ public class DomainTest extends AbstractIntegrationTest {
         ot.setPaattyy(now().plusYears(5));
         ot.setLisatiedot("Lisätiedot");
         ot.getSijainnit().add(new Sijainti(ot, Tyyppi.KOKO_SUOMI));
-        ot.getKielet().add(new Kielipari(ot, new Kieli("fi"), new Kieli("sv")));
+        ot.getKielet().add(new Kielipari(ot, new Kieli("fi"), new Kieli("sv"), now(), now()));
         oikeustulkkiRepository.save(ot);
         assertNotNull(ot.getId());
         assertNotNull(ot.getTulkki().getId());

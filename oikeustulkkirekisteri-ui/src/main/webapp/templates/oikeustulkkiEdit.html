@@ -186,11 +186,37 @@
           <div class="col-sm-8">
               <div>
                   <p ng-repeat="kielipari in tulkki.kieliparit">
-                      {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}
-                      <button type="button" class="btn btn-default remove-pair-btn btn-xs"
-                              ng-click="removeKielipari(kielipari)">
-                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                      </button>
+                      <div class="col-sm-7">
+                            {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}
+                      </div>
+                      <div class="form-group col-sm-2">
+                          <label for="kielipariAlkaa" class="col-sm-2 control-label required" tt="oikeustulkki_alku_pvm">Alku pvm</label>
+                          <div class="col-sm-8">
+                              <input class="form-control" ng-model="kielipari.voimassaoloAlkaa" id="kielipariAlkaa" required date-time min-view="date"
+                                     view="date" format="dd.MM.yyyy">
+                              <div ng-if="showErrors" ng-messages="kielipari.voimassaoloAlkaa.$error" role="alert" class="error-msg">
+                                  <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
+                                  <div ng-message="custom">{{kielipari.voimassaoloAlkaa.$customError}}</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="form-group col-sm-2">
+                          <label for="kielipariPaattyy" class="col-sm-2 control-label required" tt="oikeustulkki_paattyy_pvm">Alku pvm</label>
+                          <div class="col-sm-8">
+                              <input class="form-control" ng-model="kielipari.voimassaoloPaattyy" id="kielipariPaattyy" required date-time min-view="date"
+                                     view="date" format="dd.MM.yyyy">
+                              <div ng-if="showErrors" ng-messages="kielipari.voimassaoloPaattyy.$error" role="alert" class="error-msg">
+                                  <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
+                                  <div ng-message="custom">{{kielipari.voimassaoloPaattyy.$customError}}</div>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-sm-1">
+                          <button type="button" class="btn btn-default remove-pair-btn btn-xs"
+                                  ng-click="removeKielipari(kielipari)">
+                              <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                          </button>
+                      </div>
                   </p>
               </div>
 

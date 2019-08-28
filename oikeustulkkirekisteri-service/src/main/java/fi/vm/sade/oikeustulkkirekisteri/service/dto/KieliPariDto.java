@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.joda.time.LocalDate;
 import java.io.Serializable;
 
 /**
@@ -17,4 +18,7 @@ import java.io.Serializable;
 public class KieliPariDto implements Serializable {
     private String kielesta;
     private String kieleen;
+
+    private LocalDate voimassaoloAlkaa;
+    private LocalDate voimassaoloPaattyy;
 }
