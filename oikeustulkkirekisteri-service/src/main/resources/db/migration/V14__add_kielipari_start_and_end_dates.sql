@@ -1,2 +1,2 @@
-ALTER TABLE kielipari ADD COLUMN voimassaoloAlkaa DATE NOT NULL;
-ALTER TABLE kielipari ADD COLUMN voimassaoloPaattyy DATE NOT NULL;
+ALTER TABLE kielipari ADD COLUMN voimassaolo_alkaa   DATE;
+ALTER TABLE kielipari ADD COLUMN voimassaolo_paattyy DATE;
