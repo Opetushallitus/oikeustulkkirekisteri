@@ -36,11 +36,11 @@ public class Kielipari implements Serializable {
     private Oikeustulkki oikeustulkki;
 
     @Type(type = "localDate")
-    @Column(name = "voimassaoloAlkaa",   nullable = false)
+    @Column(name = "voimassaolo_alkaa",   nullable = false)
     private LocalDate voimassaoloAlkaa;
 
     @Type(type = "localDate")
-    @Column(name = "voimassaoloPaattyy", nullable = false)
+    @Column(name = "voimassaolo_paattyy", nullable = false)
     private LocalDate voimassaoloPaattyy;
 
     @AttributeOverrides(@AttributeOverride(name = "koodi", column = @Column(name = "kielesta", nullable = false, updatable = false)))
