@@ -22,6 +22,9 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
       
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
       $scope.kieleen = {selected: $scope.kielet[1]};
+      $scope.voimassaoloAlkaa = {selected: new Date().toDateString()};
+      $scope.voimassaoloPaattyy = {selected: new Date().toDateString()};
+
       _.map($scope.kielet, kp => $scope.kieletByArvo[kp.arvo] = kp);
 
       KoodistoService.getMaakunnat().then(r2 => {
@@ -34,7 +37,7 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
             delete result.id;
           }
           result.kieliparit = _.map(result.kieliParit, (kielipari):Kielipari => {
-            return {kielesta: $scope.kieletByArvo[kielipari.kielesta], kieleen: $scope.kieletByArvo[kielipari.kieleen]};
+            return {kielesta: $scope.kieletByArvo[kielipari.kielesta], kieleen: $scope.kieletByArvo[kielipari.kieleen], voimassaoloAlkaa: kielipari.voimassaoloAlkaa, voimassaoloPaattyy: kielipari.voimassaoloPaattyy};
           });
           result.toimintaAlue = _.map(result.maakunnat, maakunta => $scope.maakunnatByArvo[maakunta]);
 
@@ -55,7 +58,8 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
       const kielipari:Kielipari = {
         kielesta: $scope.kielesta.selected,
         kieleen: $scope.kieleen.selected,
-        voimassaoloAlkaa: new Date().toDateString()
+        voimassaoloAlkaa: $scope.voimassaoloAlkaa.selected,
+        voimassaoloPaattyy: $scope.voimassaoloPaattyy.selected
       };
       if (kielipari.kielesta != kielipari.kieleen) {
         var kielipariAlreadyExists = _.some($scope.tulkki.kieliparit, (kpari) => {

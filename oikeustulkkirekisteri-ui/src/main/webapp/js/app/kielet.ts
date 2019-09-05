@@ -7,6 +7,8 @@ interface Kieli{
 interface Kielipari {
   kielesta:Kieli;
   kieleen:Kieli;
+  voimassaoloAlkaa: string,
+  voimassaoloPaattyy: string,
 }
 
 const kielipariMatch = (a:Kielipari,b:Kielipari):boolean =>(a.kieleen === b.kieleen || a.kieleen === b.kielesta) &&
