@@ -22,6 +22,9 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
       
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
       $scope.kieleen = {selected: $scope.kielet[1]};
+      $scope.voimassaoloAlkaa = {selected: new Date()};
+      $scope.voimassaoloPaattyy = {selected: new Date()};
+
       _.map($scope.kielet, kp => $scope.kieletByArvo[kp.arvo] = kp);
 
       KoodistoService.getMaakunnat().then(r2 => {
@@ -33,9 +36,15 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
           if ($scope.action == 'create') {
             delete result.id;
           }
+
+          console.log("Result kieliparit lenght: " + result.kieliParit.length);
+
           result.kieliparit = _.map(result.kieliParit, (kielipari):Kielipari => {
-            return {kielesta: $scope.kieletByArvo[kielipari.kielesta], kieleen: $scope.kieletByArvo[kielipari.kieleen]};
+            return {kielesta: $scope.kieletByArvo[kielipari.kielesta], kieleen: $scope.kieletByArvo[kielipari.kieleen], voimassaoloAlkaa: kielipari.voimassaoloAlkaa, voimassaoloPaattyy: kielipari.voimassaoloPaattyy};
           });
+
+          console.log("Result kieliparit lenght mapped: " + result.kieliParit.length);
+
           result.toimintaAlue = _.map(result.maakunnat, maakunta => $scope.maakunnatByArvo[maakunta]);
 
           if ($scope.action == 'create') {
@@ -55,8 +64,12 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
       const kielipari:Kielipari = {
         kielesta: $scope.kielesta.selected,
         kieleen: $scope.kieleen.selected,
-        voimassaoloAlkaa: new Date().toDateString()
+        voimassaoloAlkaa: $scope.voimassaoloAlkaa.selected,
+        voimassaoloPaattyy: $scope.voimassaoloPaattyy.selected
       };
+
+      console.log("Result ADD kielipari" + JSON.stringify(kielipari));
+
       if (kielipari.kielesta != kielipari.kieleen) {
         var kielipariAlreadyExists = _.some($scope.tulkki.kieliparit, (kpari) => {
           return kielipariMatch(kielipari, kpari);

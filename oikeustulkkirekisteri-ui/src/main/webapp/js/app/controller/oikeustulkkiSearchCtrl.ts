@@ -83,7 +83,7 @@ angular.module('registryApp').controller('oikeustulkkiSearchCtrl', ["$scope", "P
     };
 
     $scope.addKielipari = () => {
-      const kielipari:Kielipari = {kielesta: $scope.kielesta.selected, kieleen: $scope.kieleen.selected};
+      const kielipari:Kielipari = {kielesta: $scope.kielesta.selected, kieleen: $scope.kieleen.selected, voimassaoloAlkaa: null, voimassaoloPaattyy: null};
 
       var kielipariAlreadyExists = _.some($scope.kieliparit, (kpari) => {
         return kielipariMatch(kielipari, kpari);
