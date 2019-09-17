@@ -67,7 +67,7 @@
         <jetty.version>9.2.11.v20150529</jetty.version>
         <ehcache.version>2.5.0</ehcache.version>
         <jackson.version>1.9.13</jackson.version>
-        <fasterxml.jackson.version>2.4.2</fasterxml.jackson.version>
+        <fasterxml.jackson.version>2.10.0.pr2</fasterxml.jackson.version>
         <jersey.version>2.10.3</jersey.version>
         <joda.version>2.2</joda.version>
         <organisaatio.api.version>2015-13</organisaatio.api.version>
@@ -83,7 +83,7 @@
         <checkstyle.failsOnError>true</checkstyle.failsOnError>
         <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
         <checkstyle.configLocation><![CDATA[https://sonar.oph.ware.fi/sonar/profiles/export?format=checkstyle&amp;language=java&amp;name=SonarWayWithFindbugsAndOPHCheckstyle]]></checkstyle.configLocation>
-        <buildversion_prefix />
+        <buildversion_prefix/>
     </properties>
 
 
@@ -566,7 +566,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
+                                <echo message="writing target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
                                 <echo file="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt">
                                     <![CDATA[artifactId=${project.artifactId}
 version=${project.version}
@@ -576,8 +576,8 @@ vcsRevision=${revision}
 buildTtime=${maven.build.timestamp}
 ]]>
                                 </echo>
-                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt" />
-                                <echo message="${buildversiontxt}" />
+                                <loadfile property="buildversiontxt" srcFile="target/${project.build.finalName}/${buildversion_prefix}buildversion.txt"/>
+                                <echo message="${buildversiontxt}"/>
                                 <echo file="target/mavenversion.txt">${project.version}</echo>
                             </target>
                         </configuration>
@@ -682,25 +682,25 @@ buildTtime=${maven.build.timestamp}
                                 </goals>
                                 <configuration>
                                     <target>
-                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
+                                        <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath"/>
                                         <if>
-                                            <available file="${project.build.directory}/classes/fi" />
+                                            <available file="${project.build.directory}/classes/fi"/>
                                             <then>
-                                                <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="maven.plugin.classpath" />
+                                                <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="maven.plugin.classpath"/>
 
-                                                <property name="findbugsclasspath" refid="maven.plugin.classpath" />
-                                                <property name="runtime_classpath" refid="maven.runtime.classpath" />
-                                                <property name="compile_classpath" refid="maven.compile.classpath" />
+                                                <property name="findbugsclasspath" refid="maven.plugin.classpath"/>
+                                                <property name="runtime_classpath" refid="maven.runtime.classpath"/>
+                                                <property name="compile_classpath" refid="maven.compile.classpath"/>
 
-                                                <mkdir dir="${project.build.directory}/findbugs" />
+                                                <mkdir dir="${project.build.directory}/findbugs"/>
                                                 <echo>Using localRepository: ${settings.localRepository}</echo>
                                                 <findbugs output="html" outputFile="${project.build.directory}/findbugs/findbugs.html" classpath="${findbugsclasspath}" pluginlist="${settings.localRepository}/net/sourceforge/findbugs/coreplugin/${findbugs.version}/coreplugin-${findbugs.version}.jar" jvmargs="-Xmx256m" reportLevel="medium" effort="default" failOnError="true">
-                                                    <sourcePath location="${project.basedir}/src/main/java" />
-                                                    <class location="${project.build.directory}/classes" />
+                                                    <sourcePath location="${project.basedir}/src/main/java"/>
+                                                    <class location="${project.build.directory}/classes"/>
                                                     <auxClasspath>
-                                                        <path refid="maven.compile.classpath" />
-                                                        <path refid="maven.runtime.classpath" />
-                                                        <path refid="maven.plugin.classpath" />
+                                                        <path refid="maven.compile.classpath"/>
+                                                        <path refid="maven.runtime.classpath"/>
+                                                        <path refid="maven.plugin.classpath"/>
                                                     </auxClasspath>
                                                 </findbugs>
                                             </then>
