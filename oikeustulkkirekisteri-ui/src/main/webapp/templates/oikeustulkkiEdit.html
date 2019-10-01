@@ -162,7 +162,9 @@
             <div class="col-sm-8">
                 <div>
                     <p ng-repeat="kielipari in tulkki.kieliparit">
-                        {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}, {{kielipari.voimassaoloAlkaa}} - {{kielipari.voimassaoloPaattyy}}
+                        {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}},
+                        {{kielipari.voimassaoloAlkaa[2]}}.{{kielipari.voimassaoloAlkaa[1]}}.{{kielipari.voimassaoloAlkaa[0]}} -
+                        {{kielipari.voimassaoloPaattyy[2]}}.{{kielipari.voimassaoloPaattyy[1]}}.{{kielipari.voimassaoloPaattyy[0]}}
                         <button type="button" class="btn btn-default remove-pair-btn btn-xs" style="float: right;"
                                 ng-click="removeKielipari(kielipari)">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
