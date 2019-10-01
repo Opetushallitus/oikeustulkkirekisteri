@@ -2,7 +2,6 @@ package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ public class OikeustulkkiPublicListDto implements Serializable {
     private Long id;
     private String etunimet;
     private String sukunimi;
-    private LocalDate paattyy;
     private boolean kokoSuomi;
     private List<String> maakunnat = new ArrayList<>();
     private List<KieliPariDto> kieliParit = new ArrayList<>();

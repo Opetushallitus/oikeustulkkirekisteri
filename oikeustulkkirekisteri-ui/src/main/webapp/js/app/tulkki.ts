@@ -34,8 +34,6 @@ interface Tulkki{
   maakunnat?: string[];
   toimintaAlue?: Maakunta[];
   julkaisulupa?: boolean;
-  alkaa?: Date;
-  paattyy?: Date;
   muokkausviesti?: string
 }
 
@@ -52,12 +50,6 @@ const getTulkkiPostData = (tulkki:Tulkki) => {
       'voimassaoloPaattyy': kielipariPaattyy.getTime()
     };
   });
-  tulkki.alkaa = moment($('#alkaa').val(), 'DD.MM.YYYY').toDate();
-  postData.alkaa = tulkki.alkaa.getTime();
-  if (tulkki.paattyy) {
-    tulkki.paattyy = moment($('#paattyy').val(), 'DD.MM.YYYY').toDate();
-    postData.paattyy = tulkki.paattyy.getTime();
-  }
   postData.maakunnat = _.map(tulkki.toimintaAlue, 'arvo');
   return postData;
 };

@@ -6,17 +6,13 @@ import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki.TutkintoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.KieliRajaus;
-import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.*;
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Stream;
 
-import static java.util.stream.Stream.concat;
-import static java.util.stream.Stream.of;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -32,16 +28,6 @@ public class OikeustulkkiHakuSpecificationBuilder {
             ));
     
     private OikeustulkkiHakuSpecificationBuilder() {}
-    
-    public static Specification<Oikeustulkki> voimassa(LocalDate at) {
-        if (at == null) {
-            return null;
-        }
-        return (root, query, cb) -> cb.and(
-                cb.lessThanOrEqualTo(root.get("alkaa"), at),
-                cb.greaterThanOrEqualTo(root.get("paattyy"), at)
-            );
-    }
     
     public static Specification<Oikeustulkki> kieliparit(Collection<? extends KieliRajaus> kieliRajaus) {
         if (kieliRajaus == null || kieliRajaus.isEmpty()  || (kieliRajaus.size() == 1 && kieliRajaus.iterator().next() == null)) {
@@ -110,32 +96,6 @@ public class OikeustulkkiHakuSpecificationBuilder {
                     )
                 );
             })).reduce(where(null), Specifications::and);
-    }
-    
-    public static Specification<Oikeustulkki> latest(Specification<Oikeustulkki> specification) {
-        return (root, query, cb) -> {
-            Subquery<LocalDate> s = query.subquery(LocalDate.class);
-            Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
-            return cb.equal(root.get("alkaa"), s.select(cb.greatest((Path)t.get("alkaa")))
-                    .where(cb.and(
-                            cb.equal(t.join("tulkki").get("id"), root.join("tulkki").get("id")),
-                            specification.toPredicate(t, query, cb)
-            )));
-        };
-    }
-
-    public static Specification<Oikeustulkki> voimassaoloRajausAlku(LocalDate alku) {
-        if (alku == null) {
-            return null;
-        }
-        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("alkaa"), alku);
-    }
-
-    public static Specification<Oikeustulkki> voimassaoloRajausLoppu(LocalDate loppu) {
-        if (loppu == null) {
-            return null;
-        }
-        return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("alkaa"), loppu);
     }
     
     public static Specification<Oikeustulkki> tutkintoTyyppi(TutkintoTyyppi tyyppi) {

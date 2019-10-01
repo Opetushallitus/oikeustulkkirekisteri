@@ -1,5 +1,6 @@
 import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 import {Tulkki, newTulkki, getTulkkiPostData, isTulkkiKutsumanimiValid} from "../tulkki.ts";
+import moment = require("moment");
 
 angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$routeParams", "Page", "KoodistoService",
   "OikeustulkkiService", "$window", "$filter", '$rootScope', 'LocalisationService',
@@ -23,7 +24,7 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
       $scope.kieleen = {selected: $scope.kielet[1]};
       $scope.voimassaoloAlkaa = {selected: new Date()};
-      $scope.voimassaoloPaattyy = {selected: new Date()};
+      $scope.voimassaoloPaattyy = {selected: moment().add(5, 'years').toDate()};
 
       _.map($scope.kielet, kp => $scope.kieletByArvo[kp.arvo] = kp);
 
@@ -47,13 +48,6 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
 
           result.toimintaAlue = _.map(result.maakunnat, maakunta => $scope.maakunnatByArvo[maakunta]);
 
-          if ($scope.action == 'create') {
-            result.alkaa = new Date();
-            result.paattyy = null;
-          } else {
-            result.alkaa = new Date(result.alkaa[0], result.alkaa[1]-1, result.alkaa[2]);
-            result.paattyy = new Date(result.paattyy[0], result.paattyy[1]-1, result.paattyy[2]);
-          }
           $scope.tulkki = result;
         });
       });

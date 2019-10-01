@@ -117,8 +117,11 @@
              {{ getKieliNimi(kielipari.kielesta) }} - {{ getKieliNimi(kielipari.kieleen) }}
           </span>
         </td>
-        <td ng-class="{'expired': hasExpired(tulkki.paattyy)}">{{tulkki.alkaa[2]}}.{{tulkki.alkaa[1]}}.{{tulkki.alkaa[0]}} -
-          {{tulkki.paattyy[2]}}.{{tulkki.paattyy[1]}}.{{tulkki.paattyy[0]}}
+        <td class="multiline">
+          <span ng-repeat="kielipari in tulkki.kieliParit">
+            {{kielipari.voimassaoloAlkaa[2]}}.{{kielipari.voimassaoloAlkaa[1]}}.{{kielipari.voimassaoloAlkaa[0]}} -
+            {{kielipari.voimassaoloPaattyy[2]}}.{{kielipari.voimassaoloPaattyy[1]}}.{{kielipari.voimassaoloPaattyy[0]}}
+          </span>
         </td>
         <td class="multiline">
           <span ng-if="tulkki.kokoSuomi" tt="haku_koko_suomi">Koko Suomi</span>

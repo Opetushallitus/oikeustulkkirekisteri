@@ -1,5 +1,6 @@
 import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 import {Tulkki, newTulkki, getTulkkiPostData, isTulkkiKutsumanimiValid} from "../tulkki.ts";
+import moment = require("moment");
 
 angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "Page", "KoodistoService",
     "OikeustulkkiService", "$window", "$filter", '$rootScope', 'LocalisationService',
@@ -11,10 +12,11 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
             $scope.kielet = r.data;
             $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
             $scope.kieleen = {selected: $scope.kielet[1]};
+            $scope.voimassaoloAlkaa = {selected: new Date()};
+            $scope.voimassaoloPaattyy = {selected: moment().add(5, 'years').toDate()};
         });
 
         $scope.tulkki = newTulkki();
-        $scope.tulkki.alkaa = new Date();
         $scope.regions = [];
 
         KoodistoService.getMaakunnat().then(r => $scope.regions = r.data);
@@ -22,8 +24,8 @@ angular.module('registryApp').controller('oikeustulkkiCreateCtrl', ["$scope", "P
             const kielipari:Kielipari = {
                 kielesta: $scope.kielesta.selected,
                 kieleen: $scope.kieleen.selected,
-                voimassaoloAlkaa: null,
-                voimassaoloPaattyy: null,
+                voimassaoloAlkaa: $scope.voimassaoloAlkaa.selected,
+                voimassaoloPaattyy: $scope.voimassaoloPaattyy.selected
             };
             if (kielipari.kielesta != kielipari.kieleen) {
                 var kielipariAlreadyExists = _.some($scope.tulkki.kieliparit, (kpari) => {

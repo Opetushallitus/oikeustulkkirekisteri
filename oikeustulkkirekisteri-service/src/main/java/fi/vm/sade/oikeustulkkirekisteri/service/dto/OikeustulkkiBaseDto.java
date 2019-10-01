@@ -31,8 +31,6 @@ public abstract class OikeustulkkiBaseDto implements Serializable {
     private OsoiteEditDto osoite;
     @NotNull @Email
     private String email;
-    @NotNull
-    private LocalDate alkaa;
     private boolean julkaisulupaEmail;
     private String puhelinnumero;
     private boolean julkaisulupaPuhelinnumero;

@@ -20,8 +20,6 @@ public class OikeustulkkiVirkailijaListDto implements Serializable {
     private String hetu;
     private String etunimi;
     private String sukunimi;
-    private LocalDate alkaa;
-    private LocalDate paattyy;
     private boolean kokoSuomi;
     private List<String> maakunnat = new ArrayList<>();
     private List<KieliPariDto> kieliParit = new ArrayList<>();

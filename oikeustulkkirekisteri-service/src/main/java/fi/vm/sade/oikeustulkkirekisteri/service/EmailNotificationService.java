@@ -14,7 +14,7 @@ public interface EmailNotificationService {
     void scheduledSend();
 
     @Transactional
-    void sendNotificationToOikeustulkki(Long id);
+    void sendNotificationToOikeustulkki(Long id, LocalDate expiresOn);
 
     List<Long> findExpiringTulkkiIds(LocalDate expiresBefore);
 }
