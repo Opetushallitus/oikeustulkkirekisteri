@@ -1,5 +1,4 @@
 import {Kieli, Kielipari} from "./kielet.ts";
-import moment = require("moment");
 
 interface Maakunta{
   arvo: string;
@@ -41,13 +40,11 @@ const getTulkkiPostData = (tulkki:Tulkki) => {
   let postData:any = angular.copy(tulkki);
   // TODO:is this really necessary? compilcates things. Just load kielet to object map in controller and make method for name?
   postData.kieliParit = _.map(tulkki.kieliparit, (kielipari) => {
-    let kielipariAlkaa:Date   = moment(kielipari.voimassaoloAlkaa, 'DD.MM.YYYY').toDate();
-    let kielipariPaattyy:Date = moment(kielipari.voimassaoloPaattyy, 'DD.MM.YYYY').toDate();
     return {
       'kielesta': kielipari.kielesta.arvo,
       'kieleen': kielipari.kieleen.arvo,
-      'voimassaoloAlkaa': kielipariAlkaa.getTime(),
-      'voimassaoloPaattyy': kielipariPaattyy.getTime()
+      'voimassaoloAlkaa': kielipari.voimassaoloAlkaa,
+      'voimassaoloPaattyy': kielipari.voimassaoloPaattyy
     };
   });
   postData.maakunnat = _.map(tulkki.toimintaAlue, 'arvo');

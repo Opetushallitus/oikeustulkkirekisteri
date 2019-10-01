@@ -55,11 +55,13 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
     
     
     $scope.addKielipari = () => {
+      const alkaa: Date = $scope.voimassaoloAlkaa.selected;
+      const paattyy: Date = $scope.voimassaoloPaattyy.selected;
       const kielipari:Kielipari = {
         kielesta: $scope.kielesta.selected,
         kieleen: $scope.kieleen.selected,
-        voimassaoloAlkaa: $scope.voimassaoloAlkaa.selected,
-        voimassaoloPaattyy: $scope.voimassaoloPaattyy.selected
+        voimassaoloAlkaa: [alkaa.getFullYear(), alkaa.getMonth() + 1, alkaa.getDate()],
+        voimassaoloPaattyy: [paattyy.getFullYear(), paattyy.getMonth() + 1, paattyy.getDate()]
       };
 
       console.log("Result ADD kielipari" + JSON.stringify(kielipari));
