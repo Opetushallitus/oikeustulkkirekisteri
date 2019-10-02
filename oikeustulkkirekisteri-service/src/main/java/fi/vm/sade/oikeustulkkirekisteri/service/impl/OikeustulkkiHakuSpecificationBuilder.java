@@ -11,7 +11,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -47,6 +49,10 @@ public class OikeustulkkiHakuSpecificationBuilder {
     }
 
     public static Specification<Oikeustulkki> kieliparit(Collection<? extends KieliRajaus> kieliRajaus) {
+        return kieliparit(kieliRajaus, null);
+    }
+
+    public static Specification<Oikeustulkki> kieliparit(Collection<? extends KieliRajaus> kieliRajaus, LocalDate at) {
         if (kieliRajaus == null || kieliRajaus.isEmpty()  || (kieliRajaus.size() == 1 && kieliRajaus.iterator().next() == null)) {
             return null;
         }
@@ -54,17 +60,22 @@ public class OikeustulkkiHakuSpecificationBuilder {
             .map(kr -> where((Specification<Oikeustulkki>) (root, query, cb) -> {
                 Subquery<Long> s = query.subquery(Long.class);
                 Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
+                Join<Oikeustulkki, Kielipari> k = t.join("kielet");
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(cb.equal(t.get("id"), root.get("id")));
+                predicates.add(kielipariEq(k, kr, cb));
+                if (at != null) {
+                    predicates.add(cb.lessThanOrEqualTo(k.get("voimassaoloAlkaa"), at));
+                    predicates.add(cb.greaterThanOrEqualTo(k.get("voimassaoloPaattyy"), at));
+                }
                 return cb.exists(s.select(t.get("id")).where(
-                        cb.and(
-                            cb.equal(t.get("id"), root.get("id")),
-                            kielipariEq(t.join("kielet"), kr, cb)
-                        )
+                        cb.and(predicates.toArray(new Predicate[predicates.size()]))
                     )
                 );
             })).reduce(where(null), Specifications::and);
     }
-    
-    private static Expression<Boolean> kielipariEq(Path<Kielipari> kp, KieliRajaus kr, CriteriaBuilder cb) {
+
+    private static Predicate kielipariEq(Path<Kielipari> kp, KieliRajaus kr, CriteriaBuilder cb) {
         if (kr.getKielesta() == null && kr.getKieleen() == null) {
             return null;
         }

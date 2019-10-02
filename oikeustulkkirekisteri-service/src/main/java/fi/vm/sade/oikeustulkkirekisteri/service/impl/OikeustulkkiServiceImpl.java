@@ -99,7 +99,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     private static Specifications<Oikeustulkki> spec(OikeustulkkiPublicHakuDto dto) {
         Specifications<Oikeustulkki> where = eiPoistettu
                 .and(jokuKielipariVoimassa(now()))
-                .and(julkaisulupa()).and(kieliparit(dto.getKieliparit()))
+                .and(julkaisulupa()).and(kieliparit(dto.getKieliparit(), now()))
                 .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())));
         return where(where);
     }
