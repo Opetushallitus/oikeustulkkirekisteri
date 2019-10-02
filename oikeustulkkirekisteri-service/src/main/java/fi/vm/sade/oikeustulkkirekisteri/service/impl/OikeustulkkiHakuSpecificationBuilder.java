@@ -6,6 +6,7 @@ import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki.TutkintoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.KieliRajaus;
+import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
@@ -28,7 +29,23 @@ public class OikeustulkkiHakuSpecificationBuilder {
             ));
     
     private OikeustulkkiHakuSpecificationBuilder() {}
-    
+
+    public static Specification<Oikeustulkki> jokuKielipariVoimassa(LocalDate at) {
+        if (at == null) {
+            return null;
+        }
+        return (root, query, cb) -> {
+            Subquery<Integer> subquery = query.subquery(Integer.class);
+            Root<Kielipari> kielipari = subquery.from(Kielipari.class);
+            subquery.select(cb.literal(1));
+            subquery.where(cb.and(
+                    cb.equal(kielipari.get("oikeustulkki"), root),
+                    cb.lessThanOrEqualTo(kielipari.get("voimassaoloAlkaa"), at),
+                    cb.greaterThanOrEqualTo(kielipari.get("voimassaoloPaattyy"), at)));
+            return cb.exists(subquery);
+        };
+    }
+
     public static Specification<Oikeustulkki> kieliparit(Collection<? extends KieliRajaus> kieliRajaus) {
         if (kieliRajaus == null || kieliRajaus.isEmpty()  || (kieliRajaus.size() == 1 && kieliRajaus.iterator().next() == null)) {
             return null;
@@ -97,7 +114,7 @@ public class OikeustulkkiHakuSpecificationBuilder {
                 );
             })).reduce(where(null), Specifications::and);
     }
-    
+
     public static Specification<Oikeustulkki> tutkintoTyyppi(TutkintoTyyppi tyyppi) {
         if (tyyppi == null) {
             return null;
