@@ -21,7 +21,6 @@ public class OikeustulkkiPublicViewDto implements JulkisetYhteystiedot, Serializ
     private String email;
     private String puhelinnumero;
     private String muuYhteystieto;
-    private LocalDate paattyy;
     private boolean kokoSuomi;
     private List<String> maakuntaKoodis = new ArrayList<>();
     private List<KieliPariDto> kieliParit = new ArrayList<>();

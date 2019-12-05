@@ -1,11 +1,8 @@
 package fi.vm.sade.oikeustulkkirekisteri.domain;
 
-import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
 import fi.vm.sade.oikeustulkkirekisteri.domain.feature.Mutable;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -28,15 +25,9 @@ public class Oikeustulkki extends Mutable {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tulkki", nullable = false)
     private Tulkki tulkki;
-    @Type(type = "localDate")
-    @Column(name = "alkaa", nullable = false)
-    private LocalDate alkaa;
     @Enumerated(EnumType.STRING)
     @Column(name = "tutkinto_tyyppi", nullable = false)
     private TutkintoTyyppi tutkintoTyyppi;
-    @Type(type = "localDate")
-    @Column(name = "paattyy", nullable = false)
-    private LocalDate paattyy;
     @Column(name = "julklaisulupa_email", nullable = false)
     private boolean julkaisulupaEmail;
     @Column(name = "julklaisulupa_puhelinnumero", nullable = false)

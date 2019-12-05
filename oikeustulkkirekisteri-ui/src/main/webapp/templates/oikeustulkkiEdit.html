@@ -140,30 +140,6 @@
       </div>
 
       <div class="form-group">
-          <label for="alkaa" class="col-sm-2 control-label required" tt="oikeustulkki_alku_pvm">Alku pvm</label>
-          <div class="col-sm-8">
-              <input class="form-control" ng-model="tulkki.alkaa" id="alkaa" required date-time min-view="date"
-                     view="date" format="dd.MM.yyyy">
-              <div ng-if="showErrors" ng-messages="tulkkiForm.alkaa.$error" role="alert" class="error-msg">
-                  <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
-                  <div ng-message="custom">{{tulkkiForm.alkaa.$customError}}</div>
-              </div>
-          </div>
-      </div>
-
-      <div class="form-group" ng-if="action == 'edit'">
-          <label for="paattyy" class="col-sm-2 control-label required"  tt="oikeustulkki_paattyy_pvm">Päättyy pvm</label>
-          <div class="col-sm-8">
-              <input class="form-control" ng-model="tulkki.paattyy" id="paattyy" required date-time min-view="date"
-                     view="date" format="dd.MM.yyyy">
-              <div ng-if="showErrors" ng-messages="tulkkiForm.paattyy.$error" role="alert" class="error-msg">
-                  <div ng-message="required" tt="pakollinen_kentta">Pakollinen kenttä</div>
-                  <div ng-message="custom">{{tulkkiForm.paattyy.$customError}}</div>
-              </div>
-          </div>
-      </div>
-
-      <div class="form-group">
           <label for="tutkinto" class="col-sm-2 control-label required" tt="oikeustulkki_suoritettu_tutkinto">Suoritettu tutkinto</label>
           <div class="col-sm-8">
               <label>
@@ -180,50 +156,62 @@
           </div>
       </div>
 
-      <div class="form-group">
-          <label for="languagePairs" class="col-sm-2 control-label required" tt="oikeustulkki_kieliparit">Kieliparit</label>
+        <div class="form-group">
+            <label for="languagePairs" class="col-sm-2 control-label required" tt="oikeustulkki_kieliparit">Kieliparit</label>
 
-          <div class="col-sm-8">
-              <div>
-                  <p ng-repeat="kielipari in tulkki.kieliparit">
-                      {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}}
-                      <button type="button" class="btn btn-default remove-pair-btn btn-xs"
-                              ng-click="removeKielipari(kielipari)">
-                          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                      </button>
-                  </p>
-              </div>
+            <div class="col-sm-8">
+                <div>
+                    <p ng-repeat="kielipari in tulkki.kieliparit">
+                        {{kielipari.kielesta.nimi[currentLocale]}} - {{kielipari.kieleen.nimi[currentLocale]}},
+                        {{kielipari.voimassaoloAlkaa[2]}}.{{kielipari.voimassaoloAlkaa[1]}}.{{kielipari.voimassaoloAlkaa[0]}} -
+                        {{kielipari.voimassaoloPaattyy[2]}}.{{kielipari.voimassaoloPaattyy[1]}}.{{kielipari.voimassaoloPaattyy[0]}}
+                        <button type="button" class="btn btn-default remove-pair-btn btn-xs" style="float: right;"
+                                ng-click="removeKielipari(kielipari)">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                    </p>
+                </div>
 
-              <div>
-                  <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
-                      <ui-select-match >
-                          <span ng-bind="$select.selected.nimi[currentLocale]"></span>
-                      </ui-select-match>
-                      <ui-select-choices position="up"
-                                         repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
-                          <span ng-bind="kieli.nimi[currentLocale]"></span>
-                      </ui-select-choices>
-                  </ui-select>
+                <div>
+                    <ui-select ng-model="kielesta.selected" id="languagePairs" class="col-sm-4">
+                        <ui-select-match >
+                            <span ng-bind="$select.selected.nimi[currentLocale]"></span>
+                        </ui-select-match>
+                        <ui-select-choices position="up"
+                                           repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
+                            <span ng-bind="kieli.nimi[currentLocale]"></span>
+                        </ui-select-choices>
+                    </ui-select>
 
-                  <ui-select ng-model="kieleen.selected" class="col-sm-4">
-                      <ui-select-match >
-                          <span ng-bind="$select.selected.nimi[currentLocale]"></span>
-                      </ui-select-match>
-                      <ui-select-choices position="up"
-                                         repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
-                          <span ng-bind="kieli.nimi[currentLocale]"></span>
-                      </ui-select-choices>
-                  </ui-select>
+                    <ui-select ng-model="kieleen.selected" class="col-sm-4">
+                        <ui-select-match >
+                            <span ng-bind="$select.selected.nimi[currentLocale]"></span>
+                        </ui-select-match>
+                        <ui-select-choices position="up"
+                                           repeat="kieli in (kielet | selectFilter: $select.search) track by kieli.arvo">
+                            <span ng-bind="kieli.nimi[currentLocale]"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                    <button class="btn btn-primary btn-oph-default" ng-click="addKielipari()" tt="oikeustulkki_kielipari_lisaa">Lisää</button>
+                </div>
 
-                  <button class="btn btn-primary btn-oph-default" ng-click="addKielipari()" tt="oikeustulkki_kielipari_lisaa">Lisää</button>
-              </div>
+                <div style="margin-top: 5px;">
+                    <div class="col-sm-4">
+                        <input class="form-control" ng-model="voimassaoloAlkaa.selected"   id="kielipariAlkaa"   date-time min-view="date"
+                               view="date" format="dd.MM.yyyy">
+                    </div>
+                    <div class="col-sm-4">
+                        <input class="form-control" ng-model="voimassaoloPaattyy.selected" id="kielipariPaattyy" date-time min-view="date"
+                               view="date" format="dd.MM.yyyy">
+                    </div>
+                </div>
 
-              <div ng-if="showErrors && tulkki.kieliparit.length === 0" class="error-msg">
-                  <div tt="virhe_kielipareja_ei_lisatty">Kielipareja ei ole lisätty</div>
-              </div>
+                <div ng-if="showErrors && tulkki.kieliparit.length === 0" class="error-msg">
+                    <div tt="virhe_kielipareja_ei_lisatty">Kielipareja ei ole lisätty</div>
+                </div>
 
-          </div>
-      </div>
+            </div>
+        </div>
 
       <div class="form-group">
           <label for="lisatiedot" class="col-sm-2 control-label" tt="oikeustulkki_lisatietoa">Lisätietoa</label>

@@ -11,12 +11,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
-import static java.util.stream.Stream.concat;
-import static java.util.stream.Stream.of;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -32,18 +31,28 @@ public class OikeustulkkiHakuSpecificationBuilder {
             ));
     
     private OikeustulkkiHakuSpecificationBuilder() {}
-    
-    public static Specification<Oikeustulkki> voimassa(LocalDate at) {
+
+    public static Specification<Oikeustulkki> jokuKielipariVoimassa(LocalDate at) {
         if (at == null) {
             return null;
         }
-        return (root, query, cb) -> cb.and(
-                cb.lessThanOrEqualTo(root.get("alkaa"), at),
-                cb.greaterThanOrEqualTo(root.get("paattyy"), at)
-            );
+        return (root, query, cb) -> {
+            Subquery<Integer> subquery = query.subquery(Integer.class);
+            Root<Kielipari> kielipari = subquery.from(Kielipari.class);
+            subquery.select(cb.literal(1));
+            subquery.where(cb.and(
+                    cb.equal(kielipari.get("oikeustulkki"), root),
+                    cb.lessThanOrEqualTo(kielipari.get("voimassaoloAlkaa"), at),
+                    cb.greaterThanOrEqualTo(kielipari.get("voimassaoloPaattyy"), at)));
+            return cb.exists(subquery);
+        };
     }
-    
+
     public static Specification<Oikeustulkki> kieliparit(Collection<? extends KieliRajaus> kieliRajaus) {
+        return kieliparit(kieliRajaus, null);
+    }
+
+    public static Specification<Oikeustulkki> kieliparit(Collection<? extends KieliRajaus> kieliRajaus, LocalDate at) {
         if (kieliRajaus == null || kieliRajaus.isEmpty()  || (kieliRajaus.size() == 1 && kieliRajaus.iterator().next() == null)) {
             return null;
         }
@@ -51,17 +60,22 @@ public class OikeustulkkiHakuSpecificationBuilder {
             .map(kr -> where((Specification<Oikeustulkki>) (root, query, cb) -> {
                 Subquery<Long> s = query.subquery(Long.class);
                 Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
+                Join<Oikeustulkki, Kielipari> k = t.join("kielet");
+                List<Predicate> predicates = new ArrayList<>();
+                predicates.add(cb.equal(t.get("id"), root.get("id")));
+                predicates.add(kielipariEq(k, kr, cb));
+                if (at != null) {
+                    predicates.add(cb.lessThanOrEqualTo(k.get("voimassaoloAlkaa"), at));
+                    predicates.add(cb.greaterThanOrEqualTo(k.get("voimassaoloPaattyy"), at));
+                }
                 return cb.exists(s.select(t.get("id")).where(
-                        cb.and(
-                            cb.equal(t.get("id"), root.get("id")),
-                            kielipariEq(t.join("kielet"), kr, cb)
-                        )
+                        cb.and(predicates.toArray(new Predicate[predicates.size()]))
                     )
                 );
             })).reduce(where(null), Specifications::and);
     }
-    
-    private static Expression<Boolean> kielipariEq(Path<Kielipari> kp, KieliRajaus kr, CriteriaBuilder cb) {
+
+    private static Predicate kielipariEq(Path<Kielipari> kp, KieliRajaus kr, CriteriaBuilder cb) {
         if (kr.getKielesta() == null && kr.getKieleen() == null) {
             return null;
         }
@@ -111,33 +125,7 @@ public class OikeustulkkiHakuSpecificationBuilder {
                 );
             })).reduce(where(null), Specifications::and);
     }
-    
-    public static Specification<Oikeustulkki> latest(Specification<Oikeustulkki> specification) {
-        return (root, query, cb) -> {
-            Subquery<LocalDate> s = query.subquery(LocalDate.class);
-            Root<Oikeustulkki> t = s.from(Oikeustulkki.class);
-            return cb.equal(root.get("alkaa"), s.select(cb.greatest((Path)t.get("alkaa")))
-                    .where(cb.and(
-                            cb.equal(t.join("tulkki").get("id"), root.join("tulkki").get("id")),
-                            specification.toPredicate(t, query, cb)
-            )));
-        };
-    }
 
-    public static Specification<Oikeustulkki> voimassaoloRajausAlku(LocalDate alku) {
-        if (alku == null) {
-            return null;
-        }
-        return (root, query, cb) -> cb.greaterThanOrEqualTo(root.get("alkaa"), alku);
-    }
-
-    public static Specification<Oikeustulkki> voimassaoloRajausLoppu(LocalDate loppu) {
-        if (loppu == null) {
-            return null;
-        }
-        return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("alkaa"), loppu);
-    }
-    
     public static Specification<Oikeustulkki> tutkintoTyyppi(TutkintoTyyppi tyyppi) {
         if (tyyppi == null) {
             return null;

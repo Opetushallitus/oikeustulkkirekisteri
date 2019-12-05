@@ -2,7 +2,6 @@ package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +14,5 @@ import javax.validation.constraints.NotNull;
 public class OikeustulkkiEditDto extends OikeustulkkiBaseDto {
     @NotNull 
     private Long id;
-    @NotNull
-    private LocalDate paattyy;
     private String muokkausviesti;
 }

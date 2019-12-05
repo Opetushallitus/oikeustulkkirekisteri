@@ -3,6 +3,7 @@ package fi.vm.sade.oikeustulkkirekisteri.service.impl;
 import fi.vm.sade.auditlog.Audit;
 import fi.vm.sade.auditlog.Changes;
 import fi.vm.sade.auditlog.Target;
+import fi.vm.sade.oikeustulkkirekisteri.domain.Kielipari;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki;
 import fi.vm.sade.oikeustulkkirekisteri.domain.SahkopostiMuistutus;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
@@ -36,11 +37,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUtil.findOikeustulkkiYhteystietoArvo;
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
-
 import static fi.vm.sade.oikeustulkkirekisteri.util.OikeustulkkiOperation.OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL;
 import static org.joda.time.LocalDate.now;
 
@@ -93,7 +94,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
         logger.info("Finding oikeustulkkis expiring on or before {}", expiresOnOrBefore);
         self.findExpiringTulkkiIds(expiresOnOrBefore).forEach(id -> {
             try {
-                self.sendNotificationToOikeustulkki(id);
+                self.sendNotificationToOikeustulkki(id, expiresOnOrBefore);
                 logger.info("Sent notification to oikeustulkki id={}", id);
             } catch (Exception e) {
                 logger.error("Sending notification to oikeustulkki id="+id+" failed. Reason: " + e.getMessage(), e);
@@ -103,7 +104,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
     
     @Override
     @Transactional(noRollbackFor = {ProcessingException.class, ClientErrorException.class})
-    public void sendNotificationToOikeustulkki(Long id) {
+    public void sendNotificationToOikeustulkki(Long id, LocalDate expiresOn) {
         Oikeustulkki oikeustulkki = oikeustulkkiRepository.findEiPoistettuById(id);
         logger.info("Sending notification to oikeustulkki id={}, henkiloOid={}", id, oikeustulkki.getTulkki().getHenkiloOid());
         
@@ -135,8 +136,14 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
         recipient.setOid(henkilo.getOidHenkilo());
         recipient.setOidType("henkilo");
         List<ReportedRecipientReplacementDTO> replacements = new ArrayList<>();
-        replacements.add(new ReportedRecipientReplacementDTO("vanhenee", 
-                new SimpleDateFormat("dd.MM.yyyy").format(oikeustulkki.getPaattyy().toDate())));
+        Optional<LocalDate> voimassaoloPaattyy = oikeustulkki.getKielet().stream()
+                .map(Kielipari::getVoimassaoloPaattyy)
+                .filter(date -> (date.isAfter(now()) || date.isEqual(now())) &&
+                        (date.isBefore(expiresOn) || date.isEqual(expiresOn)))
+                .sorted()
+                .findFirst();
+        replacements.add(new ReportedRecipientReplacementDTO("vanhenee",
+                new SimpleDateFormat("dd.MM.yyyy").format(voimassaoloPaattyy.orElse(expiresOn).toDate())));
         recipient.setRecipientReplacements(replacements);
         recipient.setLanguageCode(DEFAULT_LANGUAGE_CODE);
         emailData.getRecipient().add(recipient);

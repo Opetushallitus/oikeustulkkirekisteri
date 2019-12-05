@@ -1,5 +1,6 @@
 import {Kieli, Kielipari, kielipariMatch} from "../kielet.ts";
 import {Tulkki, newTulkki, getTulkkiPostData, isTulkkiKutsumanimiValid} from "../tulkki.ts";
+import moment = require("moment");
 
 angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$routeParams", "Page", "KoodistoService",
   "OikeustulkkiService", "$window", "$filter", '$rootScope', 'LocalisationService',
@@ -22,6 +23,9 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
       
       $scope.kielesta = {selected: _.find($scope.kielet, {'arvo': 'FI'})};
       $scope.kieleen = {selected: $scope.kielet[1]};
+      $scope.voimassaoloAlkaa = {selected: new Date()};
+      $scope.voimassaoloPaattyy = {selected: moment().add(5, 'years').toDate()};
+
       _.map($scope.kielet, kp => $scope.kieletByArvo[kp.arvo] = kp);
 
       KoodistoService.getMaakunnat().then(r2 => {
@@ -33,18 +37,17 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
           if ($scope.action == 'create') {
             delete result.id;
           }
+
+          console.log("Result kieliparit lenght: " + result.kieliParit.length);
+
           result.kieliparit = _.map(result.kieliParit, (kielipari):Kielipari => {
-            return {kielesta: $scope.kieletByArvo[kielipari.kielesta], kieleen: $scope.kieletByArvo[kielipari.kieleen]};
+            return {kielesta: $scope.kieletByArvo[kielipari.kielesta], kieleen: $scope.kieletByArvo[kielipari.kieleen], voimassaoloAlkaa: kielipari.voimassaoloAlkaa, voimassaoloPaattyy: kielipari.voimassaoloPaattyy};
           });
+
+          console.log("Result kieliparit lenght mapped: " + result.kieliParit.length);
+
           result.toimintaAlue = _.map(result.maakunnat, maakunta => $scope.maakunnatByArvo[maakunta]);
 
-          if ($scope.action == 'create') {
-            result.alkaa = new Date();
-            result.paattyy = null;
-          } else {
-            result.alkaa = new Date(result.alkaa[0], result.alkaa[1]-1, result.alkaa[2]);
-            result.paattyy = new Date(result.paattyy[0], result.paattyy[1]-1, result.paattyy[2]);
-          }
           $scope.tulkki = result;
         });
       });
@@ -52,10 +55,17 @@ angular.module('registryApp').controller('oikeustulkkiEditCtrl', ["$scope", "$ro
     
     
     $scope.addKielipari = () => {
+      const alkaa: Date = $scope.voimassaoloAlkaa.selected;
+      const paattyy: Date = $scope.voimassaoloPaattyy.selected;
       const kielipari:Kielipari = {
         kielesta: $scope.kielesta.selected,
-        kieleen: $scope.kieleen.selected
+        kieleen: $scope.kieleen.selected,
+        voimassaoloAlkaa: [alkaa.getFullYear(), alkaa.getMonth() + 1, alkaa.getDate()],
+        voimassaoloPaattyy: [paattyy.getFullYear(), paattyy.getMonth() + 1, paattyy.getDate()]
       };
+
+      console.log("Result ADD kielipari" + JSON.stringify(kielipari));
+
       if (kielipari.kielesta != kielipari.kieleen) {
         var kielipariAlreadyExists = _.some($scope.tulkki.kieliparit, (kpari) => {
           return kielipariMatch(kielipari, kpari);
