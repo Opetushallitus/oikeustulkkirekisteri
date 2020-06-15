@@ -47,7 +47,7 @@
         
         <spring.asm.version>3.1.4.RELEASE</spring.asm.version>
         <hibernate.version>4.3.5.Final</hibernate.version>
-        <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
+        <hibernate-validator.version>5.3.5.Final</hibernate-validator.version>
         <cxf.version>3.0.8</cxf.version>
         <slf4j.version>1.7.5</slf4j.version>
         <junit.version>4.10</junit.version>
