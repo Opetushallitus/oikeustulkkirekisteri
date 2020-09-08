@@ -7,6 +7,10 @@ if (!window['CONFIG']) {
   window['CONFIG'] = window['CONFIG'] || {env: {}};
 }
 
+jQuery.ajaxSetup({
+  headers: { 'Caller-Id': '1.2.246.562.10.00000000001.oikeustulkkirekisteri-ui' },
+});
+
 const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstrap', 'ngIdle', 'angularModalService',
                         'ngCookies', 'localisation', 'ui.select', 'datePicker']).factory('Page', ['$rootScope',($rootScope) => {
   let page = 'main';
