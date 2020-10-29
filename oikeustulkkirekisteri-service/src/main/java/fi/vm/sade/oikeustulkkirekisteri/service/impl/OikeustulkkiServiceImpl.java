@@ -17,7 +17,6 @@ import fi.vm.sade.oikeustulkkirekisteri.service.dto.*;
 import fi.vm.sade.oikeustulkkirekisteri.util.AuditUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -50,7 +50,6 @@ import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.*;
-import static org.joda.time.LocalDate.now;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -98,8 +97,8 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     
     private static Specifications<Oikeustulkki> spec(OikeustulkkiPublicHakuDto dto) {
         Specifications<Oikeustulkki> where = eiPoistettu
-                .and(jokuKielipariVoimassa(now()))
-                .and(julkaisulupa()).and(kieliparit(dto.getKieliparit(), now()))
+                .and(jokuKielipariVoimassa(LocalDate.now()))
+                .and(julkaisulupa()).and(kieliparit(dto.getKieliparit(), LocalDate.now()))
                 .and(toimiiMaakunnissa(singletonList(dto.getMaakuntaKoodi())));
         return where(where);
     }
@@ -396,7 +395,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         viewDto.setId(oikeustulkki.getId());
         viewDto.setEtunimet(henkilo.getEtunimet());
         viewDto.setSukunimi(henkilo.getSukunimi());
-        viewDto.setKieliParit(convert(oikeustulkki.getKielet().stream().filter(kielipariVoimassa(now()))));
+        viewDto.setKieliParit(convert(oikeustulkki.getKielet().stream().filter(kielipariVoimassa(LocalDate.now()))));
         viewDto.setKokoSuomi(isKokoSuomi(oikeustulkki.getSijainnit().stream()));
         viewDto.setMaakuntaKoodis(maakuntaKoodis(oikeustulkki.getSijainnit().stream()));
         setJulkisetYhteystiedot(oikeustulkki, henkilo, viewDto);
@@ -423,7 +422,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
             dto.setId(ot.getId());
             dto.setEtunimet(henkilo.getEtunimet());
             dto.setSukunimi(henkilo.getSukunimi());
-            dto.setKieliParit(convert(ot.getKielet().stream().filter(kielipariVoimassa(now()))));
+            dto.setKieliParit(convert(ot.getKielet().stream().filter(kielipariVoimassa(LocalDate.now()))));
             dto.setKokoSuomi(isKokoSuomi(ot.getSijainnit().stream()));
             dto.setMaakunnat(maakuntaKoodis(ot.getSijainnit().stream()));
             return dto;
@@ -431,7 +430,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
     }
 
     private boolean isKokoSuomi(Stream<Sijainti> sijainnit) {
-        return sijainnit.filter(s -> s.getTyyppi() == KOKO_SUOMI).findAny().isPresent();
+        return sijainnit.anyMatch(s -> s.getTyyppi() == KOKO_SUOMI);
     }
 
     private List<String> maakuntaKoodis(Stream<Sijainti> sijainnit) {
@@ -455,7 +454,7 @@ public class OikeustulkkiServiceImpl implements OikeustulkkiService {
         if (haku.isAllowHetu()) {
             predicate = predicate.matchingHetu();
         }
-        List<HenkiloRestDto> henkiloResults = oikeustulkkiCacheService.findHenkilos(predicate).stream().collect(toList());
+        List<HenkiloRestDto> henkiloResults = new ArrayList<>(oikeustulkkiCacheService.findHenkilos(predicate));
         Map<String,HenkiloRestDto> henkilosByOid = henkiloResults.stream().collect(toMap(HenkiloRestDto::getOidHenkilo, h -> h));
         Map<String,List<Oikeustulkki>> oikeustulkkis = oikeustulkkiRepository.findAll(where(haku.getSpecification())
                     .and(henkiloOidIn(henkilosByOid.keySet()))).stream()

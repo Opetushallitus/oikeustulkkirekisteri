@@ -3,7 +3,6 @@ package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki.TutkintoTyyppi;
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;

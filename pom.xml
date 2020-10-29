@@ -69,7 +69,6 @@
         <jetty.version>9.2.30.v20200428</jetty.version>
         <ehcache.version>2.5.0</ehcache.version>
         <jersey.version>2.10.3</jersey.version>
-        <joda.version>2.2</joda.version>
         <organisaatio.api.version>2015-13</organisaatio.api.version>
         <viestintapalvelu.version>14.7</viestintapalvelu.version>
         <java.utils.cxf.version>0.3.2-SNAPSHOT</java.utils.cxf.version>

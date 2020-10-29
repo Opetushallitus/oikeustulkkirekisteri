@@ -1,8 +1,8 @@
 package fi.vm.sade.oikeustulkkirekisteri.service;
 
-import org.joda.time.LocalDate;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**

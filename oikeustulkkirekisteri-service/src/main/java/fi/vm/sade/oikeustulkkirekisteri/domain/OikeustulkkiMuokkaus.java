@@ -2,14 +2,12 @@ package fi.vm.sade.oikeustulkkirekisteri.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-import static org.joda.time.DateTime.now;
 
 /**
  * User: tommiratamaa
@@ -29,10 +27,9 @@ public class OikeustulkkiMuokkaus implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oikeustulkki", nullable = false)
     private Oikeustulkki oikeustulkki;
-    
-    @Type(type = "dateTime")
+
     @Column(name = "muokattu", nullable = false)
-    private DateTime muokattu = now();
+    private LocalDateTime muokattu = LocalDateTime.now();
     
     @Column(name = "muokkaaja", nullable = false) // oid
     private String muokkaaja;

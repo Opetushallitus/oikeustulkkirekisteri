@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
 import static fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki.TutkintoTyyppi.OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO;
-import static org.joda.time.LocalDate.now;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -31,12 +32,13 @@ public class DomainTest extends AbstractIntegrationTest {
 
     @Test
     public void testPersistOikeustulkki() {
+        LocalDate now = LocalDate.now();
         Oikeustulkki ot = new Oikeustulkki();
         ot.setTulkki(new Tulkki("12345.oid"));
         ot.setTutkintoTyyppi(OIKEUSTULKIN_ERIKOISAMMATTITUTKINTO);
         ot.setLisatiedot("Lisätiedot");
         ot.getSijainnit().add(new Sijainti(ot, Tyyppi.KOKO_SUOMI));
-        ot.getKielet().add(new Kielipari(ot, new Kieli("fi"), new Kieli("sv"), now(), now()));
+        ot.getKielet().add(new Kielipari(ot, new Kieli("fi"), new Kieli("sv"), now, now));
         oikeustulkkiRepository.save(ot);
         assertNotNull(ot.getId());
         assertNotNull(ot.getTulkki().getId());

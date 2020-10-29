@@ -18,9 +18,6 @@ import fi.vm.sade.ryhmasahkoposti.api.dto.EmailData;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailMessage;
 import fi.vm.sade.ryhmasahkoposti.api.dto.EmailRecipient;
 import fi.vm.sade.ryhmasahkoposti.api.dto.ReportedRecipientReplacementDTO;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +30,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.ProcessingException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +43,6 @@ import static fi.vm.sade.oikeustulkkirekisteri.external.api.HenkiloYhteystietoUt
 import static fi.vm.sade.oikeustulkkirekisteri.external.api.dto.YhteystietoTyyppi.YHTEYSTIETO_SAHKOPOSTI;
 import static fi.vm.sade.oikeustulkkirekisteri.util.FoundUtil.found;
 import static fi.vm.sade.oikeustulkkirekisteri.util.OikeustulkkiOperation.OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL;
-import static org.joda.time.LocalDate.now;
 
 /**
  * User: tommiratamaa
@@ -55,8 +54,8 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
     private static final Logger logger = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
 
     private static final String DEFAULT_LANGUAGE_CODE = "fi";
-    private static final Locale DEFAULT_LOCALE = new Locale(DEFAULT_LANGUAGE_CODE);
     private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 3600*1000; // check cache state (/retry if failed) every hour
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Resource
     private RyhmasahkopostiApi ryhmasahkopostiClient;
@@ -90,7 +89,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
             initialDelayString = "${email.notification.send.delay.ms:"+ DEFAULT_CHECK_INTERVAL_MILLIS +"}")
     public void scheduledSend() {
         EmailNotificationService self = applicationContext.getBean(EmailNotificationService.class); // tx-aop-proxy
-        LocalDate expiresOnOrBefore = now().plus(Period.parse(notificationInterval));
+        LocalDate expiresOnOrBefore = LocalDate.now().plus(Period.parse(notificationInterval));
         logger.info("Finding oikeustulkkis expiring on or before {}", expiresOnOrBefore);
         self.findExpiringTulkkiIds(expiresOnOrBefore).forEach(id -> {
             try {
@@ -138,12 +137,12 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
         List<ReportedRecipientReplacementDTO> replacements = new ArrayList<>();
         Optional<LocalDate> voimassaoloPaattyy = oikeustulkki.getKielet().stream()
                 .map(Kielipari::getVoimassaoloPaattyy)
-                .filter(date -> (date.isAfter(now()) || date.isEqual(now())) &&
+                .filter(date -> (date.isAfter(LocalDate.now()) || date.isEqual(LocalDate.now())) &&
                         (date.isBefore(expiresOn) || date.isEqual(expiresOn)))
                 .sorted()
                 .findFirst();
         replacements.add(new ReportedRecipientReplacementDTO("vanhenee",
-                new SimpleDateFormat("dd.MM.yyyy").format(voimassaoloPaattyy.orElse(expiresOn).toDate())));
+                voimassaoloPaattyy.orElse(expiresOn).format(DATE_FORMATTER)));
         recipient.setRecipientReplacements(replacements);
         recipient.setLanguageCode(DEFAULT_LANGUAGE_CODE);
         emailData.getRecipient().add(recipient);
@@ -151,7 +150,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
         try {
             IdHolderDto result = ryhmasahkopostiClient.sendEmail(emailData);
             logger.info("Sent email {}", result);
-            muistutus.setLahetetty(DateTime.now());
+            muistutus.setLahetetty(LocalDateTime.now());
             audit.log(AuditUtil.getUser(), OIKEUSTULKKI_SEND_NOTIFICATION_EMAIL, new Target.Builder()
                     .setField("henkiloOid", oikeustulkki.getTulkki().getHenkiloOid())
                     .setField("oikeustulkkiId", String.valueOf(id))
@@ -166,7 +165,8 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
     @Override
     @Transactional(readOnly = true)
     public List<Long> findExpiringTulkkiIds(LocalDate expiresOnOrBefore) {
-        return oikeustulkkiRepository.findOikeustulkkisVoimassaBetweenWithoutNotificationsIds(now(), expiresOnOrBefore);
+        return oikeustulkkiRepository.findOikeustulkkisVoimassaBetweenWithoutNotificationsIds(
+                LocalDate.now(), expiresOnOrBefore);
     }
     
 }

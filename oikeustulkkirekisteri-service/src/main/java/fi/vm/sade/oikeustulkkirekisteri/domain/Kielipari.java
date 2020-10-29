@@ -7,10 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-import org.joda.time.LocalDate;
 import java.io.Serializable;
-
-import org.hibernate.annotations.Type;
+import java.time.LocalDate;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,11 +33,9 @@ public class Kielipari implements Serializable {
     @JoinColumn(name = "oikeustulkki", nullable = false)
     private Oikeustulkki oikeustulkki;
 
-    @Type(type = "localDate")
     @Column(name = "voimassaolo_alkaa",   nullable = false)
     private LocalDate voimassaoloAlkaa;
 
-    @Type(type = "localDate")
     @Column(name = "voimassaolo_paattyy", nullable = false)
     private LocalDate voimassaoloPaattyy;
 

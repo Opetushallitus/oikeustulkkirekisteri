@@ -2,10 +2,10 @@ package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * User: tommiratamaa
@@ -14,13 +14,13 @@ import java.io.Serializable;
  */
 @Getter @Setter
 public class OikeustulkkiMuokkausHistoriaDto implements Serializable {
-    private DateTime muokattu;
+    private LocalDateTime muokattu;
     private LocalDate muokattuPvm;
     private String muokkaaja;
     private String muokkausviesti;
     private String muokkajanNimi;
 
-    public OikeustulkkiMuokkausHistoriaDto(DateTime muokattu, String muokkaaja, String muokkausviesti, String muokkajanNimi) {
+    public OikeustulkkiMuokkausHistoriaDto(LocalDateTime muokattu, String muokkaaja, String muokkausviesti, String muokkajanNimi) {
         this.muokattu = muokattu;
         this.muokattuPvm = muokattu.toLocalDate();
         this.muokkaaja = muokkaaja;

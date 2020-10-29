@@ -1,6 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.domain.feature;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
 
 /**
  * User: tommiratamaa
@@ -12,5 +12,5 @@ public interface Creatable {
     
     void setLuoja(String oid);
     
-    DateTime getLuotu();
+    LocalDateTime getLuotu();
 }
