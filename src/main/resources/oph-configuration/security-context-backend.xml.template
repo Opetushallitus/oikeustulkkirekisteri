@@ -69,6 +69,7 @@
     ..default app resources with ${spring_security_default_access} access ::: /[APP]/ALLTHERESTPATHS
     -->
     <http entry-point-ref="casEntryPoint" use-expressions="true" request-matcher="regex">
+        <csrf disabled="true"/><!-- fronttipalvelin hanskaa -->
         <intercept-url pattern="(/.*)?/secured(/.*)?" access="isAuthenticated()"/>
         <intercept-url pattern="/public(/.*)?" access="permitAll"/>
         <intercept-url pattern="/api/public(/.*)?" access="permitAll"/>
