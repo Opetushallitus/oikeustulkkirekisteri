@@ -68,8 +68,6 @@
         <log4j.version>1.2.17</log4j.version>
         <jetty.version>9.2.30.v20200428</jetty.version>
         <ehcache.version>2.5.0</ehcache.version>
-        <jackson.version>1.9.13</jackson.version>
-        <fasterxml.jackson.version>2.4.2</fasterxml.jackson.version>
         <jersey.version>2.10.3</jersey.version>
         <joda.version>2.2</joda.version>
         <organisaatio.api.version>2015-13</organisaatio.api.version>
