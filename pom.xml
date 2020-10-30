@@ -60,7 +60,6 @@
         <hsqldb.version>2.5.1</hsqldb.version>
         <nosql-junit.version>0.7.6</nosql-junit.version>
         <modelmapper.version>2.3.8</modelmapper.version>
-        <guava.version>14.0.1</guava.version>
         <querydsl.version>2.6.0</querydsl.version>
         <commons-lang.version>2.6</commons-lang.version>
         <log4j.version>1.2.17</log4j.version>
@@ -359,11 +358,6 @@
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
                 <version>${modelmapper.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.reactivex</groupId>
