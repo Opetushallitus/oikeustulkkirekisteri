@@ -21,8 +21,8 @@ import java.util.Set;
 public class Tulkki extends Mutable {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "tulkki_id_seq")
-    @SequenceGenerator(name = "tulkki_id_seq", sequenceName = "tulkki_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tulkki_id_seq")
+    @SequenceGenerator(name = "tulkki_id_seq", sequenceName = "tulkki_id_seq", allocationSize = 1)
     private Long id;
     
     @Column(name = "henkilo_oid", nullable = false, unique = true, updatable = false)

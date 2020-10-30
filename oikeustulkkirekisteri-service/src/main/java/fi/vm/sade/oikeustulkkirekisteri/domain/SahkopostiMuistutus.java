@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 public class SahkopostiMuistutus implements Serializable {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "sahkoposti_muistutus_id_seq")
-    @SequenceGenerator(name = "sahkoposti_muistutus_id_seq", sequenceName = "sahkoposti_muistutus_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sahkoposti_muistutus_id_seq")
+    @SequenceGenerator(name = "sahkoposti_muistutus_id_seq", sequenceName = "sahkoposti_muistutus_id_seq", allocationSize = 1)
     private Long id;
     @Column(name = "luotu")
     private LocalDateTime luotu = LocalDateTime.now();

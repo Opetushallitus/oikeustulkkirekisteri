@@ -20,8 +20,8 @@ import java.time.LocalDateTime;
 public class OikeustulkkiMuokkaus implements Serializable {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "oikeustulkki_muokkaus_id_seq")
-    @SequenceGenerator(name = "oikeustulkki_muokkaus_id_seq", sequenceName = "oikeustulkki_muokkaus_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "oikeustulkki_muokkaus_id_seq")
+    @SequenceGenerator(name = "oikeustulkki_muokkaus_id_seq", sequenceName = "oikeustulkki_muokkaus_id_seq", allocationSize = 1)
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)

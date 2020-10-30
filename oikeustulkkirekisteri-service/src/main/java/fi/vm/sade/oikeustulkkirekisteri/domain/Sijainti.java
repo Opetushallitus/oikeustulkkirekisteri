@@ -28,8 +28,8 @@ public class Sijainti implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "sijainti_id_seq")
-    @SequenceGenerator(name = "sijainti_id_seq", sequenceName = "sijainti_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sijainti_id_seq")
+    @SequenceGenerator(name = "sijainti_id_seq", sequenceName = "sijainti_id_seq", allocationSize = 1)
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)

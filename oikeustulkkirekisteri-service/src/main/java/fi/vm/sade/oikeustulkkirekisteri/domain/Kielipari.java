@@ -25,8 +25,8 @@ import static lombok.AccessLevel.PROTECTED;
 public class Kielipari implements Serializable {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "kielipari_id_seq")
-    @SequenceGenerator(name = "kielipari_id_seq", sequenceName = "kielipari_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "kielipari_id_seq")
+    @SequenceGenerator(name = "kielipari_id_seq", sequenceName = "kielipari_id_seq", allocationSize = 1)
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
