@@ -32,9 +32,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
 
-        <tomcat.version>7.0.47</tomcat.version>
+        <tomcat.version>7.0.106</tomcat.version>
         <servlet.api.version>3.1.0</servlet.api.version>
-        <camel.version>2.12.1</camel.version>
+        <camel.version>2.25.2</camel.version>
         <generic.version>9.4-SNAPSHOT</generic.version>
         <koodisto.api.version>6.3-SNAPSHOT</koodisto.api.version>
         <organisaatio.api.version>6.2-SNAPSHOT</organisaatio.api.version>
@@ -47,21 +47,19 @@
         <org.hibernate.javax.persistence.api.version>1.0.0.Final</org.hibernate.javax.persistence.api.version>
         <swagger.version>1.0.2</swagger.version>
         
-        <spring.asm.version>3.1.4.RELEASE</spring.asm.version>
         <hibernate.version>5.2.18.Final</hibernate.version>
         <hibernate-validator.version>5.1.3.Final</hibernate-validator.version>
-        <cxf.version>3.0.8</cxf.version>
-        <slf4j.version>1.7.5</slf4j.version>
+        <cxf.version>3.3.7</cxf.version>
+        <slf4j.version>1.7.30</slf4j.version>
         <junit.version>4.13.1</junit.version>
-        <mockito.version>1.9.0</mockito.version>
+        <mockito.version>3.5.15</mockito.version>
         <surefire.plugin.version>2.12</surefire.plugin.version>
         <aspectj.version>1.6.3</aspectj.version>
-        <camel.version>2.12.1</camel.version>
-        <morphia.version>0.108</morphia.version>
+        <morphia.version>1.3.2</morphia.version><!-- abandonware? -->
         <cglib.nodep.version>[2.1_3,)</cglib.nodep.version>
-        <hsqldb.version>2.0.0</hsqldb.version>
+        <hsqldb.version>2.5.1</hsqldb.version>
         <nosql-junit.version>0.7.6</nosql-junit.version>
-        <modelmapper.version>0.6.2</modelmapper.version>
+        <modelmapper.version>2.3.8</modelmapper.version>
         <guava.version>14.0.1</guava.version>
         <querydsl.version>2.6.0</querydsl.version>
         <commons-lang.version>2.6</commons-lang.version>
@@ -258,7 +256,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
+                <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
             </dependency>
             <dependency>
@@ -490,6 +488,7 @@
                     <version>3.3.1</version>
                 </plugin>
                 <plugin>
+                    <!-- käyttää antiikkista Tomcatia, version määrittely vaatii hirveän määrän depsukikkailua :( -->
                     <groupId>org.apache.tomcat.maven</groupId>
                     <artifactId>tomcat7-maven-plugin</artifactId>
                     <version>2.2</version>
@@ -498,6 +497,20 @@
                         <systemProperties>
                             <java.security.egd>file:/dev/./urandom</java.security.egd>
                         </systemProperties>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <!-- vaihtoehto tomcat7-plugarille, helppo määritellä container/versio -->
+                    <groupId>org.codehaus.cargo</groupId>
+                    <artifactId>cargo-maven2-plugin</artifactId>
+                    <version>1.8.2</version>
+                    <configuration>
+                        <container>
+                            <containerId>tomcat7x</containerId>
+                            <zipUrlInstaller>
+                                <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>
+                            </zipUrlInstaller>
+                        </container>
                     </configuration>
                 </plugin>
             </plugins>
