@@ -61,6 +61,15 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
 
     mvn clean test
     
+
+## Riippuvuuksien auditointi
+
+Kirjastoriippuvuuksien haavoittuvuudet voi tarkastaa joko juuritasolta koko projektille:
+`mvn dependency-check:aggregate`
+... tai kunkin modulin hakemistosta vain sille:
+`mvn dependency-check:check`
+
+
 ## Käynnistäminen
 
 ### oikeustulkkirekisteri-service
