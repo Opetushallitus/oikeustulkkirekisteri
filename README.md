@@ -13,7 +13,7 @@ Määrittely ja muu tekninen löytyvät osoitteesta [CSC:n Confluencesta](https:
 
 ### Palvelin
 * Tomcat 7
-* Java 8
+* Java 11
 * Spring 4
 * JPA / Hibernate 5
 * PostgreSQL
@@ -31,7 +31,7 @@ Määrittely ja muu tekninen löytyvät osoitteesta [CSC:n Confluencesta](https:
 
 Varmista, että asennettuna on:
 
-* [Java JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) versio >= 8
+* [Java JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) versio >= 11
 * [Maven](https://maven.apache.org/download.cgi) versio >= 3.1
 * [PostgreSQL-palvelin](https://www.postgresql.org/download/) versio >= 9.1
 
