@@ -15,7 +15,7 @@ Määrittely ja muu tekninen löytyvät osoitteesta [CSC:n Confluencesta](https:
 * Tomcat 7
 * Java 8
 * Spring 4
-* JPA / Hibernate 4
+* JPA / Hibernate 5
 * PostgreSQL
 
 ### UI
@@ -38,9 +38,10 @@ Varmista, että asennettuna on:
 ### Luo paikallinen PostgreSQL-tietokanta
     echo "CREATE USER oikeustulkkirekisteri; CREATE DATABASE oikeustulkkirekisteri OWNER oikeustulkkirekisteri;" | psql -hlocalhost -Upostgres
 
-ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/static/auth-pg-hba-conf.html)).
+ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/static/auth-pg-hba-conf.html)). Vaihtoehtoisesti voit ajaa kantaa kontissa:
+`docker run --name oikeustulkkirekisteri-db -p 5432:5432 -e POSTGRES_USER=oikeustulkkirekisteri -e POSTGRES_PASSWORD=oikeustulkkirekisteri -e POSTGRES_DB=oikeustulkkirekisteri -d postgres:10.9`
 
-### Luo kotihakemistoon security-configurtaatio
+### Luo kotihakemistoon security-configuraatio
 
 - Luo kotihakemistoosi hakemisto oph-configuration, jonka sisälle tiedosto security-context-backend.xml.
 - Lisää sisällöksi esimerkiksi Springin security-konfiguraatio:
@@ -50,8 +51,8 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xmlns:p="http://www.springframework.org/schema/p"
                   xsi:schemaLocation="http://www.springframework.org/schema/beans
-                         http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-                         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd">      
+                         https://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/security https://www.springframework.org/schema/security/spring-security.xsd">      
         </beans:beans>
 
 - Tarvitset lisäksi käyttäjän, jolla on rooli ROLE_APP_OIKEUSTULKKIREKISTERI_OIKEUSTULKKI_CRUD
@@ -60,13 +61,21 @@ ja salli siihen yhteydet ([pg_hba.conf](https://www.postgresql.org/docs/9.1/stat
 
     mvn clean test
     
+
+## Riippuvuuksien auditointi
+
+Kirjastoriippuvuuksien haavoittuvuudet voi tarkastaa joko juuritasolta koko projektille:
+`mvn dependency-check:aggregate`
+... tai kunkin modulin hakemistosta vain sille:
+`mvn dependency-check:check`
+
+
 ## Käynnistäminen
 
 ### oikeustulkkirekisteri-service
 
-Rekisterin backend-palvelu ajetana Tomcatilla:
-
-    mvn tomcat7-run
+Bäkkäriä voi ajaa suorittamalla `oikeustulkkirekisteri-service` -hakemistossa:
+`mvn cargo:run`
    
 Swagger-dokumentaation tulisi löytyä [http://localhost:8080/oikeustulkkirekisteri-service/](http://localhost:8080/oikeustulkkirekisteri-service/)
 

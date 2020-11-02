@@ -6,11 +6,11 @@ import fi.vm.sade.oikeustulkkirekisteri.domain.Oikeustulkki.TutkintoTyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti;
 import fi.vm.sade.oikeustulkkirekisteri.domain.Sijainti.Tyyppi;
 import fi.vm.sade.oikeustulkkirekisteri.service.dto.KieliRajaus;
-import org.joda.time.LocalDate;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

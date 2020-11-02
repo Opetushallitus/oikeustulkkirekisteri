@@ -1,7 +1,8 @@
 package fi.vm.sade.oikeustulkkirekisteri.util;
 
-import com.google.common.base.Optional;
 import fi.vm.sade.oikeustulkkirekisteri.service.exception.NotFoundException;
+
+import java.util.Optional;
 
 /**
  * User: tommiratamaa
@@ -24,10 +25,4 @@ public class FoundUtil {
         return t.get();
     }
 
-    public static <T> T found(java.util.Optional<T> t) throws NotFoundException {
-        if (!t.isPresent()) {
-            throw new NotFoundException();
-        }
-        return t.get();
-    }
 }

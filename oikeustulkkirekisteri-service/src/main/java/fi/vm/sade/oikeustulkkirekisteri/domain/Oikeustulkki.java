@@ -19,8 +19,8 @@ import java.util.Set;
 public class Oikeustulkki extends Mutable {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "oikeustulkki_id_seq")
-    @SequenceGenerator(name = "oikeustulkki_id_seq", sequenceName = "oikeustulkki_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "oikeustulkki_id_seq")
+    @SequenceGenerator(name = "oikeustulkki_id_seq", sequenceName = "oikeustulkki_id_seq", allocationSize = 1)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tulkki", nullable = false)

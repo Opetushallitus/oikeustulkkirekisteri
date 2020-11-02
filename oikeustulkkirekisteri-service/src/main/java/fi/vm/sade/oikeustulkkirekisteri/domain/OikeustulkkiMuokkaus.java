@@ -2,14 +2,12 @@ package fi.vm.sade.oikeustulkkirekisteri.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-import static org.joda.time.DateTime.now;
 
 /**
  * User: tommiratamaa
@@ -22,17 +20,16 @@ import static org.joda.time.DateTime.now;
 public class OikeustulkkiMuokkaus implements Serializable {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "oikeustulkki_muokkaus_id_seq")
-    @SequenceGenerator(name = "oikeustulkki_muokkaus_id_seq", sequenceName = "oikeustulkki_muokkaus_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "oikeustulkki_muokkaus_id_seq")
+    @SequenceGenerator(name = "oikeustulkki_muokkaus_id_seq", sequenceName = "oikeustulkki_muokkaus_id_seq", allocationSize = 1)
     private Long id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oikeustulkki", nullable = false)
     private Oikeustulkki oikeustulkki;
-    
-    @Type(type = "dateTime")
+
     @Column(name = "muokattu", nullable = false)
-    private DateTime muokattu = now();
+    private LocalDateTime muokattu = LocalDateTime.now();
     
     @Column(name = "muokkaaja", nullable = false) // oid
     private String muokkaaja;

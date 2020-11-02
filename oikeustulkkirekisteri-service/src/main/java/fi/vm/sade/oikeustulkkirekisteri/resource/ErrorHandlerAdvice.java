@@ -1,8 +1,5 @@
 package fi.vm.sade.oikeustulkkirekisteri.resource;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Iterators;
 import fi.vm.sade.generic.common.ValidationException;
 import fi.vm.sade.oikeustulkkirekisteri.service.exception.NotFoundException;
 import org.hibernate.annotations.common.util.StringHelper;
@@ -21,6 +18,9 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * User: tommiratamaa
@@ -42,7 +42,9 @@ public class ErrorHandlerAdvice {
             return null;
         }
         return new ViolationDto(violation.getPropertyPath().toString(),
-                Iterators.getLast(violation.getPropertyPath().iterator()).toString(),
+                StreamSupport.stream(violation.getPropertyPath().spliterator(), false).reduce(
+                        (first, second) -> second
+                ).orElseThrow(NoSuchElementException::new).toString(),
                 violation.getMessage(),
                 violation.getInvalidValue());
     };
@@ -50,13 +52,6 @@ public class ErrorHandlerAdvice {
     protected Validator validator;
     @Autowired
     private MessageSource messageSource;
-
-//    @ResponseStatus(value = HttpStatus.UNAUTHORIZED) // 401 Not authorized
-//    @ExceptionHandler(AccessDeniedException.class) @ResponseBody
-//    public Map<String,Object> notAuthorized(HttpServletRequest req, AccessDeniedException exception) {
-//        return handleException(req, exception, "error_NotAuthorizedException",
-//                messageSource.getMessage("error_NotAuthorizedException", new Object[0], getLocale(req)));
-//    }
 
     @InitBinder
     public void dataBinding(WebDataBinder binder) {
@@ -113,7 +108,9 @@ public class ErrorHandlerAdvice {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST) // 400 Bad request.
     @ExceptionHandler(ValidationException.class) @ResponseBody
     public Map<String,Object> badRequest(HttpServletRequest req, ValidationException exception) {
-        Collection<ViolationDto> violations = exception.getViolations() != null ? Collections2.transform(exception.getViolations(), VIOLATIONS_TRANSFORMER) : new ArrayList<>();
+        Collection<ViolationDto> violations = exception.getViolations() != null ?
+                exception.getViolations().stream().map(VIOLATIONS_TRANSFORMER).collect(Collectors.toList()) :
+                new ArrayList<>();
         Collection<String> violationsMsgs = exception.getValidationMessages();
         Map<String,Object> result = handleException(req, exception, exception.getKey(), 
                 exception.getKey() != null ? messageSource.getMessage(exception.getKey(), new Object[0], getLocale(req)) + (violations.isEmpty() ? "" : ": ") : ""
@@ -137,8 +134,9 @@ public class ErrorHandlerAdvice {
 
     private Map<String,Object> handleConstraintViolations(HttpServletRequest req, Exception exception,
                                                           Set<? extends ConstraintViolation<?>> exViolations) {
-        Collection<ViolationDto> violations = Collections2.transform(exViolations, VIOLATIONS_TRANSFORMER);
-        Collection<String> violationsMsgs = Collections2.transform(exViolations, MESSAGES_TRANSFORMER);
+        //Collection<ViolationDto> violations = Collections2.transform(exViolations, VIOLATIONS_TRANSFORMER);
+        Collection<ViolationDto> violations = exViolations.stream().map(VIOLATIONS_TRANSFORMER).collect(Collectors.toList());
+        Collection<String> violationsMsgs = exViolations.stream().map(MESSAGES_TRANSFORMER).collect(Collectors.toList());
         Map<String,Object> result = handleException(req, exception, "bad_request_error",
                 StringHelper.join(", ", violationsMsgs.iterator()));
         result.put("errors", violationsMsgs);

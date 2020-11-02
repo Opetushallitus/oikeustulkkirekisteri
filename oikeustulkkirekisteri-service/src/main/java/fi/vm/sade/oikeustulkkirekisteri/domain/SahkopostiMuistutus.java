@@ -3,13 +3,10 @@ package fi.vm.sade.oikeustulkkirekisteri.domain;
 import fi.vm.sade.oikeustulkkirekisteri.domain.embeddable.Kieli;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
-import static org.joda.time.DateTime.now;
+import java.time.LocalDateTime;
 
 /**
  * User: tommiratamaa
@@ -22,18 +19,16 @@ import static org.joda.time.DateTime.now;
 public class SahkopostiMuistutus implements Serializable {
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)
-    @GeneratedValue(generator = "sahkoposti_muistutus_id_seq")
-    @SequenceGenerator(name = "sahkoposti_muistutus_id_seq", sequenceName = "sahkoposti_muistutus_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sahkoposti_muistutus_id_seq")
+    @SequenceGenerator(name = "sahkoposti_muistutus_id_seq", sequenceName = "sahkoposti_muistutus_id_seq", allocationSize = 1)
     private Long id;
-    @Type(type = "dateTime")
     @Column(name = "luotu")
-    private DateTime luotu = now();
+    private LocalDateTime luotu = LocalDateTime.now();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "oikeustulkki", nullable = false)
     private Oikeustulkki oikeustulkki;
-    @Type(type = "dateTime") 
     @Column(name = "lahetetty")
-    private DateTime lahetetty;
+    private LocalDateTime lahetetty;
     @Column(name = "lahettaja", nullable = false)
     private String lahettaja;
     @Column(name = "vastaanottaja", nullable = false)

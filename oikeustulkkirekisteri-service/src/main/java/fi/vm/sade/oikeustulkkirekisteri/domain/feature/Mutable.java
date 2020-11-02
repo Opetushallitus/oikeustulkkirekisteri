@@ -2,18 +2,12 @@ package fi.vm.sade.oikeustulkkirekisteri.domain.feature;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.joda.time.DateTime;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import java.io.Serializable;
-
-import static org.joda.time.DateTime.now;
+import java.time.LocalDateTime;
 
 /**
  * User: tommiratamaa
@@ -21,16 +15,10 @@ import static org.joda.time.DateTime.now;
  * Time: 12.42
  */
 @MappedSuperclass
-@TypeDefs({
-    @TypeDef(name = "localTime", typeClass = org.jadira.usertype.dateandtime.joda.PersistentLocalTime.class),
-    @TypeDef(name = "localDate", typeClass = org.jadira.usertype.dateandtime.joda.PersistentLocalDate.class),
-    @TypeDef(name = "dateTime", typeClass = org.jadira.usertype.dateandtime.joda.PersistentDateTime.class,
-            parameters = {@Parameter(name = "databaseZone", value = "jvm")})
-})
 public abstract class Mutable implements Creatable, Modifyable, Serializable {
-    @Type(type = "dateTime") @Getter
+    @Getter
     @Column(name = "luotu", nullable = false, updatable = false)
-    private DateTime luotu = now();
+    private LocalDateTime luotu = LocalDateTime.now();
     
     @Getter @Setter
     @Column(name = "luoja", nullable = false, updatable = false)
@@ -42,9 +30,8 @@ public abstract class Mutable implements Creatable, Modifyable, Serializable {
     private Long version;
 
     @Getter@Setter
-    @Type(type = "dateTime")
     @Column(name = "muokattu")
-    private DateTime muokattu;
+    private LocalDateTime muokattu;
     
     @Getter@Setter
     @Column(name = "muokkaaja")
@@ -59,17 +46,16 @@ public abstract class Mutable implements Creatable, Modifyable, Serializable {
     private String poistaja;
     
     @Getter
-    @Type(type = "dateTime")
     @Column(name = "poistohetki")
-    private DateTime poistohetki;
+    private LocalDateTime poistohetki;
     
     public void markPoistettu(String poistaja) {
-        this.poistohetki = now();
+        this.poistohetki = LocalDateTime.now();
         this.poistettu = true;
         this.poistaja = poistaja;
     }
 
-    protected void setLuotu(DateTime luotu) {
+    protected void setLuotu(LocalDateTime luotu) {
         this.luotu = luotu;
     }
 
@@ -81,7 +67,7 @@ public abstract class Mutable implements Creatable, Modifyable, Serializable {
         this.poistaja = poistaja;
     }
 
-    protected void setPoistohetki(DateTime poistohetki) {
+    protected void setPoistohetki(LocalDateTime poistohetki) {
         this.poistohetki = poistohetki;
     }
 }

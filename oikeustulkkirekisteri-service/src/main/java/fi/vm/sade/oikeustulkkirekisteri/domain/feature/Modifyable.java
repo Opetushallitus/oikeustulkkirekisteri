@@ -1,6 +1,6 @@
 package fi.vm.sade.oikeustulkkirekisteri.domain.feature;
 
-import org.joda.time.DateTime;
+import java.time.LocalDateTime;
 
 /**
  * User: tommiratamaa
@@ -8,9 +8,9 @@ import org.joda.time.DateTime;
  * Time: 13.44
  */
 public interface Modifyable {
-    DateTime getMuokattu();
+    LocalDateTime getMuokattu();
     
-    void setMuokattu(DateTime at);
+    void setMuokattu(LocalDateTime at);
     
     String getMuokkaaja();
     
