@@ -2,7 +2,6 @@ package fi.vm.sade.oikeustulkkirekisteri.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;

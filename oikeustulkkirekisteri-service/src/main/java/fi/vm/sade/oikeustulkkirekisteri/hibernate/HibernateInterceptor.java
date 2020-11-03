@@ -4,11 +4,11 @@ import fi.vm.sade.oikeustulkkirekisteri.domain.feature.Creatable;
 import fi.vm.sade.oikeustulkkirekisteri.domain.feature.Modifyable;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.joda.time.DateTime;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 import static java.util.Optional.ofNullable;
@@ -30,7 +30,7 @@ public class HibernateInterceptor extends EmptyInterceptor {
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
         boolean changed = false;
         if (entity instanceof Modifyable) {
-            changed = set("muokattu", propertyNames, currentState, DateTime::now);
+            changed = set("muokattu", propertyNames, currentState, LocalDateTime::now);
             changed |= set("muokkaaja", propertyNames, currentState, LOGGED_IN_USER);
         }
         return changed;
@@ -40,7 +40,7 @@ public class HibernateInterceptor extends EmptyInterceptor {
     public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
         boolean changed = false;
         if (entity instanceof Creatable) {
-            changed = set("luotu", propertyNames, state, DateTime::now);
+            changed = set("luotu", propertyNames, state, LocalDateTime::now);
             changed |= set("luoja", propertyNames, state, LOGGED_IN_USER);
         }
         return changed;
