@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ws.rs.ClientErrorException;
+import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +43,8 @@ public class OikeustulkkiCacheServiceImpl implements OikeustulkkiCacheService {
             .thenComparing(HenkiloRestDto::getSukunimi);
     private static final Logger logger = LoggerFactory.getLogger(OikeustulkkiCacheServiceImpl.class);
     private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 60*1000; // check cache state (/retry if failed) every 1min
-    @Value("${henkilo.cache.timeout.period:PT5M}") // refer to ISO8601
-    private String cacheTimeoutPeriod; // timeout for cache, defaults to 5 minutes
+    @Value("${henkilo.cache.timeout.duration:PT5M}") // refer to ISO8601 & java.time.Duration
+    private String cacheTimeoutDuration; // timeout for cache, defaults to 5 minutes
     private CopyOnWriteArrayList<HenkiloRestDto> allHenkilosOrdererd;
     private Map<String,HenkiloRestDto> byOid;
     private LocalDateTime fullFetchDoneAt;
@@ -81,7 +81,7 @@ public class OikeustulkkiCacheServiceImpl implements OikeustulkkiCacheService {
 
     private boolean cacheNeedsRefresh() {
         return byOid == null || (fullFetchDoneAt != null && lastAccessedAt != null
-                && lastAccessedAt.minus(Period.parse(cacheTimeoutPeriod)).isAfter(fullFetchDoneAt));
+                && lastAccessedAt.minus(Duration.parse(cacheTimeoutDuration)).isAfter(fullFetchDoneAt));
     }
 
     private synchronized void fetch() throws ClientErrorException {
