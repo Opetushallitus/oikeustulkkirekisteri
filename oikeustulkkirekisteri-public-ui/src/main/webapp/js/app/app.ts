@@ -25,3 +25,7 @@ angular.module('publicRegistryApp').filter('selectFilter', () => {
     });
   };
 });
+
+angular.module('publicRegistryApp').run(['$http', ($http) => {
+  $http.defaults.headers.common['Caller-Id'] = "1.2.246.562.10.00000000001.oikeustulkkirekisteri-public-ui";
+}]);
