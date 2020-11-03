@@ -61,7 +61,7 @@
         <modelmapper.version>2.3.8</modelmapper.version>
         <querydsl.version>2.6.0</querydsl.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <log4j.version>1.2.17</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <jetty.version>9.2.30.v20200428</jetty.version>
         <ehcache.version>2.5.0</ehcache.version>
         <jersey.version>2.10.3</jersey.version>
@@ -238,9 +238,9 @@
                 <version>${slf4j.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -382,11 +382,6 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>fi.vm.sade.generic</groupId>
