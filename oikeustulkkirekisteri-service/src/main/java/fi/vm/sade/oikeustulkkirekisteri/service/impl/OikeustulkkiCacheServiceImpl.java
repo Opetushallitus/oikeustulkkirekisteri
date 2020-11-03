@@ -4,8 +4,6 @@ import fi.vm.sade.oikeustulkkirekisteri.external.api.OppijanumerorekisteriApi;
 import fi.vm.sade.oikeustulkkirekisteri.external.api.dto.HenkiloRestDto;
 import fi.vm.sade.oikeustulkkirekisteri.repository.OikeustulkkiRepository;
 import fi.vm.sade.oikeustulkkirekisteri.service.OikeustulkkiCacheService;
-import org.joda.time.DateTime;
-import org.joda.time.Period;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ws.rs.ClientErrorException;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,6 @@ import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.joda.time.DateTime.now;
 
 /**
  * User: tommiratamaa
@@ -48,8 +47,8 @@ public class OikeustulkkiCacheServiceImpl implements OikeustulkkiCacheService {
     private String cacheTimeoutPeriod; // timeout for cache, defaults to 5 minutes
     private CopyOnWriteArrayList<HenkiloRestDto> allHenkilosOrdererd;
     private Map<String,HenkiloRestDto> byOid;
-    private DateTime fullFetchDoneAt;
-    private DateTime lastAccessedAt;
+    private LocalDateTime fullFetchDoneAt;
+    private LocalDateTime lastAccessedAt;
     
     @Autowired
     private OikeustulkkiRepository oikeustulkkiRepository;
@@ -93,7 +92,7 @@ public class OikeustulkkiCacheServiceImpl implements OikeustulkkiCacheService {
                     .map(retrying(oppijanumerorekisteriApi::findByOid, 2))
                     .peek(h -> logger.debug(" < Got result for oid {}", h.getOidHenkilo())).collect(toList()));
             byOid = allHenkilosOrdererd.stream().collect(toMap(HenkiloRestDto::getOidHenkilo, h->h));
-            fullFetchDoneAt = now();
+            fullFetchDoneAt = LocalDateTime.now();
             logger.info("FETCH all oikeustulkkihenkilös DONE");
         }
     }
@@ -122,7 +121,7 @@ public class OikeustulkkiCacheServiceImpl implements OikeustulkkiCacheService {
     @Override
     @Transactional(readOnly = true)
     public List<HenkiloRestDto> findHenkilos(Predicate<HenkiloRestDto> predicate) {
-        lastAccessedAt = now();
+        lastAccessedAt = LocalDateTime.now();
         checkCache();
         return allHenkilosOrdererd.stream().filter(predicate).collect(toList());
     }
@@ -130,7 +129,7 @@ public class OikeustulkkiCacheServiceImpl implements OikeustulkkiCacheService {
     @Override
     @Transactional(readOnly = true)
     public Optional<HenkiloRestDto> findHenkiloByOid(String oid) {
-        lastAccessedAt = now();
+        lastAccessedAt = LocalDateTime.now();
         checkCache();
         return ofNullable(byOid.get(oid));
     }
