@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Properties>
+        <Property name="logLevel">{{env_loglevel}}</Property>
+{# raw-endraw -välillä template engine ei tee mitään! #}
+{% raw %}
+        <Property name="logFile">/root/logs/oph-oikeustulkkirekisteri.log</Property>
+        <Property name="maxFileSize">10 MB</Property>
+        <Property name="maxFilesKept">20</Property>
+        <Property name="logPattern">%d{yyyy-MM-dd'T'HH:mm:ss.SSSX} %-5p {%X{user}} [%t] %-5p %c: %m%n</Property>
+        <Property name="auditLogFile">/root/logs/auditlog_oikeustulkkirekisteri.log</Property>
+        <Property name="auditLogMaxFileSize">20 MB</Property>
+        <Property name="auditLogMaxFilesKept">20</Property>
+        <Property name="auditLogPattern">%m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${logPattern}"/>
+            <ThresholdFilter level="debug"/>
+        </Console>
+        <RollingFile name="FILE" fileName="${logFile}" filePattern="${logFile}.%i" append="true">
+            <PatternLayout pattern="${logPattern}"/>
+            <SizeBasedTriggeringPolicy size="${maxFileSize}"/>
+            <DefaultRolloverStrategy max="${maxFilesKept}"/>
+            <ThresholdFilter level="${logLevel}"/>
+        </RollingFile>
+        <RollingFile name="AUDIT" fileName="${auditLogFile}" filePattern="${auditLogFile}.%i" append="true" immediateFlush="true">
+            <PatternLayout pattern="${auditLogPattern}" charset="UTF-8"/>
+            <SizeBasedTriggeringPolicy size="${auditLogMaxFileSize}"/>
+            <DefaultRolloverStrategy max="${auditLogMaxFilesKept}"/>
+            <ThresholdFilter level="info"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="${logLevel}">
+            <AppenderRef ref="FILE"/>
+        </Root>
+        <Logger name="fi.vm.sade.oikeustulkkirekisteri.util.LoggerImpl" level="info" additivity="false">
+            <AppenderRef ref="AUDIT"/>
+        </Logger>
+    </Loggers>
+</Configuration>
+{% endraw %}
