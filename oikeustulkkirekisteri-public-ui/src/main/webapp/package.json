@@ -4,7 +4,6 @@
   "version": "0.0.1",
   "description": "Opetushallitus / Oikeustulkkirekisteri UI",
   "repository": "",
-
   "devDependencies": {
     "path": "0.12.7",
     "webpack": "1.13.1",
@@ -28,10 +27,10 @@
     "extract-text-webpack-plugin": "1.0.1",
     "cross-spawn-async": "2.2.4"
   },
-  
   "dependencies": {
     "angular": "1.5.5",
     "angular-route": "1.5.6",
+    "angular-cookies": "1.5.6",
     "angular-translate": "2.11.0",
     "jquery": "2.2.4",
     "lodash": "4.13.1"

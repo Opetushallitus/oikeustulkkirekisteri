@@ -1,7 +1,20 @@
 declare const angular:any;
 declare const _:any;
+declare const jQuery:any;
 
-const app = angular.module('publicRegistryApp', ['ngRoute', 'ui.select', 'pascalprecht.translate']);
+const getCookieValue = (name) => {
+  const values = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return values ? values.pop() : '';
+}
+
+jQuery.ajaxSetup({
+  headers: { 'Caller-Id': '1.2.246.562.10.00000000001.oikeustulkkirekisteri-ui' },
+  beforeSend: function (xhr) {
+    xhr.setRequestHeader('CSRF', getCookieValue('CSRF'));
+  }
+});
+
+const app = angular.module('publicRegistryApp', ['ngRoute', 'ngCookies', 'ui.select', 'pascalprecht.translate']);
 
 angular.module('publicRegistryApp').controller('mainCtrl', ["$scope", "$translate", ($scope, $translate) => {
   $translate.use('fi');
@@ -26,6 +39,7 @@ angular.module('publicRegistryApp').filter('selectFilter', () => {
   };
 });
 
-angular.module('publicRegistryApp').run(['$http', ($http) => {
+angular.module('publicRegistryApp').run(['$http', '$cookies', ($http, $cookies) => {
   $http.defaults.headers.common['Caller-Id'] = "1.2.246.562.10.00000000001.oikeustulkkirekisteri-public-ui";
+  $http.defaults.headers.common['CSRF'] = $cookies.get('CSRF') || '';
 }]);

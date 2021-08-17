@@ -7,8 +7,16 @@ if (!window['CONFIG']) {
   window['CONFIG'] = window['CONFIG'] || {env: {}};
 }
 
+const getCookieValue = (name) => {
+  const values = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return values ? values.pop() : '';
+}
+
 jQuery.ajaxSetup({
   headers: { 'Caller-Id': '1.2.246.562.10.00000000001.oikeustulkkirekisteri-ui' },
+  beforeSend: function (xhr) {
+    xhr.setRequestHeader('CSRF', getCookieValue('CSRF'));
+  }
 });
 
 const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstrap', 'ngIdle', 'angularModalService',
@@ -31,9 +39,7 @@ const app = angular.module('registryApp', ['ngRoute', 'ngMessages', 'ui.bootstra
   uiSelectConfig.matcher = (term:string, text:string) => term && text.toLowerCase().substr(0, term.length) == term.toLowerCase();
 }]).run(['$http', '$cookies', ($http, $cookies) => {
   $http.defaults.headers.common['Caller-Id'] = "1.2.246.562.10.00000000001.oikeustulkkirekisteri-ui";
-  if($cookies['CSRF']) {
-    $http.defaults.headers.common['CSRF'] = $cookies['CSRF'];
-  }
+  $http.defaults.headers.common['CSRF'] = $cookies.get('CSRF') || '';
 }]).directive('idle', ['Idle', 'ModalService', '$rootScope', function(Idle, ModalService, $rootScope) {
   return {
     restrict: 'A',
