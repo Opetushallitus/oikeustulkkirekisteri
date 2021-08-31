@@ -54,7 +54,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
     private static final Logger logger = LoggerFactory.getLogger(EmailNotificationServiceImpl.class);
 
     private static final String DEFAULT_LANGUAGE_CODE = "fi";
-    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 180*1000; // check cache state (/retry if failed) every hour
+    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 3600*1000; // check cache state (/retry if failed) every hour
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Resource
