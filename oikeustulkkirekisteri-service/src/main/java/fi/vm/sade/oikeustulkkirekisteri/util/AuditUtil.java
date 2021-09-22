@@ -5,6 +5,7 @@ import fi.vm.sade.javautils.http.HttpServletRequestUtils;
 import org.ietf.jgss.GSSException;
 import org.ietf.jgss.Oid;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -19,12 +20,27 @@ public final class AuditUtil {
     }
 
     public static User getUser() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        if (requestAttributes instanceof ServletRequestAttributes) {
+            return getUser(((ServletRequestAttributes) requestAttributes).getRequest());
+        }
+        return new User(getIp(), null, null);
+    }
+
+    public static User getUser(HttpServletRequest request) {
         InetAddress inetAddress = getInetAddress(request);
         String session = request.getSession().getId();
         String userAgent = request.getHeader("User-Agent");
         return getOid().map(oid -> new User(oid, inetAddress, session, userAgent))
                 .orElseGet(() -> new User(inetAddress, session,userAgent));
+    }
+
+    public static InetAddress getIp() {
+        try {
+            return InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            return InetAddress.getLoopbackAddress();
+        }
     }
 
     private static Optional<Oid> getOid() {
