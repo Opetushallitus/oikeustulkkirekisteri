@@ -294,33 +294,4 @@ buildTtime=${maven.build.timestamp}
             </plugin>
         </plugins>
     </build>
-    
-    <profiles>
-        <profile>
-            <id>jrebel</id>
-            <activation>
-                <property>
-                    <name>!skipJrebel</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.zeroturnaround</groupId>
-                        <artifactId>jrebel-maven-plugin</artifactId>
-                        <version>1.1.10</version>
-                        <executions>
-                            <execution>
-                                <id>generate-rebel-xml</id>
-                                <phase>clean</phase>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
