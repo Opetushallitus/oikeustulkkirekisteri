@@ -44,12 +44,6 @@
         <jetty.version>9.2.30.v20200428</jetty.version>
         <jersey.version>2.10.3</jersey.version>
         <organisaatio.api.version>2015-13</organisaatio.api.version>
-        <checkstyle.plugin.version>3.1.1</checkstyle.plugin.version>
-        <checkstyle.excludes>**/generated/**/*,**/com/**/*,**/org/**/*,**/net/**/*,**/*Mock.java</checkstyle.excludes>
-        <checkstyle.skip>false</checkstyle.skip>
-        <checkstyle.failsOnError>true</checkstyle.failsOnError>
-        <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
-        <checkstyle.configLocation><![CDATA[https://sonar.oph.ware.fi/sonar/profiles/export?format=checkstyle&amp;language=java&amp;name=SonarWayWithFindbugsAndOPHCheckstyle]]></checkstyle.configLocation>
         <buildversion_prefix />
     </properties>
 
@@ -327,49 +321,6 @@ buildTtime=${maven.build.timestamp}
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>checkstyle</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <configuration>
-                            <excludes>${checkstyle.excludes}</excludes>
-                            <skip>${checkstyle.skip}</skip>
-                            <configLocation>${checkstyle.configLocation}</configLocation>
-                            <failsOnError>${checkstyle.failsOnError}</failsOnError>
-                            <consoleOutput>${checkstyle.consoleOutput}</consoleOutput>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>check</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-            <reporting>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>${checkstyle.plugin.version}</version>
-                        <configuration>
-                            <excludes>${checkstyle.excludes}</excludes>
-                            <skip>${checkstyle.skip}</skip>
-                            <configLocation>${checkstyle.configLocation}</configLocation>
-                            <failsOnError>${checkstyle.failsOnError}</failsOnError>
-                            <consoleOutput>${checkstyle.consoleOutput}</consoleOutput>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </reporting>
         </profile>
     </profiles>
 </project>
