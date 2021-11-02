@@ -31,7 +31,7 @@
         <project.build.fileEncoding>UTF-8</project.build.fileEncoding>
         <maven.compiler.release>11</maven.compiler.release>
 
-        <tomcat.version>7.0.106</tomcat.version>
+        <tomcat.version>8.5.72</tomcat.version>
         <servlet.api.version>3.1.0</servlet.api.version>
         <camel.version>2.25.2</camel.version>
         <generic.version>9.4-SNAPSHOT</generic.version>
@@ -498,25 +498,12 @@
                     <version>3.3.1</version>
                 </plugin>
                 <plugin>
-                    <!-- käyttää antiikkista Tomcatia, version määrittely vaatii hirveän määrän depsukikkailua :( -->
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                    <configuration>
-                        <uriEncoding>UTF-8</uriEncoding>
-                        <systemProperties>
-                            <java.security.egd>file:/dev/./urandom</java.security.egd>
-                        </systemProperties>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <!-- vaihtoehto tomcat7-plugarille, helppo määritellä container/versio -->
                     <groupId>org.codehaus.cargo</groupId>
-                    <artifactId>cargo-maven2-plugin</artifactId>
-                    <version>1.8.2</version>
+                    <artifactId>cargo-maven3-plugin</artifactId>
+                    <version>1.9.8</version>
                     <configuration>
                         <container>
-                            <containerId>tomcat7x</containerId>
+                            <containerId>tomcat8x</containerId>
                             <zipUrlInstaller>
                                 <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>
                             </zipUrlInstaller>
@@ -587,11 +574,6 @@ buildTtime=${maven.build.timestamp}
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.tomcat.maven</groupId>
-                <artifactId>tomcat7-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

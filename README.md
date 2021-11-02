@@ -12,7 +12,7 @@ Määrittely ja muu tekninen löytyvät osoitteesta [CSC:n Confluencesta](https:
 ## Teknologiat
 
 ### Palvelin
-* Tomcat 7
+* Tomcat 8
 * Java 11
 * Spring 4
 * JPA / Hibernate 5
@@ -75,7 +75,7 @@ Kirjastoriippuvuuksien haavoittuvuudet voi tarkastaa joko juuritasolta koko proj
 ### oikeustulkkirekisteri-service
 
 Bäkkäriä voi ajaa suorittamalla `oikeustulkkirekisteri-service` -hakemistossa:
-`mvn cargo:run`
+`mvn package cargo:run`
    
 Swagger-dokumentaation tulisi löytyä [http://localhost:8080/oikeustulkkirekisteri-service/](http://localhost:8080/oikeustulkkirekisteri-service/)
 
