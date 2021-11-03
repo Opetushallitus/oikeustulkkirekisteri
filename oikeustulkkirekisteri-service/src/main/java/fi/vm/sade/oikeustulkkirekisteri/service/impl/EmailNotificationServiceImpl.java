@@ -55,7 +55,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
 
     private static final String expiryNotificationTemplateName = "expiry_notification";
     private static final String DEFAULT_LANGUAGE_CODE = "fi";
-    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 3600*1000; // check cache state (/retry if failed) every hour
+    private static final long DEFAULT_CHECK_INTERVAL_MILLIS = 30*1000; // check cache state (/retry if failed) every hour
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     @Resource
