@@ -4,14 +4,16 @@ import fi.vm.sade.oikeustulkkirekisteri.service.EmailTemplateRenderer;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Map;
 
 @Service
 public class EmailTemplateRendererImpl implements EmailTemplateRenderer {
 
     @Override
-    public String renderTemplate(String templateName, Map<String, String> params) throws IOException  {
+    public String renderTemplate(String templateName, Map<String, String> params) throws IOException {
         String content = readFile("classpath:email.template/" + templateName);
 
         for (String key : params.keySet()) {
@@ -22,19 +24,7 @@ public class EmailTemplateRendererImpl implements EmailTemplateRenderer {
 
     private String readFile(String filePath) throws IOException {
         File file = ResourceUtils.getFile(filePath);
-        InputStream inputStream = new FileInputStream(file);
-
-        StringBuilder resultStringBuilder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                resultStringBuilder.append(line).append("\n");
-            }
-        }
-        String content = resultStringBuilder.toString();
-        inputStream.close();
-
-        return content;
+        return Files.readString(file.toPath());
     }
 
 }

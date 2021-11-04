@@ -73,6 +73,9 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
     private String callingProcess;
 
     @Autowired
+    private EmailTemplateRenderer emailTemplateRenderer;
+
+    @Autowired
     private OikeustulkkiRepository oikeustulkkiRepository;
 
     @Autowired
@@ -203,9 +206,7 @@ public class EmailNotificationServiceImpl implements EmailNotificationService {
         params.put("expiryDate", firstLanguagePairExpiryDate(oikeustulkki, expiryDate).format(DATE_FORMATTER));
         params.put("sender", sender);
 
-        EmailTemplateRenderer renderer = new EmailTemplateRendererImpl();
-
-        return renderer.renderTemplate(templateName, params);
+        return emailTemplateRenderer.renderTemplate(templateName, params);
     }
 
     private LocalDate firstLanguagePairExpiryDate(Oikeustulkki oikeustulkki, LocalDate expiryDate) {
