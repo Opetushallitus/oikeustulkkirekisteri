@@ -2,6 +2,7 @@ package fi.vm.sade.oikeustulkkirekisteri.service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface EmailNotificationService {
     void scheduledSend();
 
     @Transactional
-    void sendNotificationToOikeustulkki(Long id, LocalDate expiresOn);
+    void notifyOikeustulkkiOfExpiration(Long oikeustulkkiId, LocalDate expiryDate) throws IOException;
 
-    List<Long> findExpiringTulkkiIds(LocalDate expiresBefore);
+    List<Long> findOikeustulkkisToBeNotifiedWithin(LocalDate start, LocalDate end);
 }
