@@ -61,7 +61,7 @@
         <modelmapper.version>2.3.8</modelmapper.version>
         <querydsl.version>2.6.0</querydsl.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <log4j.version>2.13.3</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <jetty.version>9.2.30.v20200428</jetty.version>
         <ehcache.version>2.5.0</ehcache.version>
         <jersey.version>2.10.3</jersey.version>
