@@ -13,6 +13,7 @@ dist
 
 ### Mac related
 .DS_Store
+.java-version
 
 ### Java related
 *.class
