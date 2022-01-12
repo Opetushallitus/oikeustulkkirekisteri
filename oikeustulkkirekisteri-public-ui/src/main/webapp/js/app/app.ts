@@ -7,11 +7,13 @@ const getCookieValue = (name) => {
   return values ? values.pop() : '';
 }
 
-jQuery.ajaxSetup({
-  headers: { 'Caller-Id': '1.2.246.562.10.00000000001.oikeustulkkirekisteri-ui' },
-  beforeSend: function (xhr) {
-    xhr.setRequestHeader('CSRF', getCookieValue('CSRF'));
-  }
+angular.element(document).ready(function () {
+  jQuery.ajaxSetup({
+    headers: { 'Caller-Id': '1.2.246.562.10.00000000001.oikeustulkkirekisteri-ui' },
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader('CSRF', getCookieValue('CSRF'));
+    }
+  });
 });
 
 const app = angular.module('publicRegistryApp', ['ngRoute', 'ngCookies', 'ui.select', 'pascalprecht.translate']);
