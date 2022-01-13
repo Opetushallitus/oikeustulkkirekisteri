@@ -2,6 +2,18 @@ declare const angular:any;
 declare const _:any;
 declare const jQuery:any;
 
+// Get CSRF from the backend when starting the app
+jQuery.ajax({
+  url: `/oikeustulkkirekisteri-service/buildversion.txt?d=${new Date().getTime()}`,
+  async: false,
+  success: function (xhr, status) {
+    console.log('Loaded CSRF successfully!');
+  },
+  error: function (xhr, status) {
+    console.log('Loading CSRF failed!');
+  },
+});
+
 const getCookieValue = (name) => {
   const values = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
   return values ? values.pop() : '';
