@@ -4,7 +4,7 @@ declare const jQuery:any;
 
 // Get CSRF from the backend when starting the app
 jQuery.ajax({
-  url: '/oikeustulkkirekisteri-service/buildversion.txt',
+  url: `/oikeustulkkirekisteri-service/buildversion.txt?d=${new Date().getTime()}`,
   async: false,
   success: function (xhr, status) {
     console.log('Loaded CSRF successfully!');
