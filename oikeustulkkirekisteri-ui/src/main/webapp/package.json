@@ -20,7 +20,7 @@
     "resolve": "1.6.0",
     "bootstrap-loader": "1.0.10",
     "bootstrap-sass": "3.3.6",
-    "node-sass": "3.7.0",
+    "node-sass": "7.0.0",
     "resolve-url-loader": "1.4.3",
     "file-loader": "0.8.5",
     "url-loader": "0.5.7",
