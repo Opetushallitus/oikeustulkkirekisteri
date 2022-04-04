@@ -70,6 +70,10 @@ public class ErrorHandlerAdvice {
             }
         });
         binder.setIgnoreUnknownFields(true);
+
+        // CVE-2022-22965 mitigation
+        String[] denylist = new String[]{"class.*", "Class.*", "*.class.*", "*.Class.*"};
+        binder.setDisallowedFields(denylist);
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND) // 404 Entity not found by primary key.
