@@ -33,7 +33,7 @@
 
         <tomcat.version>8.5.72</tomcat.version>
         <servlet.api.version>3.1.0</servlet.api.version>
-        <camel.version>2.25.2</camel.version>
+        <camel.version>3.14.4</camel.version>
         <generic.version>9.4-SNAPSHOT</generic.version>
         <koodisto.api.version>6.3-SNAPSHOT</koodisto.api.version>
         <organisaatio.api.version>6.2-SNAPSHOT</organisaatio.api.version>
