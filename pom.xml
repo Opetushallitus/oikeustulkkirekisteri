@@ -38,7 +38,7 @@
         <koodisto.api.version>6.3-SNAPSHOT</koodisto.api.version>
         <organisaatio.api.version>6.2-SNAPSHOT</organisaatio.api.version>
         <auditlog.api.version>8.0.0-SNAPSHOT</auditlog.api.version>
-        <jackson.version>2.11.3</jackson.version>
+        <jackson.version>2.12.7.1</jackson.version>
         <postgresql.version>42.2.18</postgresql.version>
         <spring.version>4.3.29.RELEASE</spring.version>
         <spring.security.version>4.2.19.RELEASE</spring.security.version>
