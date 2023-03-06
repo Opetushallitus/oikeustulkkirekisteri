@@ -6,8 +6,8 @@
   "repository": "",
   "devDependencies": {
     "path": "0.12.7",
-    "webpack": "1.13.1",
-    "webpack-dev-server": "1.14.1",
+    "webpack": "5.75.0",
+    "webpack-dev-server": "4.11.1",
     "css-loader": "0.23.1",
     "style-loader": "0.13.1",
     "isomorphic-style-loader": "1.0.0",
