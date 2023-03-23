@@ -40,7 +40,7 @@
         <auditlog.api.version>8.0.0-SNAPSHOT</auditlog.api.version>
         <jackson.version>2.11.3</jackson.version>
         <postgresql.version>42.2.18</postgresql.version>
-        <spring.version>4.3.29.RELEASE</spring.version>
+        <spring.version>5.2.23.RELEASE</spring.version>
         <spring.security.version>4.2.19.RELEASE</spring.security.version>
         <spring.data.jpa.version>1.11.23.RELEASE</spring.data.jpa.version>
         <org.hibernate.javax.persistence.api.version>1.0.0.Final</org.hibernate.javax.persistence.api.version>
