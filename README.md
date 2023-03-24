@@ -1,5 +1,7 @@
 # Oikeustulkkirekisteri
 
+Palvelu korvattu uudella otr-palvelulla vuoden 2023 alkupuolella
+
 ## Tarkoitus
 
 Oikeustulkkirekisteri on Opetushallituksen ylläpitämä rekisteri, jonka tarkoitus on auttaa ihmisiä löytämään tulkki, 
